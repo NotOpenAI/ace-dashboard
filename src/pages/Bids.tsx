@@ -1,24 +1,54 @@
-import { Box } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import renderStatus from "../renderer/renderStatus.tsx";
-import renderRecommendedAction from "../renderer/renderRecommendedAction.tsx";
+import { Box } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import renderStatus from '../renderer/renderStatus.tsx';
+import renderRecommendedAction from '../renderer/renderRecommendedAction.tsx';
 
 const columns: GridColDef[] = [
     { field: 'projectNo', headerName: 'Project No', width: 120 },
-    { field: 'status', headerName: 'Status', renderCell: renderStatus, width: 120 },
-    { field: 'recommendedAction', headerName: 'Recommended Action', renderCell: renderRecommendedAction, width: 160 },
+    {
+        field: 'status',
+        headerName: 'Status',
+        renderCell: renderStatus,
+        width: 120,
+    },
+    {
+        field: 'recommendedAction',
+        headerName: 'Recommended Action',
+        renderCell: renderRecommendedAction,
+        width: 160,
+    },
     { field: 'jobName', headerName: 'Job Name', width: 160 },
     { field: 'bidDueDate', headerName: 'Bid Due Date', width: 150 },
     { field: 'jobStartDate', headerName: 'Job Start Date', width: 150 },
     { field: 'jobEndDate', headerName: 'Job End Date', width: 150 },
     { field: 'leadFrom', headerName: 'Lead From', width: 160 },
     { field: 'bidMgr', headerName: 'Bid Mgr', width: 120 },
-    { field: 'customerContactInfo', headerName: 'Customer Contact Info', width: 200 },
+    {
+        field: 'customerContactInfo',
+        headerName: 'Customer Contact Info',
+        width: 200,
+    },
     { field: 'customerName', headerName: 'Customer Name', width: 160 },
-    { field: 'jobLocationAddress', headerName: 'Job Location Address', width: 200 },
-    { field: 'estimatedTotalCost', headerName: 'Estimated Total Cost', width: 150 },
-    { field: 'estimatedMaterialCost', headerName: 'Estimated Material Cost', width: 150 },
-    { field: 'estimatedLaborCost', headerName: 'Estimated Labor Cost', width: 150 },
+    {
+        field: 'jobLocationAddress',
+        headerName: 'Job Location Address',
+        width: 200,
+    },
+    {
+        field: 'estimatedTotalCost',
+        headerName: 'Estimated Total Cost',
+        width: 150,
+    },
+    {
+        field: 'estimatedMaterialCost',
+        headerName: 'Estimated Material Cost',
+        width: 150,
+    },
+    {
+        field: 'estimatedLaborCost',
+        headerName: 'Estimated Labor Cost',
+        width: 150,
+    },
     { field: 'bidAmount', headerName: 'Bid Amount', width: 120 },
     { field: 'desiredMargin', headerName: 'Desired Margin', width: 120 },
     { field: 'estimatedMargin', headerName: 'Estimated Margin', width: 120 },
@@ -31,15 +61,27 @@ const columns: GridColDef[] = [
     { field: 'regulatory', headerName: 'Regulatory', width: 120 },
     { field: 'weather', headerName: 'Weather', width: 120 },
     { field: 'clientRating', headerName: 'Client Rating', width: 120 },
-    { field: 'materialAvailability', headerName: 'Material Avail.', width: 120 },
+    {
+        field: 'materialAvailability',
+        headerName: 'Material Avail.',
+        width: 120,
+    },
     { field: 'laborAvailability', headerName: 'Labor Avail.', width: 120 },
-    { field: 'competitiveLandscape', headerName: 'Competitive Landscape', width: 160 },
+    {
+        field: 'competitiveLandscape',
+        headerName: 'Competitive Landscape',
+        width: 160,
+    },
     { field: 'community', headerName: 'Community', width: 120 },
     { field: 'safety', headerName: 'Safety', width: 120 },
     { field: 'scopeClarity', headerName: 'Scope Clarity', width: 120 },
     { field: 'futureBusiness', headerName: 'Future Business', width: 120 },
     { field: 'risk', headerName: 'Risk', width: 120 },
-    { field: 'clientFinancialHealth', headerName: 'Client Financial Health', width: 160 },
+    {
+        field: 'clientFinancialHealth',
+        headerName: 'Client Financial Health',
+        width: 160,
+    },
     { field: 'clientReputation', headerName: 'Client Reputation', width: 160 },
 ];
 
@@ -167,12 +209,13 @@ const rows = [
 ];
 
 const Bids = () => {
+    console.log('Hello World!');
     return (
-        <Box sx={{width: '100%'}}>
-            <DataGrid 
-                rows={rows} 
+        <Box sx={{ width: '100%' }}>
+            <DataGrid
+                rows={rows}
                 columns={columns}
-                pageSizeOptions={[5]} 
+                pageSizeOptions={[5]}
                 checkboxSelection
                 sx={{
                     borderRadius: 4,
