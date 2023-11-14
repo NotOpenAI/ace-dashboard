@@ -10,7 +10,7 @@
       "files": "*.tsx",
       "options": {
         "semi": true,
-        "singleQuote": false
+        "singleQuote": true
       }
     }
   ]
