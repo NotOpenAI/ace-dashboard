@@ -209,7 +209,6 @@ const rows = [
 ];
 
 const Bids = () => {
-    console.log('Hello World!');
     return (
         <Box sx={{ width: '100%' }}>
             <DataGrid
