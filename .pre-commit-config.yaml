@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/prettier/prettier
+    hooks:
+      - id: prettier
+        stages: [commit]
+        types: [tsx, json, css, scss, markdown]
