@@ -1,39 +1,39 @@
-import * as React from "react";
-import clsx from "clsx";
-import { GridRenderCellParams } from "@mui/x-data-grid";
-import { styled } from "@mui/material/styles";
+import * as React from 'react';
+import clsx from 'clsx';
+import { GridRenderCellParams } from '@mui/x-data-grid';
+import { styled } from '@mui/material/styles';
 
 interface ProgressBarProps {
     value: number;
 }
 
-const Root = styled("div")(({ theme }) => ({
+const Root = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
-    position: "relative",
-    overflow: "hidden",
-    width: "100%",
+    position: 'relative',
+    overflow: 'hidden',
+    width: '100%',
     height: 26,
     borderRadius: 2,
 }));
 
-const Value = styled("div")({
-    position: "absolute",
-    lineHeight: "24px",
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
+const Value = styled('div')({
+    position: 'absolute',
+    lineHeight: '24px',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
 });
 
-const Bar = styled("div")({
-    height: "100%",
-    "&.low": {
-        backgroundColor: "#f44336",
+const Bar = styled('div')({
+    height: '100%',
+    '&.low': {
+        backgroundColor: '#f44336',
     },
-    "&.medium": {
-        backgroundColor: "#efbb5aa3",
+    '&.medium': {
+        backgroundColor: '#efbb5aa3',
     },
-    "&.high": {
-        backgroundColor: "#088208a3",
+    '&.high': {
+        backgroundColor: '#088208a3',
     },
 });
 
@@ -60,7 +60,7 @@ const renderDesiredMargin = (
     params: GridRenderCellParams<any, number, any>
 ) => {
     if (params.value == null) {
-        return "";
+        return '';
     }
 
     // If the aggregated value does not have the same unit as the other cell

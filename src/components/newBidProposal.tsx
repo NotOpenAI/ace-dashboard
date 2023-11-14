@@ -8,10 +8,10 @@ import {
     Stepper,
     TextField,
     Typography,
-} from '@mui/material'
-import { useState } from 'react'
-import AddIcon from '@mui/icons-material/Add'
-import CustomSelect from './customSelect.tsx'
+} from '@mui/material';
+import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import CustomSelect from './customSelect.tsx';
 
 const selectOptions = {
     bidMgr: ['Marcin', 'Ethan', 'Melissa', 'Rich'],
@@ -36,7 +36,7 @@ const selectOptions = {
     insulation: ['No', 'Yes'],
     actCeiling: ['No', 'Yes'],
     construction: ['New', 'Renovation', 'Both'],
-}
+};
 
 const fields = [
     [
@@ -85,9 +85,9 @@ const fields = [
         'clientHealth',
         'clientReputation',
     ],
-]
+];
 
-;[
+[
     {
         columnName: 'foo',
         options: ['fizz', 'buzz'],
@@ -96,34 +96,34 @@ const fields = [
         columnName: 'bar',
         options: ['fuzz', 'bazz'],
     },
-]
+];
 
 const NewBidProposal = () => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
 
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState<{
-        [k: number]: boolean
-    }>({})
+        [k: number]: boolean;
+    }>({});
 
     const totalSteps = () => {
-        return fields.length
-    }
+        return fields.length;
+    };
 
     const completedSteps = () => {
-        return Object.keys(completed).length
-    }
+        return Object.keys(completed).length;
+    };
 
     const isLastStep = () => {
-        return activeStep === totalSteps() - 1
-    }
+        return activeStep === totalSteps() - 1;
+    };
 
     const allStepsCompleted = () => {
-        return completedSteps() === totalSteps()
-    }
+        return completedSteps() === totalSteps();
+    };
 
     const handleNext = () => {
         const newActiveStep =
@@ -131,29 +131,29 @@ const NewBidProposal = () => {
                 ? // It's the last step, but not all steps have been completed,
                   // find the first step that has been completed
                   fields.findIndex((_step, i) => !(i in completed))
-                : activeStep + 1
-        setActiveStep(newActiveStep)
-    }
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
+    };
 
     const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1)
-    }
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
 
     const handleStep = (step: number) => () => {
-        setActiveStep(step)
-    }
+        setActiveStep(step);
+    };
 
     const handleComplete = () => {
-        const newCompleted = completed
-        newCompleted[activeStep] = true
-        setCompleted(newCompleted)
-        handleNext()
-    }
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+        handleNext();
+    };
 
     const handleReset = () => {
-        setActiveStep(0)
-        setCompleted({})
-    }
+        setActiveStep(0);
+        setCompleted({});
+    };
 
     return (
         <>
@@ -172,8 +172,8 @@ const NewBidProposal = () => {
             <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby='modal-modal-title'
+                aria-describedby='modal-modal-description'
             >
                 <Box
                     sx={{
@@ -193,7 +193,7 @@ const NewBidProposal = () => {
                         {fields.map((_, index) => (
                             <Step key={index} completed={completed[index]}>
                                 <StepButton
-                                    color="inherit"
+                                    color='inherit'
                                     onClick={handleStep(index)}
                                 >
                                     {`Section ${index + 1}`}
@@ -281,7 +281,7 @@ const NewBidProposal = () => {
                                 {activeStep !== fields.length &&
                                     (completed[activeStep] ? (
                                         <Typography
-                                            variant="caption"
+                                            variant='caption'
                                             sx={{ display: 'inline-block' }}
                                         >
                                             Step {activeStep + 1} already
@@ -301,7 +301,7 @@ const NewBidProposal = () => {
                 </Box>
             </Modal>
         </>
-    )
-}
+    );
+};
 
-export default NewBidProposal
+export default NewBidProposal;

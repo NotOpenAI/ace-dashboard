@@ -1,31 +1,31 @@
-import * as React from "react";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-import InfoIcon from "@mui/icons-material/Info";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
-import DoneIcon from "@mui/icons-material/Done";
-import Chip from "@mui/material/Chip";
-import { styled } from "@mui/material/styles";
-import { GridRenderCellParams } from "@mui/x-data-grid";
-import { ReactNode } from "react";
+import * as React from 'react';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import InfoIcon from '@mui/icons-material/Info';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DoneIcon from '@mui/icons-material/Done';
+import Chip from '@mui/material/Chip';
+import { styled } from '@mui/material/styles';
+import { GridRenderCellParams } from '@mui/x-data-grid';
+import { ReactNode } from 'react';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
-    justifyContent: "left",
-    "& .icon": {
-        color: "inherit",
+    justifyContent: 'left',
+    '& .icon': {
+        color: 'inherit',
     },
-    "&.New": {
+    '&.New': {
         color: theme.palette.info.dark,
         border: `1px solid ${theme.palette.info.main}`,
     },
-    "&.Approved": {
+    '&.Approved': {
         color: theme.palette.success.dark,
         border: `1px solid ${theme.palette.success.main}`,
     },
-    "&.InProgress": {
+    '&.InProgress': {
         color: theme.palette.warning.dark,
         border: `1px solid ${theme.palette.warning.main}`,
     },
-    "&.Rejected": {
+    '&.Rejected': {
         color: theme.palette.error.dark,
         border: `1px solid ${theme.palette.error.main}`,
     },
@@ -39,24 +39,24 @@ const Status = React.memo((props: StatusProps) => {
     const { status } = props;
 
     let icon: any = null;
-    if (status === "Rejected") {
+    if (status === 'Rejected') {
         icon = <ReportProblemIcon className='icon' />;
-    } else if (status === "New") {
+    } else if (status === 'New') {
         icon = <InfoIcon className='icon' />;
-    } else if (status === "In Progress") {
+    } else if (status === 'In Progress') {
         icon = <AutorenewIcon className='icon' />;
-    } else if (status === "Approved") {
+    } else if (status === 'Approved') {
         icon = <DoneIcon className='icon' />;
     }
 
     let label: string = status;
-    if (status === "PartiallyFilled") {
-        label = "Partially Filled";
+    if (status === 'PartiallyFilled') {
+        label = 'Partially Filled';
     }
 
     return (
         <StyledChip
-            className={status.replace(" ", "")}
+            className={status.replace(' ', '')}
             icon={icon}
             size='small'
             label={label}
@@ -67,7 +67,7 @@ const Status = React.memo((props: StatusProps) => {
 
 const renderStatus = (params: GridRenderCellParams): ReactNode => {
     if (params.value == null) {
-        return "";
+        return '';
     }
 
     return <Status status={params.value} />;
