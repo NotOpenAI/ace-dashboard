@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,6 +27,8 @@ import renderDesiredMargin from '../renderer/renderDesiredMargin.tsx';
 import { useState } from 'react';
 import { darken, lighten, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import NewBidProposal from '../components/newBidProposal.tsx';
+import NewProposal from '../components/newProposal.tsx';
 
 const getBackgroundColor = (color: string, mode: string) =>
     mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.8);
@@ -346,14 +347,18 @@ function EditToolbar(props: EditToolbarProps) {
                     <GridToolbarDensitySelector />
                     <GridToolbarExport />
                 </Stack>
-                <Button
-                    color={'primary'}
-                    variant={'contained'}
-                    startIcon={<AddIcon />}
-                    onClick={handleClick}
-                >
-                    New Proposal
-                </Button>
+                <Stack direction={'row'} spacing={2}>
+                    <Button
+                        color={'primary'}
+                        variant={'contained'}
+                        startIcon={<AddIcon />}
+                        onClick={handleClick}
+                    >
+                        In Line
+                    </Button>
+                    <NewBidProposal />
+                    <NewProposal />
+                </Stack>
             </Stack>
         </GridToolbarContainer>
     );

@@ -87,17 +87,6 @@ const fields = [
     ],
 ];
 
-[
-    {
-        columnName: 'foo',
-        options: ['fizz', 'buzz'],
-    },
-    {
-        columnName: 'bar',
-        options: ['fuzz', 'bazz'],
-    },
-];
-
 const NewBidProposal = () => {
     const [open, setOpen] = useState(false);
 
@@ -163,11 +152,8 @@ const NewBidProposal = () => {
                 color={'primary'}
                 startIcon={<AddIcon />}
                 size={'small'}
-                sx={{
-                    borderRadius: 4,
-                }}
             >
-                New Proposal
+                v1
             </Button>
             <Modal
                 open={open}
@@ -181,8 +167,6 @@ const NewBidProposal = () => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        // width: 1200,
-                        // maxWidth: 1200,
                         bgcolor: 'background.paper',
                         boxShadow: 2,
                         borderRadius: 4,
@@ -200,13 +184,6 @@ const NewBidProposal = () => {
                                 </StepButton>
                             </Step>
                         ))}
-                        {/*{steps.map((label, index) => (*/}
-                        {/*    <Step key={label} completed={completed[index]}>*/}
-                        {/*        <StepButton color="inherit" onClick={handleStep(index)}>*/}
-                        {/*            {label}*/}
-                        {/*        </StepButton>*/}
-                        {/*    </Step>*/}
-                        {/*))}*/}
                     </Stepper>
                     {allStepsCompleted() ? (
                         <>
