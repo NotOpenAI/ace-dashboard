@@ -22,7 +22,6 @@ body {
 
 body > *  {
   margin: auto;
-  /*width: 180vh; TODO - optionally set this if we don't want full width pages by default */
   /*border: 1px solid blue;*/
   padding: 0 12px 0 12px;
   display: block;
