@@ -354,7 +354,7 @@ function EditToolbar(props: EditToolbarProps) {
                         startIcon={<AddIcon />}
                         onClick={handleClick}
                     >
-                        In Line
+                        New Proposal
                     </Button>
                     <NewBidProposal />
                     <NewProposal />
