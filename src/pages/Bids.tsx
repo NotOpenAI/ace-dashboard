@@ -1,7 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, Breadcrumbs, Container, Link, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import renderStatus from '../renderer/renderStatus.tsx';
 import renderRecommendedAction from '../renderer/renderRecommendedAction.tsx';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const columns: GridColDef[] = [
     { field: 'projectNo', headerName: 'Project No', width: 120 },
@@ -210,17 +211,27 @@ const rows = [
 
 const Bids = () => {
     return (
-        <Box sx={{ width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSizeOptions={[5]}
-                checkboxSelection
-                sx={{
-                    borderRadius: 4,
-                }}
-            />
-        </Box>
+        <Container maxWidth={false}>
+            <Breadcrumbs
+                separator={<NavigateNextIcon fontSize='small' />}
+                sx={{ marginBottom: 2 }}
+            >
+                <Typography color={'text.primary'}>Home</Typography>
+                <Typography color={'text.primary'}>Bids</Typography>
+            </Breadcrumbs>
+            <Box sx={{ width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSizeOptions={[5]}
+                    checkboxSelection
+                    sx={{
+                        borderRadius: 4,
+                        borderColor: 'none',
+                    }}
+                />
+            </Box>
+        </Container>
     );
 };
 
