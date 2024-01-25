@@ -6,6 +6,8 @@ import Users from '../pages/Users.tsx';
 import Customers from '../pages/Customers.tsx';
 import OperationalData from '../pages/OperationalData.tsx';
 import { Account } from '../pages/Account.tsx';
+import { Bid } from '../pages/Bid.tsx';
+import { Home } from '../pages/Home.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -14,8 +16,16 @@ const Router = () => {
             element: <MainLayout />,
             children: [
                 {
+                    path: '',
+                    element: <Home />,
+                },
+                {
                     path: 'bids',
                     element: <Bids />,
+                },
+                {
+                    path: 'bids/:id',
+                    element: <Bid />,
                 },
                 {
                     path: 'users',
