@@ -3,6 +3,7 @@ import {
     StyledEngineProvider,
     ThemeProvider,
     createTheme,
+    useMediaQuery,
 } from '@mui/material';
 
 import { ReactNode } from 'react';
@@ -13,9 +14,11 @@ interface CustomThemeProps {
 }
 
 const CustomTheme = ({ children }: CustomThemeProps) => {
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
     const theme = createTheme({
         palette: {
-            mode: 'light',
+            mode: prefersDarkMode ? 'dark' : 'light',
             primary: deepPurple,
             secondary: lightBlue,
         },

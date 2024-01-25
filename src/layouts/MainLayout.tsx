@@ -20,11 +20,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleIcon from '@mui/icons-material/People';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import { Outlet, useLocation } from 'react-router-dom';
-import { Link } from '@mui/material';
+import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
+import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
 import { useEffect } from 'react';
 import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
+import { SPACING } from '../constants.tsx';
 
 const drawerWidth = 240;
 
@@ -122,23 +122,26 @@ const MainLayout = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position='fixed' open={open}>
-                <Toolbar>
-                    <IconButton
-                        color='inherit'
-                        aria-label='open drawer'
-                        onClick={handleDrawerOpen}
-                        edge='start'
-                        sx={{
-                            marginRight: 5,
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant='h6' noWrap component='div'>
-                        Ace Dashboard
-                    </Typography>
+            <AppBar position='fixed' open={open} enableColorOnDark>
+                <Toolbar sx={{ justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <IconButton
+                            color='inherit'
+                            aria-label='open drawer'
+                            onClick={handleDrawerOpen}
+                            edge='start'
+                            sx={{
+                                marginRight: 5,
+                                ...(open && { display: 'none' }),
+                            }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant='h6' noWrap component='div'>
+                            Ace Dashboard
+                        </Typography>
+                    </Box>
+                    <AccountCircleIcon fontSize={'large'} />
                 </Toolbar>
             </AppBar>
             <Drawer variant='permanent' open={open}>
@@ -154,79 +157,22 @@ const MainLayout = () => {
                 <Divider />
                 <List>
                     {navItems.map((text) => (
-                        <Link
-                            href={text.replace(' ', '-')}
-                            sx={{
-                                textDecoration: 'none',
-                                color: 'inherit',
-                            }}
-                        >
-                            <ListItem
-                                key={text}
-                                disablePadding
-                                sx={{ display: 'block' }}
-                            >
-                                <ListItemButton
-                                    sx={{
-                                        minHeight: 48,
-                                        justifyContent: open
-                                            ? 'initial'
-                                            : 'center',
-                                        px: 2.5,
-                                        borderRadius: 4,
-                                        m: 1,
-                                        backgroundColor:
-                                            activePage === text.toLowerCase()
-                                                ? theme.palette.action.selected
-                                                : 'transparent',
-                                    }}
-                                >
-                                    <ListItemIcon
-                                        sx={{
-                                            minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        {text === 'bids' && <ViewListIcon />}
-                                        {text === 'customers' && <PeopleIcon />}
-                                        {text === 'users' && (
-                                            <ManageAccountsIcon />
-                                        )}
-                                        {text === 'operational data' && (
-                                            <DataThresholdingIcon />
-                                        )}
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={capitalizeEachWord(text)}
-                                        sx={{ opacity: open ? 1 : 0 }}
-                                    />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    <Link
-                        href={'account'}
-                        sx={{
-                            textDecoration: 'none',
-                            color: 'inherit',
-                        }}
-                    >
                         <ListItem
-                            key={'account'}
+                            key={text}
                             disablePadding
                             sx={{ display: 'block' }}
                         >
                             <ListItemButton
+                                component={RouterLink}
+                                to={text.replace(' ', '-')}
                                 sx={{
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
                                     px: 2.5,
+                                    borderRadius: 4,
+                                    m: 1,
                                     backgroundColor:
-                                        activePage === 'account'
+                                        activePage === text.toLowerCase()
                                             ? theme.palette.action.selected
                                             : 'transparent',
                                 }}
@@ -238,20 +184,68 @@ const MainLayout = () => {
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <AccountCircleIcon />
+                                    {text === 'bids' && <ViewListRoundedIcon />}
+                                    {text === 'customers' && <PeopleIcon />}
+                                    {text === 'users' && <ManageAccountsIcon />}
+                                    {text === 'operational data' && (
+                                        <DataThresholdingIcon />
+                                    )}
                                 </ListItemIcon>
                                 <ListItemText
-                                    primary={'Account'}
+                                    primary={capitalizeEachWord(text)}
                                     sx={{ opacity: open ? 1 : 0 }}
                                 />
                             </ListItemButton>
                         </ListItem>
-                    </Link>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    <ListItem
+                        key={'account'}
+                        disablePadding
+                        sx={{ display: 'block' }}
+                    >
+                        <ListItemButton
+                            component={RouterLink}
+                            to={'account'}
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                                borderRadius: 4,
+                                m: 1,
+                                backgroundColor:
+                                    activePage === 'account'
+                                        ? theme.palette.action.selected
+                                        : 'transparent',
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={'Account'}
+                                sx={{ opacity: open ? 1 : 0 }}
+                            />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <Box
                 component='main'
-                sx={{ flexGrow: 1, marginTop: 10, width: '88%' }}
+                sx={{
+                    flexGrow: 1,
+                    marginTop: 10,
+                    width: '88%',
+                    p: SPACING - 1,
+                }}
             >
                 <Outlet />
             </Box>
