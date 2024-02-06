@@ -26,7 +26,7 @@ const Projects = () => {
                 <Link href={'/'} color={'inherit'} underline={'hover'}>
                     Home
                 </Link>
-                <Typography color={'text.primary'}>Customers</Typography>
+                <Typography color={'text.primary'}>Projects</Typography>
             </Breadcrumbs>
             <Paper elevation={1} sx={{ borderRadius: 4, width: '100%' }}>
                 <DataGrid {...data} sx={{ border: 0 }} />

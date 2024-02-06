@@ -27,6 +27,7 @@ import { useEffect } from 'react';
 import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
 import { SPACING } from '../constants.tsx';
 import { Container } from '@mui/material';
+import AccountMenu from '../components/AccountMenu.tsx';
 
 const drawerWidth = 240;
 
@@ -143,7 +144,7 @@ const MainLayout = () => {
                             Ace Dashboard
                         </Typography>
                     </Box>
-                    <AccountCircleIcon fontSize={'large'} />
+                    <AccountMenu />
                 </Toolbar>
             </AppBar>
             <Drawer variant='permanent' open={open}>

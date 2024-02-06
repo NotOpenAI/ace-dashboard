@@ -21,6 +21,9 @@ const CustomTheme = ({ children }: CustomThemeProps) => {
             mode: prefersDarkMode ? 'dark' : 'light',
             primary: deepPurple,
             secondary: lightBlue,
+            background: {
+                default: prefersDarkMode ? '#151515' : '#f6f6f6',
+            },
         },
     });
 
