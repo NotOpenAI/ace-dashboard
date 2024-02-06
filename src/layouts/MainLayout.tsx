@@ -17,6 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleIcon from '@mui/icons-material/People';
@@ -25,6 +26,7 @@ import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
 import { useEffect } from 'react';
 import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
 import { SPACING } from '../constants.tsx';
+import { Container } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -97,7 +99,7 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const navItems = ['bids', 'customers', 'operational data', 'users'];
+const navItems = ['bids', 'projects', 'customers', 'operational data', 'users'];
 
 const MainLayout = () => {
     const theme = useTheme();
@@ -185,6 +187,9 @@ const MainLayout = () => {
                                     }}
                                 >
                                     {text === 'bids' && <ViewListRoundedIcon />}
+                                    {text === 'projects' && (
+                                        <AssignmentRoundedIcon />
+                                    )}
                                     {text === 'customers' && <PeopleIcon />}
                                     {text === 'users' && <ManageAccountsIcon />}
                                     {text === 'operational data' && (
@@ -238,17 +243,13 @@ const MainLayout = () => {
                     </ListItem>
                 </List>
             </Drawer>
-            <Box
-                component='main'
-                sx={{
-                    flexGrow: 1,
-                    marginTop: 10,
-                    width: '88%',
-                    p: SPACING - 1,
-                }}
+            <Container
+                component={'main'}
+                maxWidth={'xl'}
+                sx={{ marginTop: 10, p: SPACING - 1 }}
             >
                 <Outlet />
-            </Box>
+            </Container>
         </Box>
     );
 };

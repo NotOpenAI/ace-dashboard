@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Link, Paper, Typography } from '@mui/material';
+import { Breadcrumbs, Link, Paper, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Footer from '../components/Footer.tsx';
@@ -62,7 +62,7 @@ const rows = [
 
 const Customers = () => {
     return (
-        <Box sx={{ width: '100%' }}>
+        <>
             <Breadcrumbs
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
@@ -82,7 +82,7 @@ const Customers = () => {
                 />
             </Paper>
             <Footer />
-        </Box>
+        </>
     );
 };
 export default Customers;

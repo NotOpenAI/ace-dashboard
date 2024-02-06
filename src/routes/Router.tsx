@@ -8,6 +8,7 @@ import OperationalData from '../pages/OperationalData.tsx';
 import { Account } from '../pages/Account.tsx';
 import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
+import Projects from '../pages/Projects.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -26,6 +27,10 @@ const Router = () => {
                 {
                     path: 'bids/:id',
                     element: <Bid />,
+                },
+                {
+                    path: 'projects',
+                    element: <Projects />,
                 },
                 {
                     path: 'users',

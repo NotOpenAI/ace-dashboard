@@ -8,9 +8,10 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 type SelectProps = {
     label: string;
     options: string[];
+    required: boolean;
 };
 
-const CustomSelect = ({ label, options }: SelectProps) => {
+const CustomSelect = ({ label, options, required }: SelectProps) => {
     const [value, setValue] = React.useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -19,11 +20,15 @@ const CustomSelect = ({ label, options }: SelectProps) => {
 
     return (
         <Box>
-            <FormControl fullWidth>
+            <FormControl fullWidth required={required}>
                 <InputLabel>{label}</InputLabel>
                 <Select value={value} label={label} onChange={handleChange}>
                     {options.map((option: string) => {
-                        return <MenuItem value={option}>{option}</MenuItem>;
+                        return (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                        );
                     })}
                 </Select>
             </FormControl>

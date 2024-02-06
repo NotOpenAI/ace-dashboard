@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -11,7 +10,6 @@ import {
     GridColDef,
     GridToolbarContainer,
     GridActionsCellItem,
-    GridRowId,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
     GridToolbarDensitySelector,
@@ -31,6 +29,7 @@ import {
 import Footer from '../components/Footer.tsx';
 import IconButton from '@mui/material/IconButton';
 import { SPACING } from '../constants.tsx';
+import ConfirmationDialog from '../components/confirmationDialog.tsx';
 
 const getBackgroundColor = (color: string, mode: string) =>
     mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.8);
@@ -308,10 +307,6 @@ const initialRows: GridRowsProp = [
     },
 ];
 
-interface SelectOptions {
-    [key: string]: string[];
-}
-
 function BidsToolbar() {
     return (
         <GridToolbarContainer style={{ width: '100%', display: 'block' }}>
@@ -343,9 +338,11 @@ function BidsToolbar() {
 
 export default function Bids() {
     const [rows, setRows] = useState(initialRows);
+    const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] =
+        useState(false);
 
-    const handleDeleteClick = (id: GridRowId) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+    const handleDeleteClick = () => {
+        setConfirmDeleteDialogOpen(true);
     };
 
     const columns: GridColDef[] = [
@@ -362,12 +359,26 @@ export default function Bids() {
                             <OpenInNewRoundedIcon fontSize={'small'} />
                         </IconButton>
                     </Link>,
-                    <GridActionsCellItem
-                        icon={<DeleteIcon />}
-                        label='Delete'
-                        onClick={handleDeleteClick(id)}
-                        color='inherit'
-                    />,
+                    <>
+                        <GridActionsCellItem
+                            icon={<DeleteIcon />}
+                            label='Delete'
+                            onClick={handleDeleteClick}
+                            color='inherit'
+                        />
+                        <ConfirmationDialog
+                            open={confirmDeleteDialogOpen}
+                            onClose={() => setConfirmDeleteDialogOpen(false)}
+                            onConfirm={() => {
+                                setRows(rows.filter((row) => row.id !== id));
+                                setConfirmDeleteDialogOpen(false);
+                            }}
+                            title={'Confirm Delete'}
+                            content={`Are you sure you want to delete bid ${id} ?`}
+                            confirmText={'Delete'}
+                            confirmColor={'error'}
+                        />
+                    </>,
                 ];
             },
         },
@@ -592,7 +603,7 @@ export default function Bids() {
     ];
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <>
             <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
                 <Link href={'/'} color={'inherit'} underline={'hover'}>
                     Home
@@ -625,7 +636,7 @@ export default function Bids() {
                     </Paper>
                 ))}
             </Stack>
-            <Paper elevation={1} sx={{ borderRadius: 4, width: '100%' }}>
+            <Paper elevation={1} sx={{ borderRadius: 4 }}>
                 <StyledDataGrid
                     rows={rows}
                     columns={columns}
@@ -665,6 +676,6 @@ export default function Bids() {
                 />
             </Paper>
             <Footer />
-        </Box>
+        </>
     );
 }

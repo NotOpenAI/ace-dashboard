@@ -9,7 +9,11 @@ import {
 } from '@mui/material';
 import RoleSelect from './RoleSelect.tsx';
 
-const NewUser = ({ handleAddUser }) => {
+type NewUserProps = {
+    handleAddUser: Function;
+};
+
+const NewUser = ({ handleAddUser }: NewUserProps) => {
     const [open, setOpen] = useState(false);
     const [newUserData, setNewUserData] = useState({
         username: undefined as string | undefined,

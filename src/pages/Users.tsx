@@ -1,11 +1,4 @@
-import {
-    Box,
-    Breadcrumbs,
-    Link,
-    Paper,
-    Stack,
-    Typography,
-} from '@mui/material';
+import { Breadcrumbs, Link, Paper, Stack, Typography } from '@mui/material';
 import {
     DataGrid,
     GridColDef,
@@ -180,7 +173,7 @@ const Users = () => {
     ]);
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <>
             <Breadcrumbs
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
@@ -204,7 +197,7 @@ const Users = () => {
                 />
             </Paper>
             <Footer />
-        </Box>
+        </>
     );
 };
 
