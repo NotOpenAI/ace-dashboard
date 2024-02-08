@@ -1,12 +1,12 @@
 import * as React from 'react';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import ErrorIcon from '@mui/icons-material/Error';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import Chip from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
-import {GridRenderCellParams} from "@mui/x-data-grid";
-import {ReactNode} from "react";
+import { GridRenderCellParams } from '@mui/x-data-grid';
+import { ReactNode } from 'react';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
     justifyContent: 'left',
@@ -17,7 +17,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
         color: theme.palette.info.dark,
         border: `1px solid ${theme.palette.info.main}`,
     },
-    '&.Completed': {
+    '&.Approved': {
         color: theme.palette.success.dark,
         border: `1px solid ${theme.palette.success.main}`,
     },
@@ -40,13 +40,13 @@ const Status = React.memo((props: StatusProps) => {
 
     let icon: any = null;
     if (status === 'Rejected') {
-        icon = <ReportProblemIcon className="icon" />;
+        icon = <ErrorIcon className='icon' />;
     } else if (status === 'New') {
-        icon = <InfoIcon className="icon" />;
+        icon = <InfoIcon className='icon' />;
     } else if (status === 'In Progress') {
-        icon = <AutorenewIcon className="icon" />;
-    } else if (status === 'Completed') {
-        icon = <DoneIcon className="icon" />;
+        icon = <AutorenewIcon className='icon' />;
+    } else if (status === 'Approved') {
+        icon = <DoneIcon className='icon' />;
     }
 
     let label: string = status;
@@ -55,7 +55,13 @@ const Status = React.memo((props: StatusProps) => {
     }
 
     return (
-        <StyledChip className={status.replace(' ', '')} icon={icon} size="small" label={label} variant="outlined" />
+        <StyledChip
+            className={status.replace(' ', '')}
+            icon={icon}
+            size='small'
+            label={label}
+            variant='outlined'
+        />
     );
 });
 
@@ -65,6 +71,6 @@ const renderStatus = (params: GridRenderCellParams): ReactNode => {
     }
 
     return <Status status={params.value} />;
-}
+};
 
 export default renderStatus;
