@@ -9,6 +9,7 @@ import { Account } from '../pages/Account.tsx';
 import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
 import Projects from '../pages/Projects.tsx';
+import { NewBid } from '../pages/NewBid.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -23,6 +24,10 @@ const Router = () => {
                 {
                     path: 'bids',
                     element: <Bids />,
+                },
+                {
+                    path: 'bids/new',
+                    element: <NewBid />,
                 },
                 {
                     path: 'bids/:id',

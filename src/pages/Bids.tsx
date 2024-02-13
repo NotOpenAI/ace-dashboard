@@ -12,8 +12,6 @@ import {
     GridActionsCellItem,
     GridToolbarColumnsButton,
     GridToolbarFilterButton,
-    GridToolbarDensitySelector,
-    GridToolbarExport,
 } from '@mui/x-data-grid';
 import renderStatus from '../renderer/renderStatus.tsx';
 import { useState } from 'react';
@@ -30,6 +28,7 @@ import Footer from '../components/Footer.tsx';
 import IconButton from '@mui/material/IconButton';
 import { SPACING } from '../constants.tsx';
 import ConfirmationDialog from '../components/confirmationDialog.tsx';
+import { NavLink as RouterLink } from 'react-router-dom';
 
 const getBackgroundColor = (color: string, mode: string) =>
     mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.8);
@@ -318,18 +317,16 @@ function BidsToolbar() {
                 <Stack direction={'row'} spacing={1}>
                     <GridToolbarColumnsButton sx={{ borderRadius: 3, p: 1 }} />
                     <GridToolbarFilterButton sx={{ borderRadius: 3, p: 1 }} />
-                    <GridToolbarDensitySelector
-                        sx={{ borderRadius: 3, p: 1 }}
-                    />
-                    <GridToolbarExport sx={{ borderRadius: 3, p: 1 }} />
                 </Stack>
                 <Button
                     color={'primary'}
                     variant={'text'}
                     startIcon={<AddIcon />}
                     sx={{ borderRadius: 3, p: 1 }}
+                    component={RouterLink}
+                    to={`new`}
                 >
-                    New Proposal
+                    Create
                 </Button>
             </Stack>
         </GridToolbarContainer>
@@ -627,11 +624,21 @@ export default function Bids() {
                         elevation={1}
                         sx={{ borderRadius: 4, p: 4, width: '100%' }}
                     >
-                        <Stack direction={'row'} alignItems={'center'}>
+                        <Stack
+                            direction={'row'}
+                            alignItems={'center'}
+                            justifyContent={'space-between'}
+                        >
                             <Typography color={'text.primary'}>
                                 {title}
                             </Typography>
-                            <Typography color={'text.primary'}></Typography>
+                            <Typography color={'text.primary'}>
+                                {title === 'Total Bids' && rows.length}
+                                {title === 'Total Customers' && 1}
+                                {title === 'Top Managers' &&
+                                    'Marcin Suchodolski'}
+                                {title === 'Revenue' && '$359,116'}
+                            </Typography>
                         </Stack>
                     </Paper>
                 ))}
