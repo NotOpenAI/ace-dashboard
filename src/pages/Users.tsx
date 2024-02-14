@@ -1,6 +1,7 @@
 import {
     Breadcrumbs,
     Button,
+    LinearProgress,
     Link,
     Paper,
     Stack,
@@ -57,16 +58,23 @@ const UsersToolbar = () => {
 
 const Users = () => {
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios
-            .get('http://localhost:8000/users')
-            .then((response) => {
-                setUsers(response.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        setLoading(true);
+        setTimeout(() => {
+            axios
+                .get('http://localhost:8000/users')
+                .then((response) => {
+                    setUsers(response.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, 500);
     }, []);
 
     return (
@@ -88,8 +96,13 @@ const Users = () => {
                         pagination: { paginationModel: { pageSize: 10 } },
                     }}
                     pageSizeOptions={[10, 25]}
-                    slots={{ toolbar: UsersToolbar }}
+                    slots={{
+                        loadingOverlay: LinearProgress,
+                        toolbar: UsersToolbar,
+                    }}
                     sx={{ border: 0 }}
+                    loading={loading}
+                    autoHeight
                 />
             </Paper>
             <Footer />

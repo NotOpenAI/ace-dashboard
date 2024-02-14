@@ -26,21 +26,23 @@ const columns: GridColDef[] = [
 
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setLoading(true);
-        axios
-            .get('http://localhost:8000/customers')
-            .then((response) => {
-                setCustomers(response.data.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+        setTimeout(() => {
+            axios
+                .get('http://localhost:8000/customers')
+                .then((response) => {
+                    setCustomers(response.data.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, 500);
     }, []);
 
     return (
@@ -64,6 +66,7 @@ const Customers = () => {
                     }}
                     sx={{ border: 0 }}
                     loading={loading}
+                    autoHeight
                 />
             </Paper>
             <Footer />

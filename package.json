@@ -27,6 +27,7 @@
     "@mui/icons-material": "^5.14.14",
     "@mui/lab": "^5.0.0-alpha.163",
     "@mui/material": "^5.15.7",
+    "@mui/x-charts": "^6.19.4",
     "@mui/x-data-grid": "^6.16.3",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",

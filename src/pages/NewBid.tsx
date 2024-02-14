@@ -379,12 +379,15 @@ export const NewBid = () => {
                 <Button
                     variant={'text'}
                     color={'inherit'}
+                    size={'large'}
                     component={RouterLink}
                     to={'/bids'}
                 >
                     Cancel
                 </Button>
-                <Button variant={'contained'}>Create</Button>
+                <Button variant={'contained'} size={'large'} disabled>
+                    Create
+                </Button>
             </Stack>
             <Footer />
         </>
