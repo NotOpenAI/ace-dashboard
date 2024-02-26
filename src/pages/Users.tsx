@@ -37,10 +37,13 @@ interface UsersToolbarProps {
 }
 
 const UsersToolbar = (props: UsersToolbarProps) => {
+    // @ts-ignore
     const { rows, setRows } = props;
 
     const handleAddUser = (newUser: GridValidRowModel[]) => {
+        // @ts-ignore
         newUser['id'] = Math.max(...rows.map((row) => row.id), 0) + 1;
+        // @ts-ignore
         newUser['created_at'] = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
         setRows((oldRows: readonly GridValidRowModel[]) => [

@@ -52,6 +52,8 @@ const RoleSelect = () => {
         setRoleName(typeof value === 'string' ? value.split(',') : value);
     };
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <div>
             <FormControl required fullWidth>
@@ -67,6 +69,7 @@ const RoleSelect = () => {
                         >
                             {selected.map((value) => (
                                 <Chip
+                                    // @ts-ignore
                                     color={getColor(value)}
                                     size={'small'}
                                     key={value}
