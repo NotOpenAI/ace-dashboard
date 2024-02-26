@@ -10,6 +10,7 @@ import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
 import Projects from '../pages/Projects.tsx';
 import { NewBid } from '../pages/NewBid.tsx';
+import BidsV2 from '../pages/BidsV2.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -24,6 +25,10 @@ const Router = () => {
                 {
                     path: 'bids',
                     element: <Bids />,
+                },
+                {
+                    path: 'bidsv2',
+                    element: <BidsV2 />,
                 },
                 {
                     path: 'bids/new',

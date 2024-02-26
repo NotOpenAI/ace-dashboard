@@ -39,9 +39,7 @@ const Customers = () => {
                 .catch((error) => {
                     console.error(error);
                 })
-                .finally(() => {
-                    setLoading(false);
-                });
+                .finally(() => setLoading(false));
         }, 500);
     }, []);
 
@@ -61,9 +59,7 @@ const Customers = () => {
                     rows={customers}
                     columns={columns}
                     pageSizeOptions={[5]}
-                    slots={{
-                        loadingOverlay: LinearProgress,
-                    }}
+                    slots={{ loadingOverlay: LinearProgress }}
                     sx={{ border: 0 }}
                     loading={loading}
                     autoHeight
