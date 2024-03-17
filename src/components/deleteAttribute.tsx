@@ -8,10 +8,15 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 type Attribute = {
-    name: string;
-    inputType: string;
-    value: string;
-    options: string[];
+    num_val: number;
+    id: number;
+    type: {
+        name: string;
+        id: number;
+    };
+    option: string | null;
+    created_at: string;
+    updated_at: string | null;
 };
 
 type DeleteAttributeProps = {
@@ -75,9 +80,9 @@ const DeleteAttribute = ({
                             label={'Type'}
                             onChange={handleInputChange}
                         >
-                            {options.map(({ name }) => (
-                                <MenuItem key={name} value={name}>
-                                    {name}
+                            {options.map(({ type }) => (
+                                <MenuItem key={type.id} value={type.name}>
+                                    {type.name}
                                 </MenuItem>
                             ))}
                         </Select>

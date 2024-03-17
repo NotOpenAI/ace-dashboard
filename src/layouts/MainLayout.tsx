@@ -246,7 +246,7 @@ const MainLayout = () => {
             </Drawer>
             <Container
                 component={'main'}
-                maxWidth={'xl'}
+                maxWidth={'lg'}
                 sx={{ marginTop: 10, p: SPACING - 1 }}
             >
                 <Outlet />

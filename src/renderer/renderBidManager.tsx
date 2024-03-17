@@ -36,6 +36,7 @@ const renderBidManager = (params: GridRenderCellParams): ReactNode => {
                         transform: 'translate(-50%, -50%)',
                         bgcolor: 'background.paper',
                         boxShadow: 24,
+                        borderRadius: 4,
                         p: 4,
                     }}
                 >
@@ -53,10 +54,14 @@ const renderBidManager = (params: GridRenderCellParams): ReactNode => {
                             headerName: capitalizeEachWord(
                                 key.replace('_', ' ')
                             ),
+                            sortable: false,
                         }))}
                         rows={[params.value]}
                         hideFooter
                         autoHeight
+                        disableRowSelectionOnClick
+                        disableColumnMenu
+                        disableColumnFilter
                     />
                 </Box>
             </Modal>

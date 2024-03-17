@@ -18,6 +18,7 @@ import renderContractType from '../renderer/renderContractType.tsx';
 import renderBidManager from '../renderer/renderBidManager.tsx';
 import renderCurrency from '../renderer/renderCurrency.tsx';
 import renderPercentage from '../renderer/renderPercentage.tsx';
+import renderBidID from '../renderer/renderBidID.tsx';
 
 interface Bid {
     id: number;
@@ -86,7 +87,7 @@ export default function Bids() {
 
     const fetchBids = () => {
         axios
-            .get(BASE_URL + 'bids')
+            .get(`${BASE_URL}/bids`)
             .then((response) => {
                 setBids(response.data.data);
             })
@@ -94,18 +95,8 @@ export default function Bids() {
             .finally(() => setLoading(false));
     };
 
-    // const fetchAttributeTypes = () => {
-    //     axios
-    //         .get(BASE_URL + 'bids/attribute-types')
-    //         .then((response) => {
-    //             setAttributeTypes(response.data.data);
-    //         })
-    //         .catch((error) => console.error(error))
-    //         .finally(() => setLoading(false));
-    // };
-
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID' },
+        { field: 'id', headerName: 'ID', renderCell: renderBidID },
         { field: 'lead', headerName: 'Lead', width: 100 },
         {
             field: 'margin',
@@ -173,8 +164,9 @@ export default function Bids() {
                 sx={{ paddingY: SPACING }}
             >
                 {loading
-                    ? [1, 2, 3, 4].map(() => (
+                    ? [1, 2, 3, 4].map((index) => (
                           <Skeleton
+                              key={index}
                               variant={'rounded'}
                               sx={{ borderRadius: 4, p: 6, width: '100%' }}
                           />
