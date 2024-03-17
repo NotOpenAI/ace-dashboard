@@ -1,5 +1,4 @@
 import { useRoutes } from 'react-router-dom';
-import Bids from '../pages/Bids';
 import MainLayout from '../layouts/MainLayout';
 import Login from '../pages/Login';
 import Users from '../pages/Users.tsx';
@@ -10,7 +9,7 @@ import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
 import Projects from '../pages/Projects.tsx';
 import { NewBid } from '../pages/NewBid.tsx';
-import BidsV2 from '../pages/BidsV2.tsx';
+import Bids from '../pages/Bids.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -25,10 +24,6 @@ const Router = () => {
                 {
                     path: 'bids',
                     element: <Bids />,
-                },
-                {
-                    path: 'bidsv2',
-                    element: <BidsV2 />,
                 },
                 {
                     path: 'bids/new',
