@@ -1,6 +1,5 @@
 import {
     Breadcrumbs,
-    capitalize,
     InputAdornment,
     Link,
     Paper,
@@ -9,7 +8,6 @@ import {
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { BASE_URL, SPACING } from '../constants.tsx';
-import CustomSelect from '../components/customSelect.tsx';
 import Footer from '../components/Footer.tsx';
 import { Masonry } from '@mui/lab';
 import { useEffect, useState } from 'react';
@@ -89,264 +87,6 @@ export const Bid = () => {
     const [bid, setBid] = useState<Bid>();
     const [loading, setLoading] = useState(true);
 
-    const [generalInfo] = useState({
-        title: 'General Information',
-        subfields: [
-            {
-                name: 'id',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'projectStatus',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'desiredMargin',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidMgrAction',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'jobName',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidDueDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobStartDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobEndDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobDuration',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'leadFrom',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidMgr',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'customerContactInfo',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'customerName',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'jobLocation',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-        ],
-    });
-
-    const [costsInfo] = useState({
-        title: 'Costs',
-        subfields: [
-            {
-                name: 'manualEstTotalCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualEstMaterialCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualEstLaborCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualBidAmount',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'finalBidAmount',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-        ],
-    });
-
-    const [attributesInfo, setAttributesInfo] = useState({
-        title: 'Attributes',
-        subfields: [
-            {
-                name: 'inputType',
-                inputType: 'select',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'construction',
-                inputType: 'select',
-                value: '',
-                options: ['New', 'Renovation', 'Both'],
-            },
-            {
-                name: 'framing',
-                inputType: 'select',
-                value: '',
-                options: ['Wood', 'Metal', 'None'],
-            },
-            {
-                name: 'drywall',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'insulation',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'actCeiling',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'size',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'sqFeet',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'site',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Moderate', 'Difficult'],
-            },
-            {
-                name: 'contract',
-                inputType: 'select',
-                value: '',
-                options: ['Lump Sum', 'Design Build'],
-            },
-            {
-                name: 'season',
-                inputType: 'select',
-                value: '',
-                options: ['Winter', 'Spring', 'Summer', 'Fall'],
-            },
-            {
-                name: 'materialAvail',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Medium', 'Hard'],
-            },
-            {
-                name: 'laborAvail',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Medium', 'Hard'],
-            },
-            {
-                name: 'competition',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'community',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'safety',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'scopeClarity',
-                inputType: 'select',
-                value: '',
-                options: ['Clear', 'Some', 'Vague'],
-            },
-            {
-                name: 'futureBusiness',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'jobRisk',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'clientHealth',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'clientReputation',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-        ],
-    });
-
     useEffect(() => {
         fetchBid();
     }, []);
@@ -359,27 +99,6 @@ export const Bid = () => {
             })
             .catch((error) => console.error(error))
             .finally(() => setLoading(false));
-    };
-
-    const handleAddAttribute = (attributeData: {
-        name: string;
-        inputType: string;
-        options: string[];
-        value: string;
-    }) => {
-        setAttributesInfo({
-            title: attributesInfo.title,
-            subfields: [...attributesInfo.subfields, attributeData],
-        });
-    };
-
-    const handleDeleteAttribute = (attributeName: string) => {
-        setAttributesInfo((prevState) => ({
-            ...prevState,
-            subfields: prevState.subfields.filter(
-                (attr) => attr.name !== attributeName
-            ),
-        }));
     };
 
     return (
@@ -536,7 +255,7 @@ export const Bid = () => {
                                 readOnly
                             />
                             <DateTimePicker
-                                label={'Created At'}
+                                label={'Updated At'}
                                 defaultValue={dayjs(
                                     bid?.bid_manager.updated_at ||
                                         bid?.bid_manager.created_at
@@ -639,7 +358,6 @@ export const Bid = () => {
                                 defaultValue={dayjs(
                                     bid?.estimated_data.start_date
                                 )}
-                                readOnly
                             />
                             <TextField
                                 variant={'outlined'}
@@ -678,7 +396,6 @@ export const Bid = () => {
                                 defaultValue={dayjs(
                                     bid?.estimated_data.end_date
                                 )}
-                                readOnly
                             />
                             <TextField
                                 variant={'outlined'}
@@ -750,15 +467,8 @@ export const Bid = () => {
                                         fullWidth
                                     />
                                 ))}
-                                <CreateAttribute
-                                    handleAddAttribute={handleAddAttribute}
-                                />
-                                <DeleteAttribute
-                                    options={bid.attributes}
-                                    handleDeleteAttribute={
-                                        handleDeleteAttribute
-                                    }
-                                />
+                                <CreateAttribute />
+                                <DeleteAttribute options={bid.attributes} />
                             </Masonry>
                         </Paper>
                     )}

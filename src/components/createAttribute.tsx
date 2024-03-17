@@ -15,10 +15,10 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 type NewAttributeProps = {
-    handleAddAttribute: Function;
+    handleAddAttribute?: string;
 };
 
-const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
+const CreateAttribute = ({}: NewAttributeProps) => {
     const [open, setOpen] = useState(false);
 
     const [newAttributeData, setNewAttributeData] = useState({
@@ -47,7 +47,6 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
     };
 
     const handleSubmit = () => {
-        handleAddAttribute(newAttributeData);
         setNewAttributeData({
             name: '',
             inputType: '',

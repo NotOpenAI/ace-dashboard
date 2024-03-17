@@ -21,13 +21,10 @@ type Attribute = {
 
 type DeleteAttributeProps = {
     options: Attribute[];
-    handleDeleteAttribute: Function;
+    handleDeleteAttribute?: string;
 };
 
-const DeleteAttribute = ({
-    options,
-    handleDeleteAttribute,
-}: DeleteAttributeProps) => {
+const DeleteAttribute = ({ options }: DeleteAttributeProps) => {
     const [open, setOpen] = useState(false);
 
     const [attribute, setAttribute] = useState('');
@@ -39,7 +36,6 @@ const DeleteAttribute = ({
     };
 
     const handleSubmit = () => {
-        handleDeleteAttribute(attribute);
         setAttribute('');
         handleClose();
     };
