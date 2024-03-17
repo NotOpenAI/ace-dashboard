@@ -97,6 +97,19 @@ export default function Bids() {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', renderCell: renderBidID },
+        {
+            field: 'approved',
+            headerName: 'Approved',
+            type: 'boolean',
+            width: 100,
+        },
+        {
+            field: 'bid_manager',
+            headerName: 'Bid Manager',
+            renderCell: renderBidManager,
+            minWidth: 180,
+            flex: 1,
+        },
         { field: 'lead', headerName: 'Lead', width: 100 },
         {
             field: 'margin',
@@ -109,12 +122,6 @@ export default function Bids() {
             field: 'due_date',
             headerName: 'Due Date',
             width: 150,
-        },
-        {
-            field: 'approved',
-            headerName: 'Approved',
-            type: 'boolean',
-            width: 100,
         },
         {
             field: 'final_amt',
@@ -131,12 +138,6 @@ export default function Bids() {
             width: 180,
         },
         {
-            field: 'bid_manager',
-            headerName: 'Bid Manager',
-            renderCell: renderBidManager,
-            minWidth: 180,
-        },
-        {
             field: 'bid_type',
             headerName: 'Bid Type',
             renderCell: renderBidType,
@@ -146,6 +147,7 @@ export default function Bids() {
             field: 'contract_type',
             headerName: 'Contract Type',
             renderCell: renderContractType,
+            minWidth: 150,
         },
     ];
 

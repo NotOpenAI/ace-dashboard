@@ -22,6 +22,7 @@ import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleIcon from '@mui/icons-material/People';
 import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
 import { useEffect } from 'react';
 import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
@@ -100,7 +101,14 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const navItems = ['bids', 'projects', 'customers', 'operational data', 'users'];
+const navItems = [
+    '',
+    'bids',
+    'projects',
+    'customers',
+    'operational data',
+    'users',
+];
 
 const MainLayout = () => {
     const theme = useTheme();
@@ -187,6 +195,7 @@ const MainLayout = () => {
                                         justifyContent: 'center',
                                     }}
                                 >
+                                    {text === '' && <HomeRoundedIcon />}
                                     {text === 'bids' && <ViewListRoundedIcon />}
                                     {text === 'projects' && (
                                         <AssignmentRoundedIcon />
@@ -198,7 +207,7 @@ const MainLayout = () => {
                                     )}
                                 </ListItemIcon>
                                 <ListItemText
-                                    primary={capitalizeEachWord(text)}
+                                    primary={capitalizeEachWord(text || 'Home')}
                                     sx={{ opacity: open ? 1 : 0 }}
                                 />
                             </ListItemButton>
@@ -246,7 +255,7 @@ const MainLayout = () => {
             </Drawer>
             <Container
                 component={'main'}
-                maxWidth={'lg'}
+                maxWidth={'xl'}
                 sx={{ marginTop: 10, p: SPACING - 1 }}
             >
                 <Outlet />

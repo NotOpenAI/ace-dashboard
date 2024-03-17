@@ -13,7 +13,7 @@ import axios from 'axios';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 30 },
-    { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'name', headerName: 'Name', minWidth: 140, flex: 1 },
     { field: 'address', headerName: 'Customer Address', width: 200 },
     { field: 'phone', headerName: 'Phone', width: 150 },
     { field: 'owner', headerName: 'Owner', width: 150 },

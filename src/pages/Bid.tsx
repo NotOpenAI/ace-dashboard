@@ -18,7 +18,7 @@ import axios from 'axios';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import * as dayjs from 'dayjs';
 
-interface Bid {
+export interface Bid {
     lead: string;
     margin: number;
     due_date: string;
@@ -426,7 +426,7 @@ export const Bid = () => {
                             <DateTimePicker
                                 label={'End Date'}
                                 defaultValue={dayjs(
-                                    bid?.estimated_data.created_at
+                                    bid?.estimated_data.end_date
                                 )}
                                 readOnly
                             />

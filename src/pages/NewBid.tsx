@@ -1,7 +1,7 @@
 import {
     Breadcrumbs,
     Button,
-    capitalize,
+    InputAdornment,
     Link,
     Paper,
     Stack,
@@ -9,293 +9,36 @@ import {
     Typography,
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { SPACING } from '../constants.tsx';
-import CustomSelect from '../components/customSelect.tsx';
+import { BASE_URL, SPACING } from '../constants.tsx';
 import Footer from '../components/Footer.tsx';
 import { Masonry } from '@mui/lab';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateAttribute from '../components/createAttribute.tsx';
 import DeleteAttribute from '../components/deleteAttribute.tsx';
 import { NavLink as RouterLink } from 'react-router-dom';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import * as dayjs from 'dayjs';
+import { Bid } from './Bid.tsx';
+import CustomSelect from '../components/customSelect.tsx';
+import axios from 'axios';
 
 export const NewBid = () => {
-    const [generalInfo] = useState({
-        title: 'General Information',
-        subfields: [
-            {
-                name: 'id',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'projectStatus',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'desiredMargin',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidMgrAction',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'jobName',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidDueDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobStartDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobEndDate',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'estJobDuration',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'leadFrom',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'bidMgr',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'customerContactInfo',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'customerName',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'jobLocation',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-        ],
-    });
+    const [bid, setBid] = useState<Bid>();
+    const [customers, setCustomers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const [costsInfo] = useState({
-        title: 'Costs',
-        subfields: [
-            {
-                name: 'manualEstTotalCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualEstMaterialCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualEstLaborCost',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'manualBidAmount',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'finalBidAmount',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-        ],
-    });
+    useEffect(() => {
+        fetchCustomers();
+    }, []);
 
-    const [attributesInfo, setAttributesInfo] = useState({
-        title: 'Attributes',
-        subfields: [
-            {
-                name: 'inputType',
-                inputType: 'select',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'construction',
-                inputType: 'select',
-                value: '',
-                options: ['New', 'Renovation', 'Both'],
-            },
-            {
-                name: 'framing',
-                inputType: 'select',
-                value: '',
-                options: ['Wood', 'Metal', 'None'],
-            },
-            {
-                name: 'drywall',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'insulation',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'actCeiling',
-                inputType: 'select',
-                value: '',
-                options: ['No', 'Yes'],
-            },
-            {
-                name: 'size',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'sqFeet',
-                inputType: 'text',
-                value: '',
-                options: [],
-            },
-            {
-                name: 'site',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Moderate', 'Difficult'],
-            },
-            {
-                name: 'contract',
-                inputType: 'select',
-                value: '',
-                options: ['Lump Sum', 'Design Build'],
-            },
-            {
-                name: 'season',
-                inputType: 'select',
-                value: '',
-                options: ['Winter', 'Spring', 'Summer', 'Fall'],
-            },
-            {
-                name: 'materialAvail',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Medium', 'Hard'],
-            },
-            {
-                name: 'laborAvail',
-                inputType: 'select',
-                value: '',
-                options: ['Easy', 'Medium', 'Hard'],
-            },
-            {
-                name: 'competition',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'community',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'safety',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'scopeClarity',
-                inputType: 'select',
-                value: '',
-                options: ['Clear', 'Some', 'Vague'],
-            },
-            {
-                name: 'futureBusiness',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'jobRisk',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'clientHealth',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-            {
-                name: 'clientReputation',
-                inputType: 'select',
-                value: '',
-                options: ['Low', 'Medium', 'High'],
-            },
-        ],
-    });
-
-    const handleAddAttribute = (attributeData: {
-        name: string;
-        inputType: string;
-        options: string[];
-        value: string;
-    }) => {
-        setAttributesInfo({
-            title: attributesInfo.title,
-            subfields: [...attributesInfo.subfields, attributeData],
-        });
-    };
-
-    const handleDeleteAttribute = (attributeName: string) => {
-        setAttributesInfo((prevState) => ({
-            ...prevState,
-            subfields: prevState.subfields.filter(
-                (attr) => attr.name !== attributeName
-            ),
-        }));
+    const fetchCustomers = () => {
+        axios
+            .get(`${BASE_URL}/customers`)
+            .then((response) => {
+                setCustomers(response.data.data);
+            })
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
     };
 
     return (
@@ -312,62 +55,174 @@ export const NewBid = () => {
                 </Link>
                 <Typography color={'text.primary'}>New</Typography>
             </Breadcrumbs>
+
             <Masonry columns={2} spacing={SPACING}>
-                {[generalInfo, attributesInfo, costsInfo].map(
-                    ({ title, subfields }) => (
-                        <Paper
-                            key={title}
-                            elevation={1}
-                            sx={{
-                                borderRadius: 4,
-                                p: 2,
+                <Paper elevation={1} sx={{ borderRadius: 4, p: 2 }}>
+                    <Typography
+                        variant={'h6'}
+                        fontWeight={'light'}
+                        paddingBottom={SPACING}
+                    >
+                        General Information
+                    </Typography>
+                    <Masonry columns={2} spacing={SPACING}>
+                        <TextField
+                            variant={'outlined'}
+                            label={'ID'}
+                            defaultValue={bid?.id}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Lead'}
+                            defaultValue={bid?.lead}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Margin'}
+                            defaultValue={bid?.margin}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position={'end'}>
+                                        $
+                                    </InputAdornment>
+                                ),
                             }}
+                            fullWidth
+                        />
+                        <DateTimePicker
+                            label={'Due Date'}
+                            defaultValue={dayjs(bid?.due_date)}
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Approved'}
+                            defaultValue={bid?.approved}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Final Amount'}
+                            defaultValue={bid?.final_amt}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position={'start'}>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Initial Amount'}
+                            defaultValue={bid?.initial_bid_amt}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position={'start'}>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Bid Type'}
+                            defaultValue={bid?.bid_type.name}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Contract Type'}
+                            defaultValue={bid?.contract_type.name}
+                            fullWidth
+                        />
+                        <CustomSelect
+                            label={'Bid Manager'}
+                            options={[]}
+                            required={true}
+                        />
+                        <CustomSelect
+                            label={'Customer'}
+                            options={customers.map((customer) => customer.name)}
+                            required={true}
+                        />
+                    </Masonry>
+                </Paper>
+
+                <Paper elevation={1} sx={{ borderRadius: 4, p: 2 }}>
+                    <Typography
+                        variant={'h6'}
+                        fontWeight={'light'}
+                        paddingBottom={SPACING}
+                    >
+                        Estimated Data
+                    </Typography>
+                    <Masonry columns={2} spacing={SPACING}>
+                        <DateTimePicker
+                            label={'Start Date'}
+                            defaultValue={dayjs(bid?.estimated_data.start_date)}
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Duration'}
+                            defaultValue={bid?.estimated_data.duration}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Material Cost'}
+                            defaultValue={bid?.estimated_data.mat_cost}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position={'start'}>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            }}
+                            fullWidth
+                        />
+                        <TextField
+                            variant={'outlined'}
+                            label={'Labor Cost'}
+                            defaultValue={bid?.estimated_data.labor_cost}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position={'start'}>
+                                        $
+                                    </InputAdornment>
+                                ),
+                            }}
+                            fullWidth
+                        />
+                    </Masonry>
+                </Paper>
+
+                {bid?.attributes && (
+                    <Paper elevation={1} sx={{ borderRadius: 4, p: 2 }}>
+                        <Typography
+                            variant={'h6'}
+                            fontWeight={'light'}
+                            paddingBottom={SPACING}
                         >
-                            <Typography
-                                variant={'h6'}
-                                fontWeight={'light'}
-                                paddingBottom={SPACING}
-                            >
-                                {title}
-                            </Typography>
-                            <Masonry columns={3} spacing={SPACING}>
-                                {subfields.map(
-                                    ({ name, inputType, value, options }) => (
-                                        <div key={name}>
-                                            {inputType === 'select' && (
-                                                <CustomSelect
-                                                    label={capitalize(name)}
-                                                    options={options}
-                                                    required={false}
-                                                />
-                                            )}
-                                            {inputType === 'text' && (
-                                                <TextField
-                                                    variant={'outlined'}
-                                                    label={capitalize(name)}
-                                                    defaultValue={value}
-                                                    fullWidth
-                                                />
-                                            )}
-                                        </div>
-                                    )
-                                )}
-                                {title === 'Attributes' && (
-                                    <CreateAttribute
-                                        handleAddAttribute={handleAddAttribute}
-                                    />
-                                )}
-                                {title === 'Attributes' && (
-                                    <DeleteAttribute
-                                        options={attributesInfo.subfields}
-                                        handleDeleteAttribute={
-                                            handleDeleteAttribute
-                                        }
-                                    />
-                                )}
-                            </Masonry>
-                        </Paper>
-                    )
+                            Attributes
+                        </Typography>
+                        <Masonry columns={2} spacing={SPACING}>
+                            {bid?.attributes.map((attribute) => (
+                                <TextField
+                                    key={attribute.id}
+                                    variant={'outlined'}
+                                    label={attribute.type.name}
+                                    defaultValue={attribute.num_val}
+                                    fullWidth
+                                />
+                            ))}
+                            <CreateAttribute />
+                            <DeleteAttribute options={bid.attributes} />
+                        </Masonry>
+                    </Paper>
                 )}
             </Masonry>
             <Stack
