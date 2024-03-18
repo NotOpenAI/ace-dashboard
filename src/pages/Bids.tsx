@@ -2,6 +2,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useEffect, useState } from 'react';
 import {
     Breadcrumbs,
+    Button,
     LinearProgress,
     Link,
     Paper,
@@ -12,6 +13,7 @@ import {
 import Footer from '../components/Footer.tsx';
 import { BASE_URL, SPACING } from '../constants.tsx';
 import axios from 'axios';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import renderBidType from '../renderer/renderBidType.tsx';
 import renderContractType from '../renderer/renderContractType.tsx';
@@ -19,6 +21,7 @@ import renderBidManager from '../renderer/renderBidManager.tsx';
 import renderCurrency from '../renderer/renderCurrency.tsx';
 import renderPercentage from '../renderer/renderPercentage.tsx';
 import renderBidID from '../renderer/renderBidID.tsx';
+import renderDate from '../renderer/renderDate.tsx';
 
 interface Bid {
     id: number;
@@ -108,9 +111,13 @@ export default function Bids() {
             headerName: 'Bid Manager',
             renderCell: renderBidManager,
             minWidth: 180,
+        },
+        {
+            field: 'lead',
+            headerName: 'Lead',
+            width: 100,
             flex: 1,
         },
-        { field: 'lead', headerName: 'Lead', width: 100 },
         {
             field: 'margin',
             headerName: 'Margin',
@@ -121,7 +128,8 @@ export default function Bids() {
         {
             field: 'due_date',
             headerName: 'Due Date',
-            width: 150,
+            renderCell: renderDate,
+            width: 100,
         },
         {
             field: 'final_amt',
@@ -153,12 +161,25 @@ export default function Bids() {
 
     return (
         <>
-            <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Typography color={'text.primary'}>Bids</Typography>
-            </Breadcrumbs>
+            <Stack direction={'row'} justifyContent={'space-between'}>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
+                    <Link href={'/'} color={'inherit'} underline={'hover'}>
+                        Home
+                    </Link>
+                    <Typography color={'text.primary'}>Bids</Typography>
+                </Breadcrumbs>
+                <Button
+                    size={'small'}
+                    variant={'contained'}
+                    color={'primary'}
+                    sx={{ borderRadius: 4 }}
+                    startIcon={<AddCircleRoundedIcon />}
+                    component={Link}
+                    href={'/bids/new'}
+                >
+                    Create
+                </Button>
+            </Stack>
             <Stack
                 direction={'row'}
                 justifyContent={'space-between'}

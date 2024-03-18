@@ -4,7 +4,7 @@ import Login from '../pages/Login';
 import Users from '../pages/Users.tsx';
 import Customers from '../pages/Customers.tsx';
 import OperationalData from '../pages/OperationalData.tsx';
-import { Account } from '../pages/Account.tsx';
+import { User } from '../pages/User.tsx';
 import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
 import Projects from '../pages/Projects.tsx';
@@ -42,6 +42,10 @@ const Router = () => {
                     element: <Users />,
                 },
                 {
+                    path: 'users/:id',
+                    element: <User />,
+                },
+                {
                     path: 'customers',
                     element: <Customers />,
                 },
@@ -51,7 +55,7 @@ const Router = () => {
                 },
                 {
                     path: 'account',
-                    element: <Account />,
+                    element: <User />,
                 },
             ],
         },

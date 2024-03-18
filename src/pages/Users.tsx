@@ -1,27 +1,20 @@
 import {
     Breadcrumbs,
-    Button,
     LinearProgress,
     Link,
     Paper,
-    Stack,
     Typography,
 } from '@mui/material';
-import {
-    DataGrid,
-    GridColDef,
-    GridToolbarColumnsButton,
-    GridToolbarContainer,
-    GridToolbarFilterButton,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import renderRoles from '../renderer/renderRoles.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Footer from '../components/Footer.tsx';
 import axios from 'axios';
+import renderUserID from '../renderer/renderUserID.tsx';
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 60 },
+    { field: 'id', headerName: 'ID', renderCell: renderUserID },
     { field: 'username', headerName: 'Username', width: 200 },
     { field: 'first_name', headerName: 'First Name', width: 140 },
     { field: 'last_name', headerName: 'Last Name', width: 140 },
@@ -34,27 +27,6 @@ const columns: GridColDef[] = [
     { field: 'created_at', headerName: 'Created At', width: 160 },
     { field: 'updated_at', headerName: 'Updated At', width: 160 },
 ];
-
-const UsersToolbar = () => {
-    return (
-        <GridToolbarContainer style={{ width: '100%', display: 'block' }}>
-            <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignContent={'space-between'}
-                spacing={1}
-            >
-                <Stack direction={'row'} spacing={1}>
-                    <GridToolbarColumnsButton />
-                    <GridToolbarFilterButton />
-                </Stack>
-                <Stack direction={'row'} spacing={1}>
-                    <Button>New User</Button>
-                </Stack>
-            </Stack>
-        </GridToolbarContainer>
-    );
-};
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -98,7 +70,6 @@ const Users = () => {
                     pageSizeOptions={[10, 25]}
                     slots={{
                         loadingOverlay: LinearProgress,
-                        toolbar: UsersToolbar,
                     }}
                     sx={{ border: 0 }}
                     loading={loading}
