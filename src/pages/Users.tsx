@@ -1,24 +1,20 @@
-import { Breadcrumbs, Link, Paper, Stack, Typography } from '@mui/material';
 import {
-    DataGrid,
-    GridColDef,
-    GridRowsProp,
-    GridToolbarColumnsButton,
-    GridToolbarContainer,
-    GridToolbarDensitySelector,
-    GridToolbarExport,
-    GridToolbarFilterButton,
-    GridValidRowModel,
-} from '@mui/x-data-grid';
-import { useState } from 'react';
+    Breadcrumbs,
+    LinearProgress,
+    Link,
+    Paper,
+    Typography,
+} from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import renderRoles from '../renderer/renderRoles.tsx';
-import NewUser from '../components/newUser.tsx';
-import dayjs from 'dayjs';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Footer from '../components/Footer.tsx';
+import axios from 'axios';
+import renderUserID from '../renderer/renderUserID.tsx';
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 60 },
+    { field: 'id', headerName: 'ID', renderCell: renderUserID },
     { field: 'username', headerName: 'Username', width: 200 },
     { field: 'first_name', headerName: 'First Name', width: 140 },
     { field: 'last_name', headerName: 'Last Name', width: 140 },
@@ -32,148 +28,20 @@ const columns: GridColDef[] = [
     { field: 'updated_at', headerName: 'Updated At', width: 160 },
 ];
 
-interface UsersToolbarProps {
-    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-}
-
-const UsersToolbar = (props: UsersToolbarProps) => {
-    // @ts-ignore
-    const { rows, setRows } = props;
-
-    const handleAddUser = (newUser: GridValidRowModel[]) => {
-        // @ts-ignore
-        newUser['id'] = Math.max(...rows.map((row) => row.id), 0) + 1;
-        // @ts-ignore
-        newUser['created_at'] = dayjs().format('YYYY-MM-DD HH:mm:ss');
-
-        setRows((oldRows: readonly GridValidRowModel[]) => [
-            ...oldRows,
-            newUser,
-        ]);
-    };
-
-    return (
-        <GridToolbarContainer style={{ width: '100%', display: 'block' }}>
-            <Stack
-                direction={'row'}
-                justifyContent={'space-between'}
-                alignContent={'space-between'}
-                spacing={1}
-            >
-                <Stack direction={'row'} spacing={1}>
-                    <GridToolbarColumnsButton />
-                    <GridToolbarFilterButton />
-                    <GridToolbarDensitySelector />
-                    <GridToolbarExport />
-                </Stack>
-                <Stack direction={'row'} spacing={1}>
-                    <NewUser handleAddUser={handleAddUser} />
-                </Stack>
-            </Stack>
-        </GridToolbarContainer>
-    );
-};
-
 const Users = () => {
-    const [rows, setRows] = useState([
-        {
-            id: 1,
-            username: 'bmontijo',
-            first_name: 'Brandon',
-            last_name: 'Montijo',
-            created_at: '2023-11-20 09:15:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'admin',
-                },
-                {
-                    name: 'bid_manager',
-                },
-                {
-                    name: 'cool guy',
-                },
-            ],
-        },
-        {
-            id: 2,
-            username: 'achen',
-            first_name: 'Alan',
-            last_name: 'Chen',
-            created_at: '2023-11-21 15:30:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'admin',
-                },
-            ],
-        },
-        {
-            id: 3,
-            username: 'qduong',
-            first_name: 'Quynh',
-            last_name: 'Duong',
-            created_at: '2023-11-21 18:30:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'admin',
-                },
-            ],
-        },
-        {
-            id: 4,
-            username: 'tuankiet',
-            first_name: 'Kiet',
-            last_name: 'Ho',
-            created_at: '2023-11-21 19:30:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'admin',
-                },
-            ],
-        },
-        {
-            id: 5,
-            username: 'kbagdon',
-            first_name: 'Keith',
-            last_name: 'Bagdon',
-            created_at: '2023-11-21 21:30:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'admin',
-                },
-            ],
-        },
-        {
-            id: 6,
-            username: 'msuchodolski',
-            first_name: 'Marcin',
-            last_name: 'Suchodolski',
-            created_at: '2023-11-22 15:30:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'bid_manager',
-                },
-            ],
-        },
-        {
-            id: 7,
-            username: 'ssandhu',
-            first_name: 'Sophia',
-            last_name: 'Sandhu',
-            created_at: '2023-11-22 19:00:00',
-            updated_at: '',
-            roles: [
-                {
-                    name: 'coach',
-                },
-            ],
-        },
-    ]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            axios
+                .get('http://localhost:8000/users')
+                .then((response) => setUsers(response.data.data))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
+        }, 500);
+    }, []);
 
     return (
         <>
@@ -188,15 +56,18 @@ const Users = () => {
             </Breadcrumbs>
             <Paper elevation={1} sx={{ borderRadius: 4 }}>
                 <DataGrid
-                    rows={rows}
                     columns={columns}
+                    rows={users}
                     initialState={{
                         pagination: { paginationModel: { pageSize: 10 } },
                     }}
                     pageSizeOptions={[10, 25]}
-                    slots={{ toolbar: UsersToolbar }}
-                    slotProps={{ toolbar: { rows, setRows } }}
+                    slots={{
+                        loadingOverlay: LinearProgress,
+                    }}
                     sx={{ border: 0 }}
+                    loading={loading}
+                    autoHeight
                 />
             </Paper>
             <Footer />

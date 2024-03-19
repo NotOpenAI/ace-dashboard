@@ -15,10 +15,10 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 type NewAttributeProps = {
-    handleAddAttribute: Function;
+    handleAddAttribute?: string;
 };
 
-const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
+const CreateAttribute = ({}: NewAttributeProps) => {
     const [open, setOpen] = useState(false);
 
     const [newAttributeData, setNewAttributeData] = useState({
@@ -29,7 +29,15 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
     });
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        setNewAttributeData({
+            name: '',
+            inputType: '',
+            options: [],
+            value: '',
+        });
+    };
     const handleInputChange = (e: { target: { name: any; value: any } }) => {
         const { name, value } = e.target;
         setNewAttributeData({
@@ -39,7 +47,6 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
     };
 
     const handleSubmit = () => {
-        handleAddAttribute(newAttributeData);
         setNewAttributeData({
             name: '',
             inputType: '',
@@ -87,26 +94,16 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
                             required
                             fullWidth
                         />
-                        <FormControl fullWidth required>
-                            <InputLabel>Type</InputLabel>
-                            <Select
-                                value={newAttributeData.inputType}
-                                label={'Type'}
-                                onChange={handleInputChange}
-                            >
-                                <MenuItem value={'text'}>Text</MenuItem>
-                                <MenuItem value={'select'}>Select</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {newAttributeData.inputType === 'text' && (
-                            <TextField
-                                name={'value'}
-                                label={'Value'}
-                                value={newAttributeData.value || ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                            />
-                        )}
+                        {newAttributeData.inputType === 'text' ||
+                            (newAttributeData.inputType === 'number' && (
+                                <TextField
+                                    name={'value'}
+                                    label={'Value'}
+                                    value={newAttributeData.value || ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                />
+                            ))}
                         {newAttributeData.inputType === 'select' && (
                             <FormControl fullWidth required>
                                 <InputLabel>Options</InputLabel>
@@ -122,14 +119,27 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
                             </FormControl>
                         )}
                     </Stack>
-                    <Button
-                        variant={'contained'}
-                        onClick={handleSubmit}
-                        sx={{ marginTop: 1 }}
-                        fullWidth
+                    <Stack
+                        direction={'row'}
+                        justifyContent={'flex-end'}
+                        spacing={1}
                     >
-                        Create
-                    </Button>
+                        <Button
+                            variant={'text'}
+                            color={'inherit'}
+                            sx={{ marginTop: 1 }}
+                            onClick={handleClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant={'contained'}
+                            onClick={handleSubmit}
+                            sx={{ marginTop: 1 }}
+                        >
+                            Create
+                        </Button>
+                    </Stack>
                 </Box>
             </Modal>
         </>

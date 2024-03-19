@@ -1,14 +1,15 @@
 import { useRoutes } from 'react-router-dom';
-import Bids from '../pages/Bids';
 import MainLayout from '../layouts/MainLayout';
 import Login from '../pages/Login';
 import Users from '../pages/Users.tsx';
 import Customers from '../pages/Customers.tsx';
 import OperationalData from '../pages/OperationalData.tsx';
-import { Account } from '../pages/Account.tsx';
+import { User } from '../pages/User.tsx';
 import { Bid } from '../pages/Bid.tsx';
 import { Home } from '../pages/Home.tsx';
 import Projects from '../pages/Projects.tsx';
+import { NewBid } from '../pages/NewBid.tsx';
+import Bids from '../pages/Bids.tsx';
 
 const Router = () => {
     return useRoutes([
@@ -25,6 +26,10 @@ const Router = () => {
                     element: <Bids />,
                 },
                 {
+                    path: 'bids/new',
+                    element: <NewBid />,
+                },
+                {
                     path: 'bids/:id',
                     element: <Bid />,
                 },
@@ -37,6 +42,10 @@ const Router = () => {
                     element: <Users />,
                 },
                 {
+                    path: 'users/:id',
+                    element: <User />,
+                },
+                {
                     path: 'customers',
                     element: <Customers />,
                 },
@@ -46,7 +55,7 @@ const Router = () => {
                 },
                 {
                     path: 'account',
-                    element: <Account />,
+                    element: <User />,
                 },
             ],
         },

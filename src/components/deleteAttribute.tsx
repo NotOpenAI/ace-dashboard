@@ -8,21 +8,23 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 type Attribute = {
-    name: string;
-    inputType: string;
-    value: string;
-    options: string[];
+    num_val: number;
+    id: number;
+    type: {
+        name: string;
+        id: number;
+    };
+    option: string | null;
+    created_at: string;
+    updated_at: string | null;
 };
 
 type DeleteAttributeProps = {
     options: Attribute[];
-    handleDeleteAttribute: Function;
+    handleDeleteAttribute?: string;
 };
 
-const DeleteAttribute = ({
-    options,
-    handleDeleteAttribute,
-}: DeleteAttributeProps) => {
+const DeleteAttribute = ({ options }: DeleteAttributeProps) => {
     const [open, setOpen] = useState(false);
 
     const [attribute, setAttribute] = useState('');
@@ -34,7 +36,6 @@ const DeleteAttribute = ({
     };
 
     const handleSubmit = () => {
-        handleDeleteAttribute(attribute);
         setAttribute('');
         handleClose();
     };
@@ -75,9 +76,9 @@ const DeleteAttribute = ({
                             label={'Type'}
                             onChange={handleInputChange}
                         >
-                            {options.map(({ name }) => (
-                                <MenuItem key={name} value={name}>
-                                    {name}
+                            {options.map(({ type }) => (
+                                <MenuItem key={type.id} value={type.name}>
+                                    {type.name}
                                 </MenuItem>
                             ))}
                         </Select>

@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 
 import { ReactNode } from 'react';
-import { deepPurple, lightBlue } from '@mui/material/colors';
+import { deepPurple, teal } from '@mui/material/colors';
 
 interface CustomThemeProps {
     children: ReactNode;
@@ -19,8 +19,8 @@ const CustomTheme = ({ children }: CustomThemeProps) => {
     const theme = createTheme({
         palette: {
             mode: prefersDarkMode ? 'dark' : 'light',
-            primary: deepPurple,
-            secondary: lightBlue,
+            primary: teal,
+            secondary: deepPurple,
             background: {
                 default: prefersDarkMode ? '#151515' : '#f6f6f6',
             },
