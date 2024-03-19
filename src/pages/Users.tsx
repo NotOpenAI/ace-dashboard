@@ -37,15 +37,9 @@ const Users = () => {
         setTimeout(() => {
             axios
                 .get('http://localhost:8000/users')
-                .then((response) => {
-                    setUsers(response.data.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
+                .then((response) => setUsers(response.data.data))
+                .catch((error) => console.error(error))
+                .finally(() => setLoading(false));
         }, 500);
     }, []);
 
