@@ -1,15 +1,16 @@
-import { useRoutes } from 'react-router-dom';
+import { CustomerInfo } from '../pages/customers/CustomerInfo.tsx';
+import { NewCustomer } from '../pages/customers/NewCustomer.tsx';
+import Customers from '../pages/customers/Customers.tsx';
+import UserInfo from '../pages/users/UserInfo.tsx';
+import { NewBid } from '../pages/bids/NewBid.tsx';
+import NewUser from '../pages/users/NewUser.tsx';
+import { BidV2 } from '../pages/bids/BidV2.tsx';
 import MainLayout from '../layouts/MainLayout';
-import Login from '../pages/Login';
-import Users from '../pages/Users.tsx';
-import Customers from '../pages/Customers.tsx';
-import OperationalData from '../pages/OperationalData.tsx';
-import { User } from '../pages/User.tsx';
-import { Bid } from '../pages/Bid.tsx';
+import { Bids } from '../pages/bids/Bids.tsx';
+import Users from '../pages/users/Users.tsx';
+import { useRoutes } from 'react-router-dom';
 import { Home } from '../pages/Home.tsx';
-import Projects from '../pages/Projects.tsx';
-import { NewBid } from '../pages/NewBid.tsx';
-import Bids from '../pages/Bids.tsx';
+import Login from '../pages/Login';
 
 const Router = () => {
     return useRoutes([
@@ -31,11 +32,7 @@ const Router = () => {
                 },
                 {
                     path: 'bids/:id',
-                    element: <Bid />,
-                },
-                {
-                    path: 'projects',
-                    element: <Projects />,
+                    element: <BidV2 />,
                 },
                 {
                     path: 'users',
@@ -43,19 +40,27 @@ const Router = () => {
                 },
                 {
                     path: 'users/:id',
-                    element: <User />,
+                    element: <UserInfo />,
+                },
+                {
+                    path: 'users/new',
+                    element: <NewUser />,
                 },
                 {
                     path: 'customers',
                     element: <Customers />,
                 },
                 {
-                    path: 'operational-data',
-                    element: <OperationalData />,
+                    path: 'customers/:id',
+                    element: <CustomerInfo />,
+                },
+                {
+                    path: 'customers/new',
+                    element: <NewCustomer />,
                 },
                 {
                     path: 'account',
-                    element: <User />,
+                    element: <UserInfo />,
                 },
             ],
         },

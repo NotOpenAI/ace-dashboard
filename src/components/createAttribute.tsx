@@ -1,44 +1,69 @@
-import { useState } from 'react';
 import {
     Box,
     Button,
+    Checkbox,
+    FormControlLabel,
     Modal,
-    Stack,
+    Snackbar,
     TextField,
     Typography,
+    Alert,
+    Stack,
 } from '@mui/material';
-import CustomButton from './customButton.tsx';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../constants.tsx';
+import axios, { AxiosError } from 'axios';
+import { useSnackbar } from 'notistack';
 
 type NewAttributeProps = {
-    handleAddAttribute?: string;
+    handleAddAttribute?: (newAttribute: any) => void;
 };
 
-const CreateAttribute = ({}: NewAttributeProps) => {
+const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
+    const [accessToken, setAccessToken] = useState<string>('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            setAccessToken(token);
+        } else {
+            navigate('/login');
+        }
+    }, []);
+
     const [open, setOpen] = useState(false);
 
     const [newAttributeData, setNewAttributeData] = useState({
         name: '',
-        inputType: '',
         options: [],
-        value: '',
+        required: false,
     });
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         setNewAttributeData({
             name: '',
-            inputType: '',
             options: [],
-            value: '',
+            required: false,
         });
     };
-    const handleInputChange = (e: { target: { name: any; value: any } }) => {
+
+    const handleInputChange = (
+        e: ChangeEvent<
+            | HTMLInputElement
+            | HTMLTextAreaElement
+            | {
+                  name?: string;
+                  value: unknown;
+              }
+        >
+    ) => {
         const { name, value } = e.target;
         setNewAttributeData({
             ...newAttributeData,
@@ -46,24 +71,66 @@ const CreateAttribute = ({}: NewAttributeProps) => {
         });
     };
 
-    const handleSubmit = () => {
-        setNewAttributeData({
-            name: '',
-            inputType: '',
-            options: [],
-            value: '',
-        });
-        handleClose();
+    const handleSubmit = async () => {
+        // Validate if all required fields are filled
+        if (newAttributeData.name && newAttributeData.options.length > 0) {
+            // Call the API to create a new attribute type using Axios
+            axios
+                .post(
+                    `${BASE_URL}/bids/attribute-types`,
+                    {
+                        name: newAttributeData.name,
+                        options: newAttributeData.options.map(
+                            (option, index) => {
+                                return {
+                                    id: index,
+                                    value: option,
+                                    active: false,
+                                };
+                            }
+                        ),
+                        required: newAttributeData.required,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${encodeURIComponent(
+                                accessToken
+                            )}`,
+                        },
+                    }
+                )
+                .then(() => {
+                    // Call the callback function to handle adding the attribute
+                    handleAddAttribute?.(newAttributeData);
+                    handleClose();
+                    enqueueSnackbar('Created attribute', {
+                        variant: 'success',
+                    });
+                })
+                .catch((error: AxiosError) => {
+                    enqueueSnackbar(error.response.data.detail, {
+                        variant: 'error',
+                    });
+                });
+        } else {
+            // Display error message or handle incomplete form submission
+            enqueueSnackbar('Please fill out all required fields', {
+                variant: 'error',
+            });
+        }
     };
 
+    // @ts-ignore
     return (
         <>
-            <CustomButton
+            <Button
                 onClick={handleOpen}
-                icon={<AddRoundedIcon />}
-                color={'success'}
-                label={'Create Attribute'}
-            />
+                startIcon={<AddRoundedIcon />}
+                sx={{ height: 56 }}
+                fullWidth
+            >
+                Add
+            </Button>
             <Modal open={open} onClose={handleClose}>
                 <Box
                     sx={{
@@ -94,30 +161,37 @@ const CreateAttribute = ({}: NewAttributeProps) => {
                             required
                             fullWidth
                         />
-                        {newAttributeData.inputType === 'text' ||
-                            (newAttributeData.inputType === 'number' && (
-                                <TextField
-                                    name={'value'}
-                                    label={'Value'}
-                                    value={newAttributeData.value || ''}
-                                    onChange={handleInputChange}
-                                    fullWidth
+                        <TextField
+                            name={'options'}
+                            label={'Options (comma-separated)'}
+                            value={newAttributeData.options.join(', ')}
+                            onChange={(e) =>
+                                setNewAttributeData({
+                                    ...newAttributeData,
+                                    // @ts-ignore
+                                    options: e.target.value
+                                        .split(',')
+                                        .map((option) => option.trim()),
+                                })
+                            }
+                            required
+                            fullWidth
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={newAttributeData.required}
+                                    onChange={(e) =>
+                                        setNewAttributeData({
+                                            ...newAttributeData,
+                                            required: e.target.checked,
+                                        })
+                                    }
+                                    color={'primary'}
                                 />
-                            ))}
-                        {newAttributeData.inputType === 'select' && (
-                            <FormControl fullWidth required>
-                                <InputLabel>Options</InputLabel>
-                                <Select
-                                    value={newAttributeData.options}
-                                    label={'Type'}
-                                    onChange={handleInputChange}
-                                >
-                                    <MenuItem value={'text'}>Text</MenuItem>
-                                    <MenuItem value={'number'}>Number</MenuItem>
-                                    <MenuItem value={'select'}>Select</MenuItem>
-                                </Select>
-                            </FormControl>
-                        )}
+                            }
+                            label={'Required'}
+                        />
                     </Stack>
                     <Stack
                         direction={'row'}

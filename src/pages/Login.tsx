@@ -1,23 +1,55 @@
-import {
-    Box,
-    Button,
-    Checkbox,
-    Container,
-    FormControlLabel,
-    Grid,
-    Link,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Container, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, useState } from 'react';
+import { BASE_URL } from '../constants.tsx';
+import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
 
 const Login = () => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value);
+        setError(false);
+    };
+
+    const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+        setError(false);
+    };
+
+    const handleSubmit = () => {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        axios
+            .post(`${BASE_URL}/users/login`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then((response) => {
+                localStorage.setItem('accessToken', response.data.access_token);
+                localStorage.setItem('username', username);
+                navigate('/bids');
+            })
+            .catch((error) => {
+                console.error(error);
+                setError(true);
+            })
+            .finally(() => setLoading(false));
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSubmit();
+        }
     };
 
     return (
@@ -41,12 +73,7 @@ const Login = () => {
                 <Typography component={'h1'} variant='h5'>
                     Login
                 </Typography>
-                <Box
-                    component={'form'}
-                    onSubmit={handleSubmit}
-                    noValidate
-                    sx={{ mt: 1 }}
-                >
+                <Box sx={{ mt: 1 }}>
                     <TextField
                         margin={'normal'}
                         fullWidth
@@ -54,6 +81,8 @@ const Login = () => {
                         label={'Username'}
                         name={'username'}
                         autoComplete={'username'}
+                        onChange={handleUsernameChange}
+                        error={error}
                         autoFocus
                     />
                     <TextField
@@ -64,39 +93,19 @@ const Login = () => {
                         type={'password'}
                         id={'password'}
                         autoComplete={'current-password'}
+                        onChange={handlePasswordChange}
+                        onKeyPress={handleKeyPress}
+                        error={error}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value='remember' color='primary' />}
-                        label={'Remember me'}
-                    />
-                    <Button
+                    <LoadingButton
                         fullWidth
                         variant={'contained'}
                         sx={{ mt: 3, mb: 2 }}
-                        href={'/'}
+                        onClick={handleSubmit}
+                        loading={loading}
                     >
                         Login
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link
-                                href='#'
-                                variant='body2'
-                                sx={{ textDecoration: 'none' }}
-                            >
-                                Forgot password?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link
-                                href='#'
-                                variant='body2'
-                                sx={{ textDecoration: 'none' }}
-                            >
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    </LoadingButton>
                 </Box>
             </Box>
         </Container>

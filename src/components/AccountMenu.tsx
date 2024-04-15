@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { NavLink as RouterLink } from 'react-router-dom';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Settings from '@mui/icons-material/Settings';
+import IconButton from '@mui/material/IconButton';
+import Logout from '@mui/icons-material/Logout';
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
 import { useState } from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
+import * as React from 'react';
 
 export default function AccountMenu() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -19,6 +19,7 @@ export default function AccountMenu() {
     };
     const handleClose = () => {
         setAnchorEl(null);
+        localStorage.removeItem('accessToken');
     };
 
     return (

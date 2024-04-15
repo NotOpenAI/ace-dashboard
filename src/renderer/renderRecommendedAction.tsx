@@ -1,12 +1,12 @@
-import * as React from 'react';
+import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
+import { GridRenderCellParams } from '@mui/x-data-grid';
+import PendingIcon from '@mui/icons-material/Pending';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckIcon from '@mui/icons-material/Check';
-import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
-import PendingIcon from '@mui/icons-material/Pending';
-import Chip from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
-import {GridRenderCellParams} from "@mui/x-data-grid";
-import {ReactNode} from "react";
+import Chip from '@mui/material/Chip';
+import { ReactNode } from 'react';
+import * as React from 'react';
 
 const StyledChip = styled(Chip)(({ theme }) => ({
     justifyContent: 'left',
@@ -40,13 +40,13 @@ const RecommendedAction = React.memo((props: StatusProps) => {
 
     let icon: any = null;
     if (recommendedAction === 'Bid') {
-        icon = <CheckIcon className="icon" />;
+        icon = <CheckIcon className='icon' />;
     } else if (recommendedAction === 'No Bid') {
-        icon = <DoNotDisturbIcon className="icon" />;
+        icon = <DoNotDisturbIcon className='icon' />;
     } else if (recommendedAction === 'Review') {
-        icon = <SearchIcon className="icon" />;
+        icon = <SearchIcon className='icon' />;
     } else if (recommendedAction === 'Pending') {
-        icon = <PendingIcon className="icon" />;
+        icon = <PendingIcon className='icon' />;
     }
 
     let label: string = recommendedAction;
@@ -55,7 +55,13 @@ const RecommendedAction = React.memo((props: StatusProps) => {
     }
 
     return (
-        <StyledChip className={recommendedAction.replace(' ', '')} icon={icon} size="small" label={label} variant="outlined" />
+        <StyledChip
+            className={recommendedAction.replace(' ', '')}
+            icon={icon}
+            size='small'
+            label={label}
+            variant='outlined'
+        />
     );
 });
 
@@ -65,6 +71,6 @@ const renderRecommendedAction = (params: GridRenderCellParams): ReactNode => {
     }
 
     return <RecommendedAction recommendedAction={params.value} />;
-}
+};
 
 export default renderRecommendedAction;

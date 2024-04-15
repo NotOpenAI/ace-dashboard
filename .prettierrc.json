@@ -13,5 +13,8 @@
         "singleQuote": true
       }
     }
+  ],
+  "plugins": [
+    "prettier-plugin-sort-imports"
   ]
 }

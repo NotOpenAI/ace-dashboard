@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { Theme, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import convertToSentenceCase from '../utils/convertToSentenceCase.tsx';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import { Theme, useTheme } from '@mui/material/styles';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
-import convertToSentenceCase from '../utils/convertToSentenceCase.tsx';
+import Box from '@mui/material/Box';
+import * as React from 'react';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

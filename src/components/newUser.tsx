@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Box,
     Button,
@@ -8,6 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import RoleSelect from './RoleSelect.tsx';
+import { useState } from 'react';
 
 type NewUserProps = {
     handleAddUser: Function;

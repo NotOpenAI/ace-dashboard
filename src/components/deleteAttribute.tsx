@@ -1,53 +1,60 @@
-import { useState } from 'react';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Box, Button, Modal, Typography } from '@mui/material';
-import CustomButton from './customButton.tsx';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { useState } from 'react';
 
 type Attribute = {
     num_val: number;
-    id: number;
     type: {
         name: string;
         id: number;
     };
-    option: string | null;
+    option: {
+        value: string;
+        id: number;
+    } | null;
     created_at: string;
-    updated_at: string | null;
+    updated_at: string;
 };
 
 type DeleteAttributeProps = {
     options: Attribute[];
-    handleDeleteAttribute?: string;
+    handleDeleteAttribute: (attributeType: string) => void;
 };
 
-const DeleteAttribute = ({ options }: DeleteAttributeProps) => {
+const DeleteAttribute = ({
+    options,
+    handleDeleteAttribute,
+}: DeleteAttributeProps) => {
     const [open, setOpen] = useState(false);
-
     const [attribute, setAttribute] = useState('');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleInputChange = (e: { target: { value: any } }) => {
-        setAttribute(e.target.value);
+    const handleInputChange = (event: SelectChangeEvent<string>) => {
+        setAttribute(event.target.value);
     };
 
     const handleSubmit = () => {
+        handleDeleteAttribute(attribute);
         setAttribute('');
         handleClose();
     };
 
     return (
         <>
-            <CustomButton
+            <Button
                 onClick={handleOpen}
-                icon={<AddRoundedIcon />}
+                startIcon={<DeleteRoundedIcon />}
                 color={'error'}
-                label={'Delete Attribute'}
-            />
+                sx={{ height: 56 }}
+                fullWidth
+            >
+                Remove
+            </Button>
             <Modal open={open} onClose={handleClose}>
                 <Box
                     sx={{

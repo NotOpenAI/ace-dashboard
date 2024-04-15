@@ -1,0 +1,128 @@
+import {
+    Breadcrumbs,
+    Button,
+    LinearProgress,
+    Link,
+    Paper,
+    Stack,
+    Typography,
+} from '@mui/material';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import renderUserID from '../../renderer/renderUserID.tsx';
+import renderRoles from '../../renderer/renderRoles.tsx';
+import { BASE_URL, SPACING } from '../../constants.tsx';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import renderDate from '../../renderer/renderDate.tsx';
+import Footer from '../../components/Footer.tsx';
+import { useNavigate } from 'react-router-dom';
+import { User } from '../../types/User.tsx';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', renderCell: renderUserID },
+    { field: 'username', headerName: 'Username', width: 200 },
+    { field: 'first_name', headerName: 'First Name', width: 140 },
+    { field: 'last_name', headerName: 'Last Name', width: 140 },
+    {
+        field: 'roles',
+        headerName: 'Roles',
+        renderCell: renderRoles,
+        flex: 1,
+    },
+    {
+        field: 'created_at',
+        headerName: 'Created At',
+        renderCell: renderDate,
+        width: 160,
+    },
+    {
+        field: 'updated_at',
+        headerName: 'Updated At',
+        renderCell: renderDate,
+        width: 160,
+    },
+];
+
+const Users = () => {
+    const [accessToken, setAccessToken] = useState<string>('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            setAccessToken(token);
+        } else {
+            navigate('/login');
+        }
+    }, []);
+
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (accessToken) {
+            setLoading(true);
+            fetchUsers();
+        }
+    }, [accessToken]);
+
+    const fetchUsers = () => {
+        axios
+            .get(`${BASE_URL}/users`, {
+                headers: {
+                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+                },
+            })
+            .then((response) => setUsers(response.data.data))
+            .catch((error) => console.error(error))
+            .finally(() => setLoading(false));
+    };
+
+    return (
+        <>
+            <Stack direction={'row'} justifyContent={'space-between'}>
+                <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
+                    <Link href={'/'} color={'inherit'} underline={'hover'}>
+                        Home
+                    </Link>
+                    <Typography color={'text.primary'}>Users</Typography>
+                </Breadcrumbs>
+                <Button
+                    size={'small'}
+                    variant={'contained'}
+                    color={'primary'}
+                    sx={{ borderRadius: 4 }}
+                    startIcon={<AddCircleRoundedIcon />}
+                    component={Link}
+                    href={'/users/new'}
+                >
+                    Create
+                </Button>
+            </Stack>
+            <Paper elevation={1} sx={{ borderRadius: 4, marginTop: SPACING }}>
+                <DataGrid
+                    columns={columns}
+                    rows={users}
+                    initialState={{
+                        pagination: { paginationModel: { pageSize: 10 } },
+                        sorting: {
+                            sortModel: [{ field: 'id', sort: 'asc' }],
+                        },
+                    }}
+                    pageSizeOptions={[10, 25]}
+                    slots={{
+                        loadingOverlay: LinearProgress,
+                    }}
+                    sx={{ border: 0 }}
+                    loading={loading}
+                    autoHeight
+                />
+            </Paper>
+            <Footer />
+        </>
+    );
+};
+
+export default Users;

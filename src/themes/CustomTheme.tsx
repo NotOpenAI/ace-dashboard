@@ -6,8 +6,8 @@ import {
     useMediaQuery,
 } from '@mui/material';
 
-import { ReactNode } from 'react';
 import { deepPurple, teal } from '@mui/material/colors';
+import { ReactNode } from 'react';
 
 interface CustomThemeProps {
     children: ReactNode;

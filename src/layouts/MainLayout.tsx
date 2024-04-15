@@ -1,34 +1,34 @@
-import * as React from 'react';
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
+import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
+import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
+import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ListItemButton from '@mui/material/ListItemButton';
+import AccountMenu from '../components/AccountMenu.tsx';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleIcon from '@mui/icons-material/People';
-import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
-import { useEffect } from 'react';
-import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
+import CssBaseline from '@mui/material/CssBaseline';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ListItem from '@mui/material/ListItem';
+import MuiDrawer from '@mui/material/Drawer';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 import { SPACING } from '../constants.tsx';
 import { Container } from '@mui/material';
-import AccountMenu from '../components/AccountMenu.tsx';
+import List from '@mui/material/List';
+import Box from '@mui/material/Box';
+import { useEffect } from 'react';
+import * as React from 'react';
 
 const drawerWidth = 240;
 
@@ -101,14 +101,7 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const navItems = [
-    '',
-    'bids',
-    'projects',
-    'customers',
-    'operational data',
-    'users',
-];
+const navItems = ['', 'bids', 'customers', 'users'];
 
 const MainLayout = () => {
     const theme = useTheme();

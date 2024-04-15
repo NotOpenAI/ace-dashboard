@@ -1,21 +1,26 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Box from '@mui/material/Box';
 
 type SelectProps = {
     label: string;
     options: string[];
     required: boolean;
+    value: string;
+    onChange: Function;
 };
 
-const CustomSelect = ({ label, options, required }: SelectProps) => {
-    const [value, setValue] = React.useState('');
-
+const CustomSelect = ({
+    label,
+    options,
+    required,
+    value,
+    onChange,
+}: SelectProps) => {
     const handleChange = (event: SelectChangeEvent) => {
-        setValue(event.target.value as string);
+        onChange(event.target.value as string);
     };
 
     return (
