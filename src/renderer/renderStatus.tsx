@@ -41,11 +41,11 @@ const Status = React.memo((props: StatusProps) => {
     } else if (status.value === 'Active') {
         icon = <ConstructionIcon className='icon' />;
         color = 'info';
-        variant = 'filled';
+        // variant = 'filled';
     } else if (status.value === 'Completed') {
         icon = <DoneIcon className='icon' />;
         color = 'success';
-        variant = 'filled';
+        // variant = 'filled';
     }
 
     return (

@@ -4,6 +4,10 @@ import InfoIcon from '@mui/icons-material/Info';
 import { ReactNode, useState } from 'react';
 
 const renderComments = (params: GridRenderCellParams): ReactNode => {
+    if (!params.value || params.value.length === 0) {
+        return '';
+    }
+
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);

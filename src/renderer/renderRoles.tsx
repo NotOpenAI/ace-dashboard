@@ -52,7 +52,13 @@ const renderRoles = (params: GridRenderCellParams): ReactNode => {
     }
 
     return (
-        <Stack direction={'row'} spacing={1}>
+        <Stack
+            direction={'row'}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+            spacing={1}
+            sx={{ overflowX: 'auto', whiteSpace: 'nowrap' }}
+        >
             {params.value.map((role: Role) => (
                 <Role key={role.name} role={role.name} />
             ))}
