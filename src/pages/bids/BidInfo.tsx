@@ -20,6 +20,8 @@ import {
     bidStatusOptions,
     Status,
 } from '../../types/Bid.tsx';
+import RecommendedActionModal from '../../components/modal/RecommendedActionModal.tsx';
+import UpdateBidConfirmation from '../../components/updateBidConfirmation.tsx';
 import { SelectManagers } from '../../components/select/SelectManagers.tsx';
 import { SelectCustomer } from '../../components/select/SelectCustomer.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
@@ -28,6 +30,7 @@ import { BASE_URL, FIELD_COLUMNS, SPACING } from '../../constants.tsx';
 import CreateAttribute from '../../components/createAttribute.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { SetStateAction, useEffect, useState } from 'react';
+import { compareBids } from '../../utils/compareBids.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormControl from '@mui/material/FormControl';
 import { Customer } from '../../types/Customer.tsx';
@@ -39,7 +42,7 @@ import { useSnackbar } from 'notistack';
 import { Masonry } from '@mui/lab';
 import axios from 'axios';
 
-export const BidV3 = () => {
+export const BidInfo = () => {
     const { id } = useParams();
 
     const [accessToken, setAccessToken] = useState<string>('');
@@ -71,6 +74,8 @@ export const BidV3 = () => {
     const [customers, setCustomers] = useState<Customer[]>([]);
 
     const [loading, setLoading] = useState(true);
+
+    const [saveDisabled, setSaveDisabled] = useState(true);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -187,6 +192,18 @@ export const BidV3 = () => {
         }
     };
 
+    const handleBidStatusChangeOnAIRecommendation = (
+        option: 'Accepted' | 'Rejected'
+    ) => {
+        const selectedStatus: Status | undefined = bidStatusOptions.find(
+            (status) => status.value === option
+        );
+        if (selectedStatus) {
+            // @ts-ignore
+            setBid({ ...bid, bid_status: selectedStatus });
+        }
+    };
+
     const jobStatusOptions: Status[] = [
         {
             id: 1,
@@ -254,18 +271,47 @@ export const BidV3 = () => {
         }
     };
 
-    const handleAttributeChange = (typeName: string, optionId: number) => {
+    const handleAttributeSelectChange = (
+        typeName: string,
+        optionId: number
+    ) => {
         setBid((prevBid: Bid | undefined) => {
-            console.log('Attribute:', typeName, 'Option:', optionId);
             if (!prevBid || !prevBid.attributes) return prevBid;
 
             // Find the index of the attribute with the given type name
-            const attributeIndex = prevBid.attributes.findIndex(
+            let attributeIndex = prevBid.attributes.findIndex(
                 (attribute) => attribute.type.name === typeName
             );
 
             if (attributeIndex === -1) {
-                console.log('new attr');
+                attributeIndex = prevBid.attributes.length;
+
+                // Find the value of the option ID
+                const option = attributes
+                    .flatMap((attribute) => attribute.options)
+                    .find((option) => option.id === optionId);
+
+                // Update the option ID of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+
+                if (option) {
+                    updatedAttributes[attributeIndex] = {
+                        ...updatedAttributes[attributeIndex],
+                        type: {
+                            name: typeName,
+                            id: attributeIndex,
+                        },
+                        option: {
+                            value: option.value,
+                            id: option.id,
+                        },
+                    };
+                }
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
             } else {
                 // Find the value of the option ID
                 const option = attributes
@@ -293,6 +339,45 @@ export const BidV3 = () => {
         });
     };
 
+    const handleAttributeNumericChange = (typeName: string, numVal: number) => {
+        setBid((prevBid: Bid | undefined) => {
+            if (!prevBid || !prevBid.attributes) return prevBid;
+
+            // Find the index of the attribute with the given type name
+            let attributeIndex = prevBid.attributes.findIndex(
+                (attribute) => attribute.type.name === typeName
+            );
+
+            if (attributeIndex === -1) {
+                attributeIndex = prevBid.attributes.length;
+
+                // Update the num_val of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+                updatedAttributes[attributeIndex] = {
+                    type: { name: typeName, id: attributeIndex },
+                    num_val: numVal,
+                };
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            } else {
+                // Update the num_val of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+                updatedAttributes[attributeIndex] = {
+                    ...updatedAttributes[attributeIndex],
+                    num_val: numVal,
+                };
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            }
+        });
+    };
+
     const handleAddAttribute = () => {
         fetchAttributeTypes().then(() =>
             enqueueSnackbar('Created attribute', {
@@ -302,83 +387,49 @@ export const BidV3 = () => {
     };
 
     const handleUpdate = () => {
-        console.log(bid);
-        // if (bid) {
-        //     const requestBody = {
-        //         ...(bid.name !== originalBid?.name && { name: bid.name }),
-        //         ...(bid.lead !== originalBid?.lead && { lead: bid.lead }),
-        //         ...(bid.bid_managers !== originalBid?.bid_managers && {
-        //             bid_manager_ids: bid.bid_managers.map(
-        //                 (manager: Manager) => manager.id
-        //             ),
-        //         }),
-        //         ...(bid.project_managers !== originalBid?.project_managers && {
-        //             project_manager_ids: bid.project_managers.map(
-        //                 (manager: Manager) => manager.id
-        //             ),
-        //         }),
-        //         ...(bid.foreman !== originalBid?.foreman && {
-        //             foreman: bid.foreman,
-        //         }),
-        //         ...(bid.start_date !== originalBid?.start_date && {
-        //             start_date: bid.start_date,
-        //         }),
-        //         ...(bid.finish_date !== originalBid?.finish_date && {
-        //             finish_date: bid.finish_date,
-        //         }),
-        //         ...(bid.bid_status !== originalBid?.bid_status && {
-        //             bid_status_id: bid.bid_status.id,
-        //         }),
-        //         ...(bid.job_status !== originalBid?.job_status && {
-        //             job_status_id: bid.job_status.id,
-        //         }),
-        //         ...(bid.original_contract !==
-        //             originalBid?.original_contract && {
-        //             original_contract: bid.original_contract,
-        //         }),
-        //         ...(bid.comments !== originalBid?.comments && {
-        //             new_comments: bid.comments,
-        //         }),
-        //         ...(bid.final_cost !== originalBid?.final_cost && {
-        //             final_cost: bid.final_cost,
-        //         }),
-        //         ...(bid.attributes !== originalBid?.attributes && {
-        //             attributes: bid.attributes,
-        //         }),
-        //     };
-        //
-        //     axios
-        //         .put(`${BASE_URL}/bids/${id}`, requestBody, {
-        //             headers: {
-        //                 Authorization: `Bearer ${encodeURIComponent(
-        //                     accessToken
-        //                 )}`,
-        //             },
-        //         })
-        //         .then((response) => {
-        //             setOriginalBid(response.data.data);
-        //             enqueueSnackbar('Updated bid', { variant: 'success' });
-        //         })
-        //         .catch((error) => {
-        //             if (typeof error.response.data.detail === 'object') {
-        //                 error.response.data.detail.map(
-        //                     (error: { msg: string }) =>
-        //                         enqueueSnackbar(error.msg, { variant: 'error' })
-        //                 );
-        //             } else {
-        //                 enqueueSnackbar(error.response.data.detail, {
-        //                     variant: 'error',
-        //                 });
-        //             }
-        //             setBid(originalBid);
-        //         });
-        // }
+        if (originalBid && bid) {
+            const requestBody = compareBids(originalBid, bid);
+
+            axios
+                .put(`${BASE_URL}/bids/${id}`, requestBody, {
+                    headers: {
+                        Authorization: `Bearer ${encodeURIComponent(
+                            accessToken
+                        )}`,
+                    },
+                })
+                .then((response) => {
+                    setOriginalBid(response.data.data);
+                    enqueueSnackbar('Updated bid', { variant: 'success' });
+                })
+                .catch((error) => {
+                    if (typeof error.response.data.detail === 'object') {
+                        error.response.data.detail.map(
+                            (error: { msg: string }) =>
+                                enqueueSnackbar(error.msg, { variant: 'error' })
+                        );
+                    } else {
+                        enqueueSnackbar(error.response.data.detail, {
+                            variant: 'error',
+                        });
+                    }
+                    setBid(originalBid);
+                })
+                .finally(() => setSaveDisabled(true));
+        }
     };
 
     const handleCancel = () => {
         enqueueSnackbar('Canceled bid update', { variant: 'warning' });
         setBid(originalBid);
     };
+
+    useEffect(() => {
+        if (originalBid && bid) {
+            let difference = compareBids(originalBid, bid);
+            setSaveDisabled(Object.keys(difference).length === 0);
+        }
+    }, [bid, originalBid]);
 
     // @ts-ignore
     return (
@@ -408,13 +459,29 @@ export const BidV3 = () => {
                             divider={<Divider />}
                         >
                             <>
-                                <Typography
-                                    variant={'h6'}
-                                    fontWeight={'light'}
-                                    paddingBottom={SPACING}
+                                <Stack
+                                    direction={'row'}
+                                    justifyContent={'space-between'}
                                 >
-                                    General Information
-                                </Typography>
+                                    <Typography
+                                        variant={'h6'}
+                                        fontWeight={'light'}
+                                        paddingBottom={SPACING}
+                                    >
+                                        General Information
+                                    </Typography>
+                                    {id && bid?.name && (
+                                        <RecommendedActionModal
+                                            id={parseInt(id)}
+                                            name={bid?.name}
+                                            // TODO - set this: desiredMargin={bid.desired_margin}
+                                            desiredMargin={50}
+                                            handleSetBidStatus={
+                                                handleBidStatusChangeOnAIRecommendation
+                                            }
+                                        />
+                                    )}
+                                </Stack>
                                 <Masonry
                                     columns={FIELD_COLUMNS}
                                     spacing={SPACING}
@@ -526,12 +593,7 @@ export const BidV3 = () => {
                                         variant={'outlined'}
                                         label={'Actual Margin'}
                                         value={bid?.actual_margin || ''}
-                                        onChange={(e) =>
-                                            handleNumberFieldChange(
-                                                'actual_margin',
-                                                e.target.value
-                                            )
-                                        }
+                                        disabled
                                         fullWidth
                                     />
                                 </Masonry>
@@ -552,6 +614,7 @@ export const BidV3 = () => {
                                         options={customers}
                                         value={bid?.customer.id}
                                         onChange={handleCustomerChange}
+                                        disabled
                                     />
                                     <SelectManagers
                                         label={'Bid Managers'}
@@ -597,7 +660,10 @@ export const BidV3 = () => {
                                                             .name ===
                                                         attribute.name
                                                 );
-                                            if (bidAttribute) {
+                                            if (
+                                                bidAttribute &&
+                                                bidAttribute.option
+                                            ) {
                                                 value = bidAttribute.option.id;
                                             } else {
                                                 value = '';
@@ -619,7 +685,7 @@ export const BidV3 = () => {
                                                             attribute.name
                                                         )}
                                                         onChange={(e) =>
-                                                            handleAttributeChange(
+                                                            handleAttributeSelectChange(
                                                                 attribute.name,
                                                                 parseInt(
                                                                     String(
@@ -673,12 +739,14 @@ export const BidV3 = () => {
                                                         attribute.name
                                                     )}
                                                     value={value}
-                                                    // onChange={(e) =>
-                                                    //     handleNumberFieldChange(
-                                                    //         'actual_margin',
-                                                    //         e.target.value
-                                                    //     )
-                                                    // }
+                                                    onChange={(e) =>
+                                                        handleAttributeNumericChange(
+                                                            attribute.name,
+                                                            parseInt(
+                                                                e.target.value
+                                                            )
+                                                        )
+                                                    }
                                                     fullWidth
                                                 />
                                             );
@@ -688,6 +756,37 @@ export const BidV3 = () => {
                                         handleAddAttribute={handleAddAttribute}
                                     />
                                 </Masonry>
+                            </>
+                            <>
+                                <Typography
+                                    variant={'h6'}
+                                    fontWeight={'light'}
+                                    paddingBottom={SPACING}
+                                >
+                                    Comments
+                                </Typography>
+                                <Stack direction={'column'} spacing={1}>
+                                    {bid?.comments &&
+                                    bid?.comments.length > 0 ? (
+                                        bid?.comments.map(
+                                            (commentText: string) => (
+                                                <TextField
+                                                    variant={'outlined'}
+                                                    label={'Desired Margin'}
+                                                    value={commentText || ''}
+                                                    fullWidth
+                                                />
+                                            )
+                                        )
+                                    ) : (
+                                        <TextField
+                                            multiline
+                                            rows={3}
+                                            variant={'outlined'}
+                                            fullWidth
+                                        />
+                                    )}
+                                </Stack>
                                 <Stack
                                     direction={'row'}
                                     justifyContent={'flex-end'}
@@ -702,10 +801,19 @@ export const BidV3 = () => {
                                     <Button
                                         variant={'contained'}
                                         onClick={handleUpdate}
-                                        disabled={bid === originalBid}
+                                        disabled={saveDisabled}
                                     >
                                         Save
                                     </Button>
+                                    <UpdateBidConfirmation
+                                        requestBody={
+                                            originalBid && bid
+                                                ? compareBids(originalBid, bid)
+                                                : {}
+                                        }
+                                        onSave={handleUpdate}
+                                        disabled={saveDisabled}
+                                    />
                                 </Stack>
                             </>
                         </Stack>

@@ -190,12 +190,6 @@ export const Bids = () => {
     };
 
     const columns: GridColDef[] = [
-        // {
-        //     field: 'ai',
-        //     headerName: 'Recommend',
-        //     renderCell: renderRecommendation,
-        //     width: 140,
-        // },
         {
             field: 'id',
             headerName: 'ID',
@@ -244,6 +238,22 @@ export const Bids = () => {
             width: 170,
         },
         {
+            field: 'bid_managers',
+            headerName: 'Bid Managers',
+            renderCell: renderManagers,
+            width: 250,
+            filterable: false,
+            sortable: false,
+        },
+        {
+            field: 'project_managers',
+            headerName: 'Project Managers',
+            renderCell: renderManagers,
+            width: 250,
+            filterable: false,
+            sortable: false,
+        },
+        {
             field: 'foreman',
             headerName: 'Foreman',
             width: 160,
@@ -264,22 +274,6 @@ export const Bids = () => {
             headerName: 'Final Cost',
             renderCell: renderCurrency,
             width: 160,
-        },
-        {
-            field: 'bid_managers',
-            headerName: 'Bid Managers',
-            renderCell: renderManagers,
-            width: 250,
-            filterable: false,
-            sortable: false,
-        },
-        {
-            field: 'project_managers',
-            headerName: 'Project Managers',
-            renderCell: renderManagers,
-            width: 250,
-            filterable: false,
-            sortable: false,
         },
         {
             field: 'desired_margin',
