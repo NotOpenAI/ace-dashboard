@@ -4,7 +4,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { BarChart, LineChart } from '@mui/x-charts';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Bid } from './bids/NewBid.tsx';
+import { Bid } from '../types/Bid.tsx';
 import { Masonry } from '@mui/lab';
 import axios from 'axios';
 
@@ -14,6 +14,14 @@ export const Home = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
         if (token) {
             setAccessToken(token);
         } else {

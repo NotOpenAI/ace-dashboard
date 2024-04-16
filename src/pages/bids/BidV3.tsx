@@ -14,16 +14,17 @@ import {
     Typography,
 } from '@mui/material';
 import {
-    BASE_URL,
-    FIELD_COLUMNS,
-    PAGE_COLUMNS,
-    SPACING,
-} from '../../constants.tsx';
-import { Attribute, AttributeOption, Bid, Status } from '../../types/Bid.tsx';
+    Attribute,
+    AttributeOption,
+    Bid,
+    bidStatusOptions,
+    Status,
+} from '../../types/Bid.tsx';
 import { SelectManagers } from '../../components/select/SelectManagers.tsx';
 import { SelectCustomer } from '../../components/select/SelectCustomer.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
 import { SelectStatus } from '../../components/select/SelectStatus.tsx';
+import { BASE_URL, FIELD_COLUMNS, SPACING } from '../../constants.tsx';
 import CreateAttribute from '../../components/createAttribute.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { SetStateAction, useEffect, useState } from 'react';
@@ -46,6 +47,14 @@ export const BidV3 = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
         if (token) {
             setAccessToken(token);
         } else {
@@ -163,21 +172,6 @@ export const BidV3 = () => {
         }
     };
 
-    const bidStatusOptions: Status[] = [
-        {
-            id: 1,
-            value: 'New',
-        },
-        {
-            id: 2,
-            value: 'Rejected',
-        },
-        {
-            id: 3,
-            value: 'Accepted',
-        },
-    ];
-
     const handleBidStatusSelectChange = (event: {
         target: { value: SetStateAction<number | undefined> };
     }) => {
@@ -281,13 +275,15 @@ export const BidV3 = () => {
                 // Update the option ID of the found attribute
                 const updatedAttributes = [...prevBid.attributes];
 
-                updatedAttributes[attributeIndex] = {
-                    ...updatedAttributes[attributeIndex],
-                    option: {
-                        value: option.value,
-                        id: option.id,
-                    },
-                };
+                if (option) {
+                    updatedAttributes[attributeIndex] = {
+                        ...updatedAttributes[attributeIndex],
+                        option: {
+                            value: option.value,
+                            id: option.id,
+                        },
+                    };
+                }
 
                 return {
                     ...prevBid,
@@ -444,7 +440,12 @@ export const BidV3 = () => {
                                     <SelectStatus
                                         label={'Job Status'}
                                         options={jobStatusOptions}
-                                        value={bid?.job_status.id}
+                                        // @ts-ignore
+                                        value={
+                                            bid?.job_status
+                                                ? bid?.job_status.id
+                                                : ''
+                                        }
                                         onChange={handleJobStatusSelectChange}
                                     />
                                     <TextField
@@ -621,8 +622,10 @@ export const BidV3 = () => {
                                                             handleAttributeChange(
                                                                 attribute.name,
                                                                 parseInt(
-                                                                    e.target
-                                                                        .value
+                                                                    String(
+                                                                        e.target
+                                                                            .value
+                                                                    )
                                                                 )
                                                             )
                                                         }

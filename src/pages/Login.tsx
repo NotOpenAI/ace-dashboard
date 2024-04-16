@@ -1,7 +1,7 @@
 import { Box, Container, TextField, Typography } from '@mui/material';
+import { BASE_URL, SESSION_EXPIRATION } from '../constants.tsx';
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
-import { BASE_URL } from '../constants.tsx';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 
@@ -35,8 +35,15 @@ const Login = () => {
                 },
             })
             .then((response) => {
+                const currentTime = new Date().getTime();
+
                 localStorage.setItem('accessToken', response.data.access_token);
                 localStorage.setItem('username', username);
+                localStorage.setItem(
+                    'sessionExpiration',
+                    String(currentTime + SESSION_EXPIRATION * 60 * 1000)
+                );
+
                 navigate('/bids');
             })
             .catch((error) => {

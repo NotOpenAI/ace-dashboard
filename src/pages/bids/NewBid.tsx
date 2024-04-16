@@ -11,83 +11,35 @@ import {
     Typography,
 } from '@mui/material';
 import {
+    Attribute,
+    AttributeOption,
+    Bid,
+    bidStatusOptions,
+    Status,
+} from '../../types/Bid.tsx';
+import {
     BASE_URL,
     FIELD_COLUMNS,
     PAGE_COLUMNS,
     SPACING,
 } from '../../constants.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
+import { SelectStatus } from '../../components/select/SelectStatus.tsx';
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 import CreateAttribute from '../../components/createAttribute.tsx';
 import AttributeSelect from '../../components/attributeSelect.tsx';
 import CustomerSelect from '../../components/customerSelect.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ManagerSelect from '../../components/managerSelect.tsx';
+import { SetStateAction, useEffect, useState } from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers';
+import { Customer } from '../../types/Customer.tsx';
 import Footer from '../../components/Footer.tsx';
-import { useEffect, useState } from 'react';
+import { Manager } from '../../types/Role.tsx';
+import { enqueueSnackbar } from 'notistack';
 import { Masonry } from '@mui/lab';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import axios from 'axios';
-
-export interface Bid {
-    name: string;
-    id: number;
-    bid_managers: Manager[];
-    project_managers: Manager[];
-    lead: string;
-    foreman: string;
-    customer: Customer;
-    start_date: string;
-    finish_date: string;
-    original_contract: number;
-    original_cost: number;
-    attributes: Attribute[];
-    created_at: string;
-    updated_at: string;
-}
-
-export interface Attribute {
-    name: string;
-    id: number;
-    active: boolean;
-    required: boolean;
-    options: AttributeOption[];
-    num_val: string;
-    type: AttributeType;
-    option: AttributeOption;
-}
-
-export interface AttributeOption {
-    value: string;
-    id: number;
-    active: boolean;
-}
-
-export interface AttributeType {
-    id: number;
-    name: string;
-}
-
-export interface Customer {
-    name: string;
-    owner: string;
-    market: string;
-    reputation: number;
-    fin_health: number;
-    id: number;
-    created_at: string;
-    updated_at: string;
-}
-
-export interface Manager {
-    username: string;
-    first_name: string;
-    last_name: string;
-    id: number;
-    created_at: string;
-    updated_at: string;
-}
 
 export const NewBid = () => {
     const [accessToken, setAccessToken] = useState<string>('');
@@ -95,6 +47,14 @@ export const NewBid = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
         if (token) {
             setAccessToken(token);
         } else {
@@ -103,8 +63,11 @@ export const NewBid = () => {
     }, []);
 
     const [bid, setBid] = useState<Bid>({
-        id: 0,
         name: '',
+        bid_status: {
+            id: 1,
+            value: 'New',
+        },
         bid_managers: [],
         project_managers: [],
         lead: '',
@@ -114,7 +77,7 @@ export const NewBid = () => {
         start_date: '',
         finish_date: '',
         original_contract: 0,
-        original_cost: 0,
+        final_cost: 0,
         attributes: [],
         created_at: '',
         updated_at: '',
@@ -197,6 +160,21 @@ export const NewBid = () => {
         setBid({ ...bid, [fieldName]: value });
     };
 
+    const handleBidStatusSelectChange = (event: {
+        target: { value: SetStateAction<number | undefined> };
+    }) => {
+        const selectedBidStatusID = event.target.value;
+        if (typeof selectedBidStatusID === 'number') {
+            const selectedStatus: Status | undefined = bidStatusOptions.find(
+                (status) => status.id === selectedBidStatusID
+            );
+            if (selectedStatus) {
+                // @ts-ignore
+                setBid({ ...bid, bid_status: selectedStatus });
+            }
+        }
+    };
+
     const [allRequiredFieldsFilled, setAllRequiredFieldsFilled] =
         useState(false);
 
@@ -206,7 +184,7 @@ export const NewBid = () => {
             bid.name !== '' &&
             bid.lead !== '' &&
             bid.original_contract !== 0 &&
-            bid.original_cost !== 0;
+            bid.final_cost !== 0;
 
         // Check if all attributes marked as required have values
         const allAttributesFilled = attributes.every(
@@ -224,11 +202,12 @@ export const NewBid = () => {
     const handleCreateBid = () => {
         const {
             name,
+            bid_status,
             bid_managers,
             project_managers,
             customer,
             original_contract,
-            original_cost,
+            final_cost,
             lead,
             foreman,
             start_date,
@@ -238,11 +217,12 @@ export const NewBid = () => {
 
         const requestBody = {
             name,
+            bid_status_id: bid_status.id,
             bid_manager_ids: bid_managers.map((manager) => manager.id),
             project_manager_ids: project_managers.map((manager) => manager.id),
             customer_id: customer.id,
             original_contract,
-            original_cost,
+            final_cost,
             lead,
             foreman,
             start_date,
@@ -259,13 +239,22 @@ export const NewBid = () => {
                     Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
                 },
             })
-            .then((response) => {
+            .then(() => {
                 // Handle success, e.g., show success message or redirect
-                console.log('Bid created successfully:', response.data);
+                enqueueSnackbar('Bid created', { variant: 'success' });
                 navigate('/bids'); // Redirect to bids page after creating bid
             })
             .catch((error) => {
                 // Handle error
+                if (typeof error.response.data.detail === 'object') {
+                    error.response.data.detail.map((error: { msg: string }) =>
+                        enqueueSnackbar(error.msg, { variant: 'error' })
+                    );
+                } else {
+                    enqueueSnackbar(error.response.data.detail, {
+                        variant: 'error',
+                    });
+                }
                 console.error('Error creating bid:', error);
             });
     };
@@ -310,6 +299,12 @@ export const NewBid = () => {
                                 }
                                 fullWidth
                                 required
+                            />
+                            <SelectStatus
+                                label={'Bid Status'}
+                                options={bidStatusOptions}
+                                value={bid?.bid_status.id}
+                                onChange={handleBidStatusSelectChange}
                             />
                             <ManagerSelect
                                 label={'Bid Managers'}
@@ -382,13 +377,10 @@ export const NewBid = () => {
                             />
                             <TextField
                                 variant={'outlined'}
-                                label={'Original Cost'}
-                                value={bid.original_cost}
+                                label={'Final Cost'}
+                                value={bid.final_cost}
                                 onChange={(e) =>
-                                    handleChange(
-                                        'original_cost',
-                                        e.target.value
-                                    )
+                                    handleChange('final_cost', e.target.value)
                                 }
                                 InputProps={{
                                     startAdornment: (
@@ -455,11 +447,13 @@ export const NewBid = () => {
                                                         attribute.name
                                                 )?.option || null
                                             }
+                                            // @ts-ignore
                                             onChange={(
                                                 selected: AttributeOption | null
                                             ) => {
                                                 const updatedAttributes =
                                                     bid.attributes.map(
+                                                        // @ts-ignore
                                                         (attr: Attribute) => {
                                                             if (
                                                                 attr.name ===

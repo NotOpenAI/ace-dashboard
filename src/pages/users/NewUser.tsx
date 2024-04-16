@@ -34,6 +34,14 @@ const NewUser = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
         if (token) {
             setAccessToken(token);
         } else {

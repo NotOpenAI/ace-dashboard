@@ -16,11 +16,8 @@ import { Contact, Customer } from '../../types/Customer.tsx';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 import Footer from '../../components/Footer.tsx';
 import { BASE_URL } from '../../constants.tsx';
-import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import dayjs from 'dayjs';
@@ -34,6 +31,14 @@ export const CustomerInfo = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
         if (token) {
             setAccessToken(token);
         } else {
@@ -108,20 +113,6 @@ export const CustomerInfo = () => {
                 ...updatedContacts[contactIndex],
                 [key]: value,
             };
-
-            return {
-                ...prevCustomer,
-                contacts: updatedContacts,
-            };
-        });
-    };
-
-    const handleDeleteContact = (contactIndex: number) => {
-        setCustomer((prevCustomer) => {
-            if (!prevCustomer) return prevCustomer;
-
-            const updatedContacts = [...prevCustomer.contacts];
-            updatedContacts.splice(contactIndex, 1);
 
             return {
                 ...prevCustomer,
