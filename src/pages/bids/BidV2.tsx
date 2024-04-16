@@ -6,7 +6,6 @@ import {
     CircularProgress,
     Divider,
     Link,
-    Modal,
     Paper,
     Snackbar,
     Stack,
@@ -32,13 +31,11 @@ import {
     useParams,
 } from 'react-router-dom';
 import UpdateBidConfirmation from '../../components/updateBidConfirmation.tsx';
-import updateBidConfirmation from '../../components/updateBidConfirmation.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
 import CreateAttribute from '../../components/createAttribute.tsx';
 import AttributeSelect from '../../components/attributeSelect.tsx';
 import CustomerSelect from '../../components/customerSelect.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ManagerSelect from '../../components/managerSelect.tsx';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -47,7 +44,7 @@ import Footer from '../../components/Footer.tsx';
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { Masonry } from '@mui/lab';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 export const BidV2 = () => {
@@ -613,7 +610,7 @@ export const BidV2 = () => {
                                             )}
                                             required={attribute.required}
                                             value={
-                                                bid.attributes.find(
+                                                bid?.attributes.find(
                                                     (attr: Attribute) =>
                                                         attr.type.name ===
                                                         attribute.name

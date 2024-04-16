@@ -9,10 +9,13 @@ import {
     Typography,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import renderPercentage from '../../renderer/renderPercentage.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import renderCustomer from '../../renderer/renderCustomer.tsx';
 import renderCurrency from '../../renderer/renderCurrency.tsx';
 import renderManagers from '../../renderer/renderManagers.tsx';
+import renderComments from '../../renderer/renderComments.tsx';
+import renderStatus from '../../renderer/renderStatus.tsx';
 import renderBidID from '../../renderer/renderBidID.tsx';
 import { BASE_URL, SPACING } from '../../constants.tsx';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -197,6 +200,22 @@ export const Bids = () => {
             flex: 1,
         },
         {
+            field: 'bid_status',
+            headerName: 'Bid Status',
+            renderCell: renderStatus,
+            width: 150,
+            filterable: false,
+            sortable: false,
+        },
+        {
+            field: 'job_status',
+            headerName: 'Job Status',
+            renderCell: renderStatus,
+            width: 150,
+            filterable: false,
+            sortable: false,
+        },
+        {
             field: 'customer',
             headerName: 'Customer',
             renderCell: renderCustomer,
@@ -233,8 +252,8 @@ export const Bids = () => {
             width: 160,
         },
         {
-            field: 'original_cost',
-            headerName: 'Original Cost',
+            field: 'final_cost',
+            headerName: 'Final Cost',
             renderCell: renderCurrency,
             width: 160,
         },
@@ -242,15 +261,35 @@ export const Bids = () => {
             field: 'bid_managers',
             headerName: 'Bid Managers',
             renderCell: renderManagers,
-            width: 220,
-            // filterable: false,
+            width: 250,
+            filterable: false,
+            sortable: false,
         },
         {
             field: 'project_managers',
             headerName: 'Project Managers',
             renderCell: renderManagers,
-            width: 220,
+            width: 250,
             filterable: false,
+            sortable: false,
+        },
+        {
+            field: 'desired_margin',
+            headerName: 'Desired Margin',
+            renderCell: renderPercentage,
+            width: 160,
+        },
+        {
+            field: 'actual_margin',
+            headerName: 'Actual Margin',
+            renderCell: renderPercentage,
+            width: 160,
+        },
+        {
+            field: 'comments',
+            headerName: 'Comments',
+            renderCell: renderComments,
+            width: 160,
         },
         {
             field: 'created_at',
