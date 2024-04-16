@@ -1,53 +1,52 @@
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { AttributeOption } from '../pages/bids/NewBid.tsx';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import { Manager } from '../../types/Role.tsx';
 import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
 
 type SelectProps = {
     label: string;
-    required: boolean;
-    options?: AttributeOption[];
-    value: AttributeOption;
-    onChange: (selected: string) => void;
+    options: Manager[];
+    value: number[];
+    onChange: Function;
+    required?: boolean;
 };
 
-const AttributeSelect = ({
+export const SelectManagers = ({
     label,
     options,
-    required,
     value,
     onChange,
+    required = false,
 }: SelectProps) => {
     const handleChange = (event: SelectChangeEvent) => {
-        onChange(event.target.value);
+        onChange(event);
     };
 
     return (
-        <Box>
+        <>
             <FormControl fullWidth required={required}>
                 <InputLabel>{label}</InputLabel>
                 <Select
-                    value={value || ''}
-                    label={label}
+                    multiple
+                    fullWidth
                     // @ts-ignore
+                    value={value}
+                    label={label}
                     onChange={handleChange}
-                    renderValue={(option: AttributeOption) => option.value}
+                    required={required}
                 >
                     {options &&
-                        options.map((option: AttributeOption) => {
+                        options.map((manager: Manager) => {
                             return (
                                 // @ts-ignore
-                                <MenuItem key={option.id} value={option}>
-                                    {option.value}
+                                <MenuItem key={manager.id} value={manager.id}>
+                                    {`${manager.first_name} ${manager.last_name}`}
                                 </MenuItem>
                             );
                         })}
                 </Select>
             </FormControl>
-        </Box>
+        </>
     );
 };
-
-export default AttributeSelect;

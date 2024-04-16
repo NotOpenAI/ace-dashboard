@@ -13,12 +13,13 @@ import {
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Attribute } from '../types/Bid.tsx';
 import { BASE_URL } from '../constants.tsx';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
 
 type NewAttributeProps = {
-    handleAddAttribute?: (newAttribute: any) => void;
+    handleAddAttribute?: () => void;
 };
 
 const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
@@ -101,11 +102,8 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
                 )
                 .then(() => {
                     // Call the callback function to handle adding the attribute
-                    handleAddAttribute?.(newAttributeData);
+                    handleAddAttribute?.();
                     handleClose();
-                    enqueueSnackbar('Created attribute', {
-                        variant: 'success',
-                    });
                 })
                 .catch((error: AxiosError) => {
                     enqueueSnackbar(error.response.data.detail, {

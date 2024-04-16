@@ -1,53 +1,49 @@
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { AttributeOption } from '../pages/bids/NewBid.tsx';
 import FormControl from '@mui/material/FormControl';
+import { Customer } from '../../types/Customer.tsx';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
 
 type SelectProps = {
-    label: string;
-    required: boolean;
-    options?: AttributeOption[];
-    value: AttributeOption;
-    onChange: (selected: string) => void;
+    options: Customer[];
+    value?: number;
+    onChange: Function;
+    required?: boolean;
 };
 
-const AttributeSelect = ({
-    label,
+export const SelectCustomer = ({
     options,
-    required,
     value,
     onChange,
+    required = false,
 }: SelectProps) => {
     const handleChange = (event: SelectChangeEvent) => {
-        onChange(event.target.value);
+        onChange(event);
     };
 
     return (
-        <Box>
+        <>
             <FormControl fullWidth required={required}>
-                <InputLabel>{label}</InputLabel>
+                <InputLabel>Customer</InputLabel>
                 <Select
-                    value={value || ''}
-                    label={label}
+                    fullWidth
                     // @ts-ignore
+                    value={value}
+                    label={'Customer'}
                     onChange={handleChange}
-                    renderValue={(option: AttributeOption) => option.value}
+                    required={required}
                 >
                     {options &&
-                        options.map((option: AttributeOption) => {
+                        options.map((customer: Customer) => {
                             return (
                                 // @ts-ignore
-                                <MenuItem key={option.id} value={option}>
-                                    {option.value}
+                                <MenuItem key={customer.id} value={customer.id}>
+                                    {customer.name}
                                 </MenuItem>
                             );
                         })}
                 </Select>
             </FormControl>
-        </Box>
+        </>
     );
 };
-
-export default AttributeSelect;

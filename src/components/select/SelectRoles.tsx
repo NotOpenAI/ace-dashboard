@@ -13,7 +13,7 @@ type SelectProps = {
     required?: boolean;
 };
 
-export const Roles = ({
+export const SelectRoles = ({
     options,
     value,
     onChange,
@@ -32,7 +32,7 @@ export const Roles = ({
                     fullWidth
                     // @ts-ignore
                     value={value}
-                    label={'Roles'}
+                    label={'SelectRoles'}
                     onChange={handleChange}
                     renderValue={(selected) => (
                         <Box

@@ -1,53 +1,51 @@
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { AttributeOption } from '../pages/bids/NewBid.tsx';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
+import { Status } from '../../types/Bid.tsx';
 
 type SelectProps = {
     label: string;
-    required: boolean;
-    options?: AttributeOption[];
-    value: AttributeOption;
-    onChange: (selected: string) => void;
+    options: Status[];
+    value?: number;
+    onChange: Function;
+    required?: boolean;
 };
 
-const AttributeSelect = ({
+export const SelectStatus = ({
     label,
     options,
-    required,
     value,
     onChange,
+    required = false,
 }: SelectProps) => {
     const handleChange = (event: SelectChangeEvent) => {
-        onChange(event.target.value);
+        onChange(event);
     };
 
     return (
-        <Box>
+        <>
             <FormControl fullWidth required={required}>
                 <InputLabel>{label}</InputLabel>
                 <Select
-                    value={value || ''}
-                    label={label}
+                    fullWidth
                     // @ts-ignore
+                    value={value}
+                    label={label}
                     onChange={handleChange}
-                    renderValue={(option: AttributeOption) => option.value}
+                    required={required}
                 >
                     {options &&
-                        options.map((option: AttributeOption) => {
+                        options.map((status: Status) => {
                             return (
                                 // @ts-ignore
-                                <MenuItem key={option.id} value={option}>
-                                    {option.value}
+                                <MenuItem key={status.id} value={status.id}>
+                                    {status.value}
                                 </MenuItem>
                             );
                         })}
                 </Select>
             </FormControl>
-        </Box>
+        </>
     );
 };
-
-export default AttributeSelect;
