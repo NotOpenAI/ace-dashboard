@@ -29,6 +29,7 @@ const columns: GridColDef[] = [
         field: 'roles',
         headerName: 'Roles',
         renderCell: renderRoles,
+        minWidth: 140,
         flex: 1,
     },
     {

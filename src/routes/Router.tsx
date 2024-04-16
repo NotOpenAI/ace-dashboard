@@ -1,10 +1,10 @@
 import { CustomerInfo } from '../pages/customers/CustomerInfo.tsx';
 import { NewCustomer } from '../pages/customers/NewCustomer.tsx';
 import Customers from '../pages/customers/Customers.tsx';
+import { BidInfo } from '../pages/bids/BidInfo.tsx';
 import UserInfo from '../pages/users/UserInfo.tsx';
 import { NewBid } from '../pages/bids/NewBid.tsx';
 import NewUser from '../pages/users/NewUser.tsx';
-import { BidV3 } from '../pages/bids/BidV3.tsx';
 import MainLayout from '../layouts/MainLayout';
 import { Bids } from '../pages/bids/Bids.tsx';
 import Users from '../pages/users/Users.tsx';
@@ -32,7 +32,7 @@ const Router = () => {
                 },
                 {
                     path: 'bids/:id',
-                    element: <BidV3 />,
+                    element: <BidInfo />,
                 },
                 {
                     path: 'users',

@@ -26,9 +26,9 @@ export type Bid = {
 export type BidAttribute = {
     num_val: number;
     type: AttributeType;
-    option: AttributeOption;
-    created_at: string;
-    updated_at: string;
+    option?: AttributeOption;
+    created_at?: string;
+    updated_at?: string;
 };
 
 export type Attribute = {
@@ -40,6 +40,12 @@ export type Attribute = {
     num_val: string;
     type: AttributeType;
     option: AttributeOption;
+};
+
+export type AttributeUpdate = {
+    num_val?: number;
+    type_id: number;
+    option_id?: number;
 };
 
 export type AttributeOption = {
@@ -72,3 +78,23 @@ export const bidStatusOptions: Status[] = [
         value: 'Accepted',
     },
 ];
+
+export type UpdateRequestBody = {
+    name?: string;
+    lead?: string;
+    bid_manager_ids?: number[];
+    project_manager_ids?: number[];
+    foreman?: string;
+    desired_margin?: number;
+    start_date?: string;
+    finish_date?: string;
+    bid_status_id?: number;
+    job_status_id?: number;
+    original_contract?: number;
+    new_comments?: string[];
+    final_cost?: number;
+    attributes?: {
+        updated_attributes?: Partial<AttributeUpdate>[];
+        deleted_attributes?: number[];
+    };
+};

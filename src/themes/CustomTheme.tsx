@@ -6,7 +6,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 
-import { deepPurple, teal } from '@mui/material/colors';
+import { teal, grey } from '@mui/material/colors';
 import { ReactNode } from 'react';
 
 interface CustomThemeProps {
@@ -20,7 +20,7 @@ const CustomTheme = ({ children }: CustomThemeProps) => {
         palette: {
             mode: prefersDarkMode ? 'dark' : 'light',
             primary: teal,
-            secondary: deepPurple,
+            secondary: grey,
             background: {
                 default: prefersDarkMode ? '#151515' : '#f6f6f6',
             },
