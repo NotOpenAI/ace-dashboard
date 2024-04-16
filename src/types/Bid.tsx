@@ -3,7 +3,7 @@ import { Manager } from './Role.tsx';
 
 export type Bid = {
     name: string;
-    id: number;
+    id?: number;
     bid_status: Status;
     job_status: Status;
     bid_managers: Manager[];
@@ -57,3 +57,18 @@ export type Status = {
     id: number;
     value: string;
 };
+
+export const bidStatusOptions: Status[] = [
+    {
+        id: 1,
+        value: 'New',
+    },
+    {
+        id: 2,
+        value: 'Rejected',
+    },
+    {
+        id: 3,
+        value: 'Accepted',
+    },
+];

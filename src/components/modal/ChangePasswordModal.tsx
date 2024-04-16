@@ -65,9 +65,6 @@ const ChangePasswordModal = ({ id }: ChangePasswordProps) => {
                     Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
                 },
             })
-            .then((response) => {
-                console.log(response);
-            })
             .catch((error) => console.error(error))
             .finally(() => {
                 setOpen(false);
