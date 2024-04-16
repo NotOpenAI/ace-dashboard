@@ -1,6 +1,6 @@
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { NavLink as RouterLink } from 'react-router-dom';
 import { GridRenderCellParams } from '@mui/x-data-grid';
-import InfoIcon from '@mui/icons-material/Info';
 import { Button, Stack } from '@mui/material';
 import { ReactNode } from 'react';
 
@@ -14,12 +14,13 @@ const renderCustomer = (params: GridRenderCellParams): ReactNode => {
         >
             <Button
                 size={'small'}
-                startIcon={<InfoIcon />}
+                startIcon={<OpenInNewIcon />}
                 color={'inherit'}
                 variant={'outlined'}
-                sx={{ borderRadius: 4, textTransform: 'none' }}
+                sx={{ textTransform: 'none' }}
                 component={RouterLink}
                 to={`/customers/${params.value.id}`}
+                target={'_blank'}
             >
                 {params.value.name}
             </Button>

@@ -12,10 +12,10 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import { SelectRoles } from '../../components/select/SelectRoles.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { SetStateAction, useEffect, useState } from 'react';
-import { Roles } from '../../components/select/Roles.tsx';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -259,7 +259,7 @@ const NewUser = () => {
                                 </Stack>
                                 {roles && (
                                     <Stack direction={'row'} spacing={1}>
-                                        <Roles
+                                        <SelectRoles
                                             options={roles}
                                             value={userRoles}
                                             onChange={handleRoleSelectChange}

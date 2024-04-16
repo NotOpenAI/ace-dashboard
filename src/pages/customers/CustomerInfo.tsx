@@ -23,7 +23,7 @@ import { BASE_URL } from '../../constants.tsx';
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 export const CustomerInfo = () => {
@@ -329,23 +329,23 @@ export const CustomerInfo = () => {
                                                 }
                                                 fullWidth
                                             />
-                                            <Tooltip
-                                                title={'Remove'}
-                                                placement={'bottom'}
-                                                arrow
-                                            >
-                                                <IconButton
-                                                    color={'error'}
-                                                    sx={{ borderRadius: 1 }}
-                                                    onClick={() =>
-                                                        handleDeleteContact(
-                                                            index
-                                                        )
-                                                    }
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Tooltip>
+                                            {/*<Tooltip*/}
+                                            {/*    title={'Remove'}*/}
+                                            {/*    placement={'bottom'}*/}
+                                            {/*    arrow*/}
+                                            {/*>*/}
+                                            {/*    <IconButton*/}
+                                            {/*        color={'error'}*/}
+                                            {/*        sx={{ borderRadius: 1 }}*/}
+                                            {/*        onClick={() =>*/}
+                                            {/*            handleDeleteContact(*/}
+                                            {/*                index*/}
+                                            {/*            )*/}
+                                            {/*        }*/}
+                                            {/*    >*/}
+                                            {/*        <DeleteIcon />*/}
+                                            {/*    </IconButton>*/}
+                                            {/*</Tooltip>*/}
                                         </Stack>
                                     </div>
                                 )

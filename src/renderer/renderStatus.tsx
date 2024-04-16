@@ -1,66 +1,59 @@
-import AutorenewIcon from '@mui/icons-material/Autorenew';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import ErrorIcon from '@mui/icons-material/Error';
 import InfoIcon from '@mui/icons-material/Info';
 import DoneIcon from '@mui/icons-material/Done';
-import { styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import { ReactNode } from 'react';
 import * as React from 'react';
 
-const StyledChip = styled(Chip)(({ theme }) => ({
-    justifyContent: 'left',
-    '& .icon': {
-        color: 'inherit',
-    },
-    '&.New': {
-        color: theme.palette.info.dark,
-        border: `1px solid ${theme.palette.info.main}`,
-    },
-    '&.Approved': {
-        color: theme.palette.success.dark,
-        border: `1px solid ${theme.palette.success.main}`,
-    },
-    '&.InProgress': {
-        color: theme.palette.warning.dark,
-        border: `1px solid ${theme.palette.warning.main}`,
-    },
-    '&.Rejected': {
-        color: theme.palette.error.dark,
-        border: `1px solid ${theme.palette.error.main}`,
-    },
-}));
-
 interface StatusProps {
-    status: string;
+    status: {
+        id: number;
+        value: string;
+    };
 }
 
 const Status = React.memo((props: StatusProps) => {
     const { status } = props;
 
-    let icon: any = null;
-    if (status === 'Rejected') {
+    let icon: React.ReactElement = <QuestionMarkIcon />;
+    let color:
+        | 'error'
+        | 'info'
+        | 'success'
+        | 'default'
+        | 'primary'
+        | 'secondary'
+        | 'warning' = 'default';
+    let variant: 'filled' | 'outlined' = 'outlined';
+    if (status.value === 'Rejected') {
         icon = <ErrorIcon className='icon' />;
-    } else if (status === 'New') {
+        color = 'error';
+    } else if (status.value === 'New') {
         icon = <InfoIcon className='icon' />;
-    } else if (status === 'In Progress') {
-        icon = <AutorenewIcon className='icon' />;
-    } else if (status === 'Approved') {
+        color = 'info';
+    } else if (status.value === 'Accepted') {
+        icon = <CheckCircleIcon className='icon' />;
+        color = 'success';
+    } else if (status.value === 'Active') {
+        icon = <ConstructionIcon className='icon' />;
+        color = 'info';
+        variant = 'filled';
+    } else if (status.value === 'Completed') {
         icon = <DoneIcon className='icon' />;
-    }
-
-    let label: string = status;
-    if (status === 'PartiallyFilled') {
-        label = 'Partially Filled';
+        color = 'success';
+        variant = 'filled';
     }
 
     return (
-        <StyledChip
-            className={status.replace(' ', '')}
+        <Chip
+            label={status.value}
+            color={color}
+            variant={variant}
             icon={icon}
-            size='small'
-            label={label}
-            variant='outlined'
         />
     );
 });

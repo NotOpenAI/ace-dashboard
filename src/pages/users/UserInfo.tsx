@@ -12,9 +12,9 @@ import {
     Typography,
 } from '@mui/material';
 import ChangePasswordModal from '../../components/modal/ChangePasswordModal.tsx';
+import { SelectRoles } from '../../components/select/SelectRoles.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { SetStateAction, useEffect, useState } from 'react';
-import { Roles } from '../../components/select/Roles.tsx';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import Footer from '../../components/Footer.tsx';
@@ -22,7 +22,7 @@ import { BASE_URL } from '../../constants.tsx';
 import { Role } from '../../types/Role.tsx';
 import { User } from '../../types/User.tsx';
 import { useSnackbar } from 'notistack';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import axios from 'axios';
 
 const UserInfo = () => {
@@ -172,6 +172,7 @@ const UserInfo = () => {
         });
         setUserRoles(user?.roles.map((role) => role.id));
     };
+
     return (
         <>
             <Breadcrumbs
@@ -268,7 +269,7 @@ const UserInfo = () => {
                                 </Stack>
                                 {roles && (
                                     <Stack direction={'row'} spacing={1}>
-                                        <Roles
+                                        <SelectRoles
                                             options={roles}
                                             value={userRoles}
                                             onChange={handleRoleSelectChange}
