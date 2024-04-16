@@ -4,16 +4,13 @@ import {
     Checkbox,
     FormControlLabel,
     Modal,
-    Snackbar,
     TextField,
     Typography,
-    Alert,
     Stack,
 } from '@mui/material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Attribute } from '../types/Bid.tsx';
 import { BASE_URL } from '../constants.tsx';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';

@@ -9,6 +9,7 @@ type SelectProps = {
     value?: number;
     onChange: Function;
     required?: boolean;
+    disabled?: boolean;
 };
 
 export const SelectCustomer = ({
@@ -16,6 +17,7 @@ export const SelectCustomer = ({
     value,
     onChange,
     required = false,
+    disabled = false,
 }: SelectProps) => {
     const handleChange = (event: SelectChangeEvent) => {
         onChange(event);
@@ -32,6 +34,7 @@ export const SelectCustomer = ({
                     label={'Customer'}
                     onChange={handleChange}
                     required={required}
+                    disabled={disabled}
                 >
                     {options &&
                         options.map((customer: Customer) => {

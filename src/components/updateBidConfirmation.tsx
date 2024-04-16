@@ -1,78 +1,59 @@
 import { Box, Button, Modal, Typography, Stack } from '@mui/material';
-import { Bid } from '../pages/bids/NewBid.tsx';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { UpdateRequestBody } from '../types/Bid.tsx';
 import { SPACING } from '../constants.tsx';
+import { useState } from 'react';
 
 type NewAttributeProps = {
-    updatedBid?: Bid;
-    originalBid?: Bid;
+    requestBody: UpdateRequestBody;
     onSave: () => void;
-};
-
-type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
+    disabled: boolean;
 };
 
 const UpdateBidConfirmation = ({
-    updatedBid,
-    originalBid,
+    requestBody,
     onSave,
+    disabled,
 }: NewAttributeProps) => {
-    const [accessToken, setAccessToken] = useState<string>('');
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            setAccessToken(token);
-        } else {
-            navigate('/login');
-        }
-    }, []);
-
     const [open, setOpen] = useState(false);
-
-    const [changes, setChanges] = useState<object>();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const getObjectChanges = (original?: Bid, updated?: Bid) => {
-        const changes: DeepPartial<T> = {};
+    // Example mapping of property IDs to names
+    const propertyNames: Record<string, string> = {
+        name: 'Name',
+        lead: 'Lead',
+        foreman: 'Foreman',
+        desired_margin: 'Desired Margin',
+        start_date: 'Start Date',
+        finish_date: 'Finish Date',
+        bid_status_id: 'Bid Status',
+        job_status_id: 'Job Status',
+        original_contract: 'Original Contract',
+        final_cost: 'Final Cost',
+        bid_manager_ids: 'Bid Managers',
+        project_manager_ids: 'Project Managers',
+        attributes: 'Attributes',
+    };
 
-        for (const key in original) {
-            if (original.hasOwnProperty(key)) {
-                const originalValue = original[key];
-                const updatedValue = updated[key];
-
-                if (
-                    typeof originalValue === 'object' &&
-                    typeof updatedValue === 'object'
-                ) {
-                    const nestedChanges = getObjectChanges(
-                        originalValue,
-                        updatedValue
-                    );
-                    if (Object.keys(nestedChanges).length > 0) {
-                        changes[key] = nestedChanges;
-                    }
-                } else if (originalValue !== updatedValue) {
-                    changes[key] = {
-                        original: originalValue,
-                        updated: updatedValue,
-                    };
-                }
-            }
+    const renderPropertyValue = (key: string, value: any) => {
+        if (typeof value === 'object' && value !== null) {
+            return JSON.stringify(value, null, 2); // Pretty print objects
+        } else {
+            // Check if the key exists in propertyNames, if yes, use the name, otherwise use the key
+            const propertyName = propertyNames[key] || key;
+            return String(propertyName) + ': ' + String(value); // Render other types as string
         }
-
-        return changes;
     };
 
     return (
         <>
-            <Button variant={'contained'} onClick={handleOpen}>
-                Save
+            <Button
+                variant={'contained'}
+                onClick={handleOpen}
+                disabled={disabled}
+            >
+                Save with Modal
             </Button>
             <Modal open={open} onClose={handleClose}>
                 <Box
@@ -99,9 +80,75 @@ const UpdateBidConfirmation = ({
                         Properties changed:
                     </Typography>
                     <Stack direction={'column'} spacing={SPACING}>
-                        {}
+                        {Object.entries(requestBody).map(([key, value]) => (
+                            <Box key={key}>
+                                <Typography
+                                    variant='subtitle1'
+                                    fontWeight='bold'
+                                >
+                                    {key}
+                                </Typography>
+                                <Typography variant='body2'>
+                                    {renderPropertyValue(key, value)}
+                                </Typography>
+                            </Box>
+                        ))}
                     </Stack>
 
+                    <Stack direction={'column'} spacing={SPACING}>
+                        {requestBody.attributes &&
+                            requestBody.attributes.updated_attributes && (
+                                <>
+                                    <Typography variant={'body1'}>
+                                        Updated Attributes:
+                                    </Typography>
+                                    {requestBody.attributes.updated_attributes.map(
+                                        (attribute, index) => (
+                                            <Box key={index}>
+                                                <Typography
+                                                    variant='subtitle1'
+                                                    fontWeight='bold'
+                                                >
+                                                    Attribute {index + 1}
+                                                </Typography>
+                                                {Object.entries(attribute).map(
+                                                    ([key, value]) => (
+                                                        <Typography
+                                                            key={key}
+                                                            variant='body2'
+                                                        >
+                                                            {key}:{' '}
+                                                            {JSON.stringify(
+                                                                value
+                                                            )}
+                                                        </Typography>
+                                                    )
+                                                )}
+                                            </Box>
+                                        )
+                                    )}
+                                </>
+                            )}
+
+                        {requestBody.attributes &&
+                            requestBody.attributes.deleted_attributes && (
+                                <>
+                                    <Typography variant={'body1'}>
+                                        Deleted Attributes:
+                                    </Typography>
+                                    {requestBody.attributes.deleted_attributes.map(
+                                        (id, index) => (
+                                            <Typography
+                                                key={index}
+                                                variant='body2'
+                                            >
+                                                Attribute ID: {id}
+                                            </Typography>
+                                        )
+                                    )}
+                                </>
+                            )}
+                    </Stack>
                     <Stack
                         direction={'row'}
                         justifyContent={'flex-end'}
