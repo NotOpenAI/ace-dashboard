@@ -13,6 +13,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { BASE_URL } from '../../constants.tsx';
+import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -32,38 +33,62 @@ const RecommendedActionModal = ({
     desiredMargin,
     handleSetBidStatus,
 }: ChangePasswordProps) => {
+    const [accessToken, setAccessToken] = useState<string>('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        const sessionExpiration = localStorage.getItem('sessionExpiration');
+
+        if (sessionExpiration) {
+            if (parseInt(sessionExpiration) - new Date().getTime() < 0) {
+                navigate('/login');
+            }
+        }
+
+        if (token) {
+            setAccessToken(token);
+        } else {
+            navigate('/login');
+        }
+    }, []);
+
     const [open, setOpen] = useState<boolean>(false);
     const [showComments, setShowComments] = useState<boolean>(false);
     const [selectedOption, setSelectedOption] = useState<'success' | 'error'>();
+    const [estimatedMargin, setEstimatedMargin] = useState<number>(0);
+    const [error, setError] = useState<string>();
+    const [loading, setLoading] = useState<boolean>(true);
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
+        setShowComments(false);
     };
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [estimatedMargin, setEstimatedMargin] = useState<number>(0);
+    const handleOpen = () => {
+        setOpen(true);
 
-    useEffect(() => {
-        // axios
-        //     .get(`${BASE_URL}/ai/${id}`)
-        //     .then((response) => {
-        //         console.log(response.data.data);
-        //         setEstimatedMargin(response.data.data);
-        //     })
-        //     .catch((error) =>
-        //         enqueueSnackbar(error.response.data, { variant: 'error' })
-        //     );
-
-        const timeoutId = setTimeout(() => {
-            setLoading(false);
-            setEstimatedMargin(Math.floor(Math.random() * 100) + 1);
-        }, 2500);
-
-        return () => clearTimeout(timeoutId);
-    }, []);
+        axios
+            .get(`${BASE_URL}/ai/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+                },
+            })
+            .then((response) => {
+                setEstimatedMargin(
+                    Math.round(parseFloat(response.data.data) * 10000) / 100
+                );
+            })
+            .catch((error) => {
+                setError('Not enough data');
+                enqueueSnackbar(error.response.data.detail, {
+                    variant: 'error',
+                });
+            })
+            .finally(() => setLoading(false));
+    };
 
     const handleReject = () => {
         setShowComments(true);
@@ -140,7 +165,8 @@ const RecommendedActionModal = ({
                                     color={
                                         loading
                                             ? 'default'
-                                            : estimatedMargin < desiredMargin
+                                            : estimatedMargin < desiredMargin &&
+                                                !error
                                               ? 'error'
                                               : 'default'
                                     }
@@ -212,7 +238,11 @@ const RecommendedActionModal = ({
                                 AI Estimated Margin:{' '}
                                 {!loading && (
                                     <>
-                                        <strong>{estimatedMargin}%</strong>
+                                        <strong>
+                                            {error
+                                                ? error
+                                                : `${estimatedMargin}%`}
+                                        </strong>
                                     </>
                                 )}
                             </Typography>
