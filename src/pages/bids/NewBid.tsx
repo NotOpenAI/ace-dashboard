@@ -181,10 +181,7 @@ export const NewBid = () => {
     useEffect(() => {
         // Check if all required fields are filled
         const requiredFieldsFilled =
-            bid.name !== '' &&
-            bid.lead !== '' &&
-            bid.original_contract !== 0 &&
-            bid.final_cost !== 0;
+            bid.name !== '' && bid.lead !== '' && bid.original_contract !== 0;
 
         // Check if all attributes marked as required have values
         const allAttributesFilled = attributes.every(

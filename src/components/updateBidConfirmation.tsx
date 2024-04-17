@@ -53,7 +53,7 @@ const UpdateBidConfirmation = ({
                 onClick={handleOpen}
                 disabled={disabled}
             >
-                Save with Modal
+                View Changes
             </Button>
             <Modal open={open} onClose={handleClose}>
                 <Box
