@@ -1,5 +1,7 @@
+import { AttributeInfo } from '../pages/attributes/AttributeInfo.tsx';
 import { CustomerInfo } from '../pages/customers/CustomerInfo.tsx';
 import { NewCustomer } from '../pages/customers/NewCustomer.tsx';
+import { Attributes } from '../pages/attributes/Attributes.tsx';
 import Customers from '../pages/customers/Customers.tsx';
 import { BidInfo } from '../pages/bids/BidInfo.tsx';
 import UserInfo from '../pages/users/UserInfo.tsx';
@@ -57,6 +59,14 @@ const Router = () => {
                 {
                     path: 'customers/new',
                     element: <NewCustomer />,
+                },
+                {
+                    path: 'attributes',
+                    element: <Attributes />,
+                },
+                {
+                    path: 'attributes/:id',
+                    element: <AttributeInfo />,
                 },
                 {
                     path: 'account',

@@ -98,3 +98,12 @@ export type UpdateRequestBody = {
         deleted_attributes?: number[];
     };
 };
+
+export type AttributeComparisonResult = {
+    options: {
+        update_options: AttributeOption[];
+        delete_options: number[];
+    };
+    active: boolean;
+    required: boolean;
+};

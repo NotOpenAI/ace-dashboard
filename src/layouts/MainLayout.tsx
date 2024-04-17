@@ -1,8 +1,6 @@
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { Outlet, useLocation, NavLink as RouterLink } from 'react-router-dom';
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import ViewListRoundedIcon from '@mui/icons-material/ViewListRounded';
 import { capitalizeEachWord } from '../utils/capitalizeEachWord.tsx';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -12,6 +10,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ListItemButton from '@mui/material/ListItemButton';
 import AccountMenu from '../components/AccountMenu.tsx';
+import DatasetIcon from '@mui/icons-material/Dataset';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
@@ -101,7 +100,7 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-const navItems = ['', 'bids', 'customers', 'users'];
+const navItems = ['', 'bids', 'customers', 'users', 'attributes'];
 
 const MainLayout = () => {
     const theme = useTheme();
@@ -190,14 +189,9 @@ const MainLayout = () => {
                                 >
                                     {text === '' && <HomeRoundedIcon />}
                                     {text === 'bids' && <ViewListRoundedIcon />}
-                                    {text === 'projects' && (
-                                        <AssignmentRoundedIcon />
-                                    )}
                                     {text === 'customers' && <PeopleIcon />}
                                     {text === 'users' && <ManageAccountsIcon />}
-                                    {text === 'operational data' && (
-                                        <DataThresholdingIcon />
-                                    )}
+                                    {text === 'attributes' && <DatasetIcon />}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={capitalizeEachWord(text || 'Home')}

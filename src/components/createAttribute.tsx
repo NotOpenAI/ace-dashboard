@@ -12,8 +12,8 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../constants.tsx';
-import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+import axios from 'axios';
 
 type NewAttributeProps = {
     handleAddAttribute?: () => void;
@@ -102,7 +102,7 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
                     handleAddAttribute?.();
                     handleClose();
                 })
-                .catch((error: AxiosError) => {
+                .catch((error) => {
                     enqueueSnackbar(error.response.data.detail, {
                         variant: 'error',
                     });

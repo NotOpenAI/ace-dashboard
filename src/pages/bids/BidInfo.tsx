@@ -474,7 +474,9 @@ export const BidInfo = () => {
                                         <RecommendedActionModal
                                             id={parseInt(id)}
                                             name={bid?.name}
-                                            desiredMargin={bid.desired_margin}
+                                            desiredMargin={parseInt(
+                                                String(bid.desired_margin)
+                                            )}
                                             handleSetBidStatus={
                                                 handleBidStatusChangeOnAIRecommendation
                                             }
