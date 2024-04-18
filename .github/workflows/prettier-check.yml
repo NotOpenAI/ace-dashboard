@@ -2,24 +2,19 @@ name: Prettier Check
 
 on:
   pull_request:
-    paths:
-      - '**/*.{tsx,json,css,scss,md}'
+  push:
+    branches:
+      - main
 
 jobs:
-  prettier-check:
+  prettier:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
         with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Check code formatting with Prettier
-        run: npx prettier --check '**/*.{tsx,json,css,scss,md}'
+          prettier_options: --write src/**/*.tsx

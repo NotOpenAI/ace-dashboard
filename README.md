@@ -1,10 +1,22 @@
 # ACE Dashboard
 
-To install `yarn`, see [docs](https://classic.yarnpkg.com/en/). 
+### About US Ceiling
 
-To run locally, run the following commands
-```shell
-cd ace-dashboard
-yarn
-yarn run dev
-```
+US Ceiling Corp is a contractor specializing in interior construction for commercial, multifamily, and residential
+projects. US ceiling is looking to incorporate artificial intelligence into the bid and project cost estimation process.
+
+## Installation
+
+This project was initialized using Vite's [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite)
+package (with template `react-ts`), alongside npm as a package manager.
+
+To install npm, see their [Installation Guide](https://npmpkg.com/getting-started/install).
+
+### Development
+
+To get started, run ```npm install``` at the base of the repository:
+
+To start the app locally, run ```npm run dev```. Open http://localhost:5174 to view it in a browser.
+
+To format the repository according to [prettier](https://prettier.io/) standards, run ```npm run format```.
+
