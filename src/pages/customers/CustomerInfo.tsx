@@ -95,6 +95,7 @@ export const CustomerInfo = () => {
 
             return {
                 ...prevCustomer,
+                // @ts-ignore
                 contacts: [...prevCustomer.contacts, newContact],
             };
         });
@@ -277,70 +278,74 @@ export const CustomerInfo = () => {
                             spacing={1}
                             sx={{ paddingY: 2 }}
                         >
-                            {customer?.contacts.map(
-                                (contact: Contact, index) => (
-                                    <div key={index}>
-                                        <Stack direction={'row'} spacing={1}>
-                                            <TextField
-                                                variant={'outlined'}
-                                                label={'Name'}
-                                                value={contact.name || ''}
-                                                onChange={(e) =>
-                                                    handleContactFieldChange(
-                                                        index,
-                                                        'name',
-                                                        e.target.value
-                                                    )
-                                                }
-                                                fullWidth
-                                            />
-                                            <TextField
-                                                variant={'outlined'}
-                                                label={'Email'}
-                                                value={contact.email || ''}
-                                                onChange={(e) =>
-                                                    handleContactFieldChange(
-                                                        index,
-                                                        'email',
-                                                        e.target.value
-                                                    )
-                                                }
-                                                fullWidth
-                                            />
-                                            <TextField
-                                                variant={'outlined'}
-                                                label={'Phone'}
-                                                value={contact.phone || ''}
-                                                onChange={(e) =>
-                                                    handleContactFieldChange(
-                                                        index,
-                                                        'phone',
-                                                        e.target.value
-                                                    )
-                                                }
-                                                fullWidth
-                                            />
-                                            {/*<Tooltip*/}
-                                            {/*    title={'Remove'}*/}
-                                            {/*    placement={'bottom'}*/}
-                                            {/*    arrow*/}
-                                            {/*>*/}
-                                            {/*    <IconButton*/}
-                                            {/*        color={'error'}*/}
-                                            {/*        sx={{ borderRadius: 1 }}*/}
-                                            {/*        onClick={() =>*/}
-                                            {/*            handleDeleteContact(*/}
-                                            {/*                index*/}
-                                            {/*            )*/}
-                                            {/*        }*/}
-                                            {/*    >*/}
-                                            {/*        <DeleteIcon />*/}
-                                            {/*    </IconButton>*/}
-                                            {/*</Tooltip>*/}
-                                        </Stack>
-                                    </div>
-                                )
-                            )}
+                            {customer?.contacts &&
+                                customer?.contacts.map(
+                                    (contact: Contact, index) => (
+                                        <div key={index}>
+                                            <Stack
+                                                direction={'row'}
+                                                spacing={1}
+                                            >
+                                                <TextField
+                                                    variant={'outlined'}
+                                                    label={'Name'}
+                                                    value={contact.name || ''}
+                                                    onChange={(e) =>
+                                                        handleContactFieldChange(
+                                                            index,
+                                                            'name',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    fullWidth
+                                                />
+                                                <TextField
+                                                    variant={'outlined'}
+                                                    label={'Email'}
+                                                    value={contact.email || ''}
+                                                    onChange={(e) =>
+                                                        handleContactFieldChange(
+                                                            index,
+                                                            'email',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    fullWidth
+                                                />
+                                                <TextField
+                                                    variant={'outlined'}
+                                                    label={'Phone'}
+                                                    value={contact.phone || ''}
+                                                    onChange={(e) =>
+                                                        handleContactFieldChange(
+                                                            index,
+                                                            'phone',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    fullWidth
+                                                />
+                                                {/*<Tooltip*/}
+                                                {/*    title={'Remove'}*/}
+                                                {/*    placement={'bottom'}*/}
+                                                {/*    arrow*/}
+                                                {/*>*/}
+                                                {/*    <IconButton*/}
+                                                {/*        color={'error'}*/}
+                                                {/*        sx={{ borderRadius: 1 }}*/}
+                                                {/*        onClick={() =>*/}
+                                                {/*            handleDeleteContact(*/}
+                                                {/*                index*/}
+                                                {/*            )*/}
+                                                {/*        }*/}
+                                                {/*    >*/}
+                                                {/*        <DeleteIcon />*/}
+                                                {/*    </IconButton>*/}
+                                                {/*</Tooltip>*/}
+                                            </Stack>
+                                        </div>
+                                    )
+                                )}
                             <Button
                                 color={'primary'}
                                 startIcon={<AddRoundedIcon />}
