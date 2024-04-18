@@ -3,8 +3,11 @@ import {
     Breadcrumbs,
     Button,
     CircularProgress,
+    Container,
+    Divider,
     InputAdornment,
     Link,
+    MenuItem,
     Paper,
     Stack,
     TextField,
@@ -15,28 +18,26 @@ import {
     AttributeOption,
     Bid,
     bidStatusOptions,
+    jobStatusOptions,
     Status,
 } from '../../types/Bid.tsx';
-import {
-    BASE_URL,
-    FIELD_COLUMNS,
-    PAGE_COLUMNS,
-    SPACING,
-} from '../../constants.tsx';
+import { SelectCustomer } from '../../components/select/SelectCustomer.tsx';
+import { SelectManagers } from '../../components/select/SelectManagers.tsx';
+import { getCreateRequestBody } from '../../utils/getCreateRequestBody.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
 import { SelectStatus } from '../../components/select/SelectStatus.tsx';
-import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
-import CreateAttribute from '../../components/createAttribute.tsx';
-import AttributeSelect from '../../components/attributeSelect.tsx';
-import CustomerSelect from '../../components/customerSelect.tsx';
+import { BASE_URL, FIELD_COLUMNS, SPACING } from '../../constants.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ManagerSelect from '../../components/managerSelect.tsx';
 import { SetStateAction, useEffect, useState } from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers';
+import FormControl from '@mui/material/FormControl';
 import { Customer } from '../../types/Customer.tsx';
+import InputLabel from '@mui/material/InputLabel';
 import Footer from '../../components/Footer.tsx';
 import { Manager } from '../../types/Role.tsx';
-import { enqueueSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
+import Select from '@mui/material/Select';
+import { useSnackbar } from 'notistack';
 import { Masonry } from '@mui/lab';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -64,21 +65,18 @@ export const NewBid = () => {
 
     const [bid, setBid] = useState<Bid>({
         name: '',
-        bid_status: {
-            id: 1,
-            value: 'New',
-        },
         bid_managers: [],
         project_managers: [],
         lead: '',
         foreman: '',
-        // @ts-ignore
-        customer: '',
         start_date: '',
         finish_date: '',
         original_contract: 0,
         final_cost: 0,
+        desired_margin: 0,
+        actual_margin: 0,
         attributes: [],
+        comments: [],
         created_at: '',
         updated_at: '',
     });
@@ -87,77 +85,115 @@ export const NewBid = () => {
     const [bidManagers, setBidManagers] = useState<Manager[]>([]);
     const [projectManagers, setProjectManagers] = useState<Manager[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [loading, setLoading] = useState(true);
+
+    const [loading, setLoading] = useState(false);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (accessToken) {
-            fetchAttributeTypes();
-            fetchBidManagers();
-            fetchCustomers();
-            fetchProjectManagers();
+            fetchAllData();
         }
     }, [accessToken]);
 
-    const fetchAttributeTypes = () => {
-        axios
-            .get(`${BASE_URL}/bids/attribute-types`, {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
-                },
-            })
-            .then((response) => setAttributes(response.data.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+    const fetchAllData = async () => {
+        try {
+            await Promise.all([
+                fetchAttributeTypes(),
+                fetchBidManagers(),
+                fetchProjectManagers(),
+                fetchCustomers(),
+            ]);
+        } catch (error) {
+            // @ts-ignore
+            enqueueSnackbar(error.response.data.detail, { variant: 'error' });
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const fetchBidManagers = () => {
-        const params = {
-            role_name: 'Bid Manager',
-        };
-
-        axios
-            .get(`${BASE_URL}/users`, {
-                params,
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
-                },
-            })
-            .then((response) => setBidManagers(response.data.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+    const fetchAttributeTypes = async () => {
+        const response = await axios.get(`${BASE_URL}/bids/attribute-types`, {
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+            },
+        });
+        setAttributes(response.data.data);
     };
 
-    const fetchProjectManagers = () => {
-        const params = {
-            role_name: 'Project Manager',
-        };
-
-        axios
-            .get(`${BASE_URL}/users`, {
-                params,
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
-                },
-            })
-            .then((response) => setProjectManagers(response.data.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+    const fetchBidManagers = async () => {
+        const params = { role_name: 'Bid Manager' };
+        const response = await axios.get(`${BASE_URL}/users`, {
+            params,
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+            },
+        });
+        setBidManagers(response.data.data);
     };
 
-    const fetchCustomers = () => {
-        axios
-            .get(`${BASE_URL}/customers`, {
-                headers: {
-                    Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
-                },
-            })
-            .then((response) => setCustomers(response.data.data))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
+    const fetchProjectManagers = async () => {
+        const params = { role_name: 'Project Manager' };
+        const response = await axios.get(`${BASE_URL}/users`, {
+            params,
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+            },
+        });
+        setProjectManagers(response.data.data);
     };
 
-    const handleChange = (fieldName: keyof Bid, value: any) => {
-        setBid({ ...bid, [fieldName]: value });
+    const fetchCustomers = async () => {
+        const response = await axios.get(`${BASE_URL}/customers`, {
+            headers: {
+                Authorization: `Bearer ${encodeURIComponent(accessToken)}`,
+            },
+        });
+        setCustomers(response.data.data);
+    };
+
+    const [allRequiredFieldsFilled, setAllRequiredFieldsFilled] =
+        useState(false);
+
+    useEffect(() => {
+        // Check if all required fields are filled
+        const requiredFieldsFilled =
+            bid.name !== '' &&
+            bid.bid_status?.id !== undefined &&
+            bid.customer?.id !== undefined;
+
+        // Check if all attributes marked as required have values
+        const allAttributesFilled = attributes.every(
+            (attribute) =>
+                !attribute.required ||
+                (attribute.type.name === 'text'
+                    ? attribute.num_val !== ''
+                    : attribute.option !== undefined)
+        );
+
+        // Set the state to true if both required fields and attributes are filled
+        setAllRequiredFieldsFilled(requiredFieldsFilled && allAttributesFilled);
+    }, [bid, attributes]);
+
+    const handleTextFieldChange = (key: keyof Bid, value: string) => {
+        setBid((prevBid) => ({
+            ...prevBid,
+            [key]: value,
+        }));
+    };
+
+    const handleNumberFieldChange = (key: keyof Bid, value: string) => {
+        if (/^\d*\.?\d*$/.test(value)) {
+            setBid((prevBid) => ({
+                ...prevBid,
+                [key]: parseFloat(value),
+            }));
+        }
+    };
+
+    const handleDateChange = (key: keyof Bid, date: dayjs.Dayjs) => {
+        setBid({ ...bid, [key]: date });
     };
 
     const handleBidStatusSelectChange = (event: {
@@ -175,60 +211,173 @@ export const NewBid = () => {
         }
     };
 
-    const [allRequiredFieldsFilled, setAllRequiredFieldsFilled] =
-        useState(false);
+    const handleJobStatusSelectChange = (event: {
+        target: { value: SetStateAction<number | undefined> };
+    }) => {
+        const selectedJobStatusID = event.target.value;
+        if (typeof selectedJobStatusID === 'number') {
+            const selectedStatus: Status | undefined = jobStatusOptions.find(
+                (status: Status) => status.id === selectedJobStatusID
+            );
+            if (selectedStatus) {
+                // @ts-ignore
+                setBid({ ...bid, job_status: selectedStatus });
+            }
+        }
+    };
 
-    useEffect(() => {
-        // Check if all required fields are filled
-        const requiredFieldsFilled =
-            bid.name !== '' && bid.lead !== '' && bid.original_contract !== 0;
+    const handleCustomerChange = (event: {
+        target: { value: SetStateAction<number | undefined> };
+    }) => {
+        const selectedCustomerID = event.target.value;
+        if (typeof selectedCustomerID === 'number') {
+            const selectedCustomer: Customer | undefined = customers.find(
+                (customer: Customer) => customer.id === selectedCustomerID
+            );
+            if (selectedCustomer) {
+                // @ts-ignore
+                setBid({ ...bid, customer: selectedCustomer });
+            }
+        }
+    };
 
-        // Check if all attributes marked as required have values
-        const allAttributesFilled = attributes.every(
-            (attribute) =>
-                !attribute.required ||
-                (attribute.type.name === 'text'
-                    ? attribute.num_val !== ''
-                    : attribute.option !== undefined)
-        );
+    const handleBidManagersChange = (event: {
+        target: { value: SetStateAction<number[] | undefined> };
+    }) => {
+        const selectedManagerIds = event.target.value;
+        if (Array.isArray(selectedManagerIds)) {
+            const selectedManagers: Manager[] = bidManagers.filter(
+                (manager: Manager) => selectedManagerIds.includes(manager.id)
+            );
+            // @ts-ignore
+            setBid({ ...bid, bid_managers: selectedManagers });
+        }
+    };
 
-        // Set the state to true if both required fields and attributes are filled
-        setAllRequiredFieldsFilled(requiredFieldsFilled && allAttributesFilled);
-    }, [bid, attributes]);
+    const handleProjectManagersChange = (event: {
+        target: { value: SetStateAction<number[] | undefined> };
+    }) => {
+        const selectedManagerIds = event.target.value;
+        if (Array.isArray(selectedManagerIds)) {
+            const selectedManagers: Manager[] = projectManagers.filter(
+                (manager: Manager) => selectedManagerIds.includes(manager.id)
+            );
+            // @ts-ignore
+            setBid({ ...bid, project_managers: selectedManagers });
+        }
+    };
 
-    const handleCreateBid = () => {
-        const {
-            name,
-            bid_status,
-            bid_managers,
-            project_managers,
-            customer,
-            original_contract,
-            final_cost,
-            lead,
-            foreman,
-            start_date,
-            finish_date,
-            attributes,
-        } = bid;
+    const handleAttributeSelectChange = (
+        typeName: string,
+        optionId: number
+    ) => {
+        // @ts-ignore
+        setBid((prevBid: Bid | undefined) => {
+            if (!prevBid || !prevBid.attributes) return prevBid;
 
-        const requestBody = {
-            name,
-            bid_status_id: bid_status.id,
-            bid_manager_ids: bid_managers.map((manager) => manager.id),
-            project_manager_ids: project_managers.map((manager) => manager.id),
-            customer_id: customer.id,
-            original_contract,
-            final_cost,
-            lead,
-            foreman,
-            start_date,
-            finish_date,
-            attributes: attributes.map((attribute) => ({
-                type_id: attribute.id,
-                option_id: attribute.option.id,
-            })),
-        };
+            // Find the index of the attribute with the given type name
+            let attributeIndex = prevBid.attributes.findIndex(
+                (attribute) => attribute.type.name === typeName
+            );
+
+            if (attributeIndex === -1) {
+                attributeIndex = prevBid.attributes.length;
+
+                // Find the value of the option ID
+                const option = attributes
+                    .flatMap((attribute) => attribute.options)
+                    .find((option) => option.id === optionId);
+
+                // Update the option ID of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+
+                if (option) {
+                    updatedAttributes[attributeIndex] = {
+                        ...updatedAttributes[attributeIndex],
+                        type: {
+                            name: typeName,
+                            id: attributeIndex,
+                        },
+                        option: {
+                            value: option.value,
+                            id: option.id,
+                        },
+                    };
+                }
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            } else {
+                // Find the value of the option ID
+                const option = attributes
+                    .flatMap((attribute) => attribute.options)
+                    .find((option) => option.id === optionId);
+
+                // Update the option ID of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+
+                if (option) {
+                    updatedAttributes[attributeIndex] = {
+                        ...updatedAttributes[attributeIndex],
+                        option: {
+                            value: option.value,
+                            id: option.id,
+                        },
+                    };
+                }
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            }
+        });
+    };
+
+    const handleAttributeNumericChange = (typeName: string, numVal: number) => {
+        // @ts-ignore
+        setBid((prevBid: Bid | undefined) => {
+            if (!prevBid || !prevBid.attributes) return prevBid;
+
+            // Find the index of the attribute with the given type name
+            let attributeIndex = prevBid.attributes.findIndex(
+                (attribute) => attribute.type.name === typeName
+            );
+
+            if (attributeIndex === -1) {
+                attributeIndex = prevBid.attributes.length;
+
+                // Update the num_val of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+                updatedAttributes[attributeIndex] = {
+                    type: { name: typeName, id: attributeIndex },
+                    num_val: numVal,
+                };
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            } else {
+                // Update the num_val of the found attribute
+                const updatedAttributes = [...prevBid.attributes];
+                updatedAttributes[attributeIndex] = {
+                    ...updatedAttributes[attributeIndex],
+                    num_val: numVal,
+                };
+
+                return {
+                    ...prevBid,
+                    attributes: updatedAttributes,
+                };
+            }
+        });
+    };
+
+    const handleCreate = () => {
+        const requestBody = getCreateRequestBody(bid);
 
         axios
             .post(`${BASE_URL}/bids`, requestBody, {
@@ -256,8 +405,10 @@ export const NewBid = () => {
             });
     };
 
-    // @ts-ignore
-    // @ts-ignore
+    const handleCancel = () => {
+        navigate('/bids');
+    };
+
     return (
         <>
             <Breadcrumbs
@@ -270,289 +421,374 @@ export const NewBid = () => {
                 <Link href={'/bids'} color={'inherit'} underline={'hover'}>
                     Bids
                 </Link>
-                <Typography color={'text.primary'}>New</Typography>
+                <Typography color={'text.primary'}>New Bid</Typography>
             </Breadcrumbs>
             {loading ? (
                 <Box textAlign={'center'}>
                     <CircularProgress />
                 </Box>
             ) : (
-                <Masonry columns={PAGE_COLUMNS} spacing={SPACING}>
+                <Container maxWidth={'lg'}>
                     <Paper elevation={1} sx={{ borderRadius: 4, p: 2 }}>
-                        <Typography
-                            variant={'h6'}
-                            fontWeight={'light'}
-                            paddingBottom={SPACING}
+                        <Stack
+                            direction={'column'}
+                            spacing={1}
+                            divider={<Divider />}
                         >
-                            General Information
-                        </Typography>
-                        <Masonry columns={FIELD_COLUMNS} spacing={SPACING}>
-                            <TextField
-                                variant={'outlined'}
-                                label={'Name'}
-                                value={bid.name}
-                                onChange={(e) =>
-                                    handleChange('name', e.target.value)
-                                }
-                                fullWidth
-                                required
-                            />
-                            <SelectStatus
-                                label={'Bid Status'}
-                                options={bidStatusOptions}
-                                value={bid?.bid_status.id}
-                                onChange={handleBidStatusSelectChange}
-                            />
-                            <ManagerSelect
-                                label={'Bid Managers'}
-                                options={bidManagers}
-                                value={bid.bid_managers}
-                                onChange={(managers: Manager[]) => {
-                                    setBid({
-                                        ...bid,
-                                        ['bid_managers']: managers,
-                                    });
-                                }}
-                            />
-                            <ManagerSelect
-                                label={'Project Managers'}
-                                options={projectManagers}
-                                value={bid.project_managers}
-                                onChange={(managers: Manager[]) => {
-                                    setBid({
-                                        ...bid,
-                                        ['project_managers']: managers,
-                                    });
-                                }}
-                            />
-                            <TextField
-                                variant={'outlined'}
-                                label={'Lead'}
-                                value={bid.lead}
-                                onChange={(e) =>
-                                    handleChange('lead', e.target.value)
-                                }
-                                fullWidth
-                                required
-                            />
-                            <TextField
-                                variant={'outlined'}
-                                label={'Foreman'}
-                                value={bid.foreman}
-                                onChange={(e) =>
-                                    handleChange('foreman', e.target.value)
-                                }
-                                fullWidth
-                            />
-                            <CustomerSelect
-                                options={customers}
-                                // @ts-ignore
-                                value={bid.customer}
-                                onChange={(customer: Customer) => {
-                                    setBid({ ...bid, ['customer']: customer });
-                                }}
-                            />
-                            <TextField
-                                variant={'outlined'}
-                                label={'Original Contract'}
-                                value={bid.original_contract}
-                                onChange={(e) =>
-                                    handleChange(
-                                        'original_contract',
-                                        e.target.value
-                                    )
-                                }
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            $
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                type={'number'}
-                                fullWidth
-                            />
-                            <TextField
-                                variant={'outlined'}
-                                label={'Final Cost'}
-                                value={bid.final_cost}
-                                onChange={(e) =>
-                                    handleChange('final_cost', e.target.value)
-                                }
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            $
-                                        </InputAdornment>
-                                    ),
-                                }}
-                                type={'number'}
-                                fullWidth
-                            />
-                            <DateTimePicker
-                                label={'Start Date'}
-                                value={
-                                    bid?.start_date
-                                        ? dayjs(bid?.start_date)
-                                        : null
-                                }
-                                onChange={(date: dayjs.Dayjs | null) => {
-                                    if (date) {
-                                        handleChange('start_date', date);
-                                    }
-                                }}
-                            />
-                            <DateTimePicker
-                                label={'Finish Date'}
-                                value={
-                                    bid?.finish_date
-                                        ? dayjs(bid?.finish_date)
-                                        : null
-                                }
-                                onChange={(date: dayjs.Dayjs | null) => {
-                                    if (date) {
-                                        handleChange('finish_date', date);
-                                    }
-                                }}
-                            />
-                        </Masonry>
-                    </Paper>
-
-                    <Paper elevation={1} sx={{ borderRadius: 4, p: 2 }}>
-                        <Typography
-                            variant={'h6'}
-                            fontWeight={'light'}
-                            paddingBottom={SPACING}
-                        >
-                            Attributes
-                        </Typography>
-                        <Masonry columns={FIELD_COLUMNS} spacing={SPACING}>
-                            {attributes.map((attribute) => (
-                                <div key={attribute.id}>
-                                    {attribute.options.length ? (
-                                        <AttributeSelect
-                                            label={convertToSentenceCase(
-                                                attribute.name
-                                            )}
-                                            options={attribute.options}
-                                            required={attribute.required}
-                                            // @ts-ignore
-                                            value={
-                                                bid.attributes.find(
-                                                    (attr) =>
-                                                        attr.name ===
-                                                        attribute.name
-                                                )?.option || null
+                            <>
+                                <Stack
+                                    direction={'row'}
+                                    justifyContent={'space-between'}
+                                >
+                                    <Typography
+                                        variant={'h6'}
+                                        fontWeight={'light'}
+                                        paddingBottom={SPACING}
+                                    >
+                                        General Information
+                                    </Typography>
+                                </Stack>
+                                <Masonry
+                                    columns={FIELD_COLUMNS}
+                                    spacing={SPACING}
+                                >
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Name'}
+                                        value={bid?.name || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleTextFieldChange(
+                                                'name',
+                                                e.target.value
+                                            )
+                                        }
+                                        required
+                                    />
+                                    <SelectStatus
+                                        label={'Bid Status'}
+                                        options={bidStatusOptions}
+                                        value={
+                                            bid?.bid_status
+                                                ? bid?.bid_status.id
+                                                : ''
+                                        }
+                                        onChange={handleBidStatusSelectChange}
+                                        required
+                                    />
+                                    <SelectStatus
+                                        label={'Job Status'}
+                                        options={jobStatusOptions}
+                                        // @ts-ignore
+                                        value={
+                                            bid?.job_status
+                                                ? bid?.job_status.id
+                                                : ''
+                                        }
+                                        onChange={handleJobStatusSelectChange}
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Original Contract'}
+                                        value={bid?.original_contract || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleNumberFieldChange(
+                                                'original_contract',
+                                                e.target.value
+                                            )
+                                        }
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    $
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Final Cost'}
+                                        value={bid?.final_cost || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleNumberFieldChange(
+                                                'final_cost',
+                                                e.target.value
+                                            )
+                                        }
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position='start'>
+                                                    $
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Lead'}
+                                        value={bid?.lead || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleTextFieldChange(
+                                                'lead',
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Foreman'}
+                                        value={bid?.foreman || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleTextFieldChange(
+                                                'foreman',
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Desired Margin'}
+                                        value={bid?.desired_margin || ''}
+                                        onChange={(e) =>
+                                            handleNumberFieldChange(
+                                                'desired_margin',
+                                                e.target.value
+                                            )
+                                        }
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position='end'>
+                                                    %
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                        fullWidth
+                                    />
+                                    <DateTimePicker
+                                        label={'Start Date'}
+                                        value={
+                                            bid?.start_date
+                                                ? dayjs(bid?.start_date)
+                                                : null
+                                        }
+                                        onChange={(
+                                            date: dayjs.Dayjs | null
+                                        ) => {
+                                            if (date) {
+                                                handleDateChange(
+                                                    'start_date',
+                                                    date
+                                                );
                                             }
-                                            // @ts-ignore
-                                            onChange={(
-                                                selected: AttributeOption | null
-                                            ) => {
-                                                const updatedAttributes =
-                                                    bid.attributes.map(
-                                                        // @ts-ignore
-                                                        (attr: Attribute) => {
-                                                            if (
-                                                                attr.name ===
-                                                                attribute.name
-                                                            ) {
-                                                                return {
-                                                                    ...attr,
-                                                                    option: selected,
-                                                                };
-                                                            }
-                                                            return attr;
-                                                        }
-                                                    );
-                                                if (
-                                                    !bid.attributes.find(
-                                                        (attr) =>
-                                                            attr.name ===
+                                        }}
+                                    />
+                                    <DateTimePicker
+                                        label={'Finish Date'}
+                                        value={
+                                            bid?.finish_date
+                                                ? dayjs(bid?.finish_date)
+                                                : null
+                                        }
+                                        onChange={(
+                                            date: dayjs.Dayjs | null
+                                        ) => {
+                                            if (date) {
+                                                handleDateChange(
+                                                    'finish_date',
+                                                    date
+                                                );
+                                            }
+                                        }}
+                                    />
+                                </Masonry>
+                            </>
+                            <>
+                                <Typography
+                                    variant={'h6'}
+                                    fontWeight={'light'}
+                                    paddingBottom={SPACING}
+                                >
+                                    People
+                                </Typography>
+                                <Masonry
+                                    columns={FIELD_COLUMNS}
+                                    spacing={SPACING}
+                                >
+                                    <SelectCustomer
+                                        options={customers}
+                                        value={
+                                            bid.customer ? bid?.customer.id : ''
+                                        }
+                                        onChange={handleCustomerChange}
+                                        required
+                                    />
+                                    <SelectManagers
+                                        label={'Bid Managers'}
+                                        options={bidManagers}
+                                        value={
+                                            bid?.bid_managers.map(
+                                                (manager) => manager.id
+                                            ) || []
+                                        }
+                                        onChange={handleBidManagersChange}
+                                    />
+                                    <SelectManagers
+                                        label={'Project Managers'}
+                                        options={projectManagers}
+                                        value={
+                                            bid?.project_managers.map(
+                                                (manager) => manager.id
+                                            ) || []
+                                        }
+                                        onChange={handleProjectManagersChange}
+                                    />
+                                </Masonry>
+                            </>
+
+                            <>
+                                <Typography
+                                    variant={'h6'}
+                                    fontWeight={'light'}
+                                    paddingBottom={SPACING}
+                                >
+                                    Attributes
+                                </Typography>
+                                <Masonry
+                                    columns={FIELD_COLUMNS}
+                                    spacing={SPACING}
+                                >
+                                    {attributes.map((attribute: Attribute) => {
+                                        if (attribute.options.length > 0) {
+                                            let value = undefined;
+                                            let bidAttribute =
+                                                bid?.attributes.find(
+                                                    (bidAttribute) =>
+                                                        bidAttribute.type
+                                                            .name ===
+                                                        attribute.name
+                                                );
+                                            if (
+                                                bidAttribute &&
+                                                bidAttribute.option
+                                            ) {
+                                                value = bidAttribute.option.id;
+                                            } else {
+                                                value = '';
+                                            }
+
+                                            return (
+                                                <FormControl
+                                                    key={attribute.id}
+                                                    fullWidth
+                                                >
+                                                    <InputLabel>
+                                                        {convertToSentenceCase(
                                                             attribute.name
-                                                    )
-                                                ) {
-                                                    // If the attribute doesn't exist in bid.attributes, add it
-                                                    updatedAttributes.push({
-                                                        ...attribute,
-                                                        option: selected,
-                                                    });
-                                                }
-                                                setBid({
-                                                    ...bid,
-                                                    // @ts-ignore
-                                                    attributes:
-                                                        updatedAttributes,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <TextField
-                                            fullWidth
-                                            label={convertToSentenceCase(
-                                                attribute.name
-                                            )}
-                                            variant={'outlined'}
-                                            type={'number'}
-                                            value={attribute.num_val}
-                                            onChange={(e) => {
-                                                const updatedAttributes =
-                                                    bid.attributes.map(
-                                                        (attr: Attribute) => {
-                                                            if (
-                                                                attr.name ===
-                                                                attribute.name
-                                                            ) {
-                                                                return {
-                                                                    ...attr,
-                                                                    num_val:
+                                                        )}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={value}
+                                                        label={convertToSentenceCase(
+                                                            attribute.name
+                                                        )}
+                                                        onChange={(e) =>
+                                                            handleAttributeSelectChange(
+                                                                attribute.name,
+                                                                parseInt(
+                                                                    String(
                                                                         e.target
-                                                                            .value,
-                                                                };
-                                                            }
-                                                            return attr;
+                                                                            .value
+                                                                    )
+                                                                )
+                                                            )
                                                         }
-                                                    );
-                                                setBid({
-                                                    ...bid,
-                                                    attributes:
-                                                        updatedAttributes,
-                                                });
-                                            }}
-                                        />
-                                    )}
-                                </div>
-                            ))}
-                            <CreateAttribute />
-                            {/*<DeleteAttribute options={bid?.attributes} />*/}
-                        </Masonry>
+                                                    >
+                                                        {attribute.options.map(
+                                                            (
+                                                                option: AttributeOption
+                                                            ) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        option.id
+                                                                    }
+                                                                    value={
+                                                                        option.id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        option.value
+                                                                    }
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            );
+                                        } else {
+                                            let value = undefined;
+                                            let bidAttribute =
+                                                bid?.attributes.find(
+                                                    (bidAttribute) =>
+                                                        bidAttribute.type
+                                                            .name ===
+                                                        attribute.name
+                                                );
+                                            if (bidAttribute) {
+                                                value = bidAttribute.num_val;
+                                            } else {
+                                                value = '';
+                                            }
+                                            return (
+                                                <TextField
+                                                    key={attribute.id}
+                                                    variant={'outlined'}
+                                                    label={convertToSentenceCase(
+                                                        attribute.name
+                                                    )}
+                                                    value={value}
+                                                    onChange={(e) =>
+                                                        handleAttributeNumericChange(
+                                                            attribute.name,
+                                                            parseInt(
+                                                                e.target.value
+                                                            )
+                                                        )
+                                                    }
+                                                    fullWidth
+                                                />
+                                            );
+                                        }
+                                    })}
+                                </Masonry>
+                                <Stack
+                                    direction={'row'}
+                                    justifyContent={'flex-end'}
+                                    spacing={1}
+                                >
+                                    <Button
+                                        color={'inherit'}
+                                        onClick={handleCancel}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant={'contained'}
+                                        onClick={handleCreate}
+                                        disabled={!allRequiredFieldsFilled}
+                                    >
+                                        Create
+                                    </Button>
+                                </Stack>
+                            </>
+                        </Stack>
                     </Paper>
-                </Masonry>
+                </Container>
             )}
-            <Stack
-                direction={'row'}
-                justifyContent={'flex-end'}
-                spacing={1}
-                paddingTop={4}
-            >
-                <Button
-                    variant={'text'}
-                    color={'inherit'}
-                    component={RouterLink}
-                    to={'/bids'}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    variant={'contained'}
-                    onClick={handleCreateBid}
-                    disabled={!allRequiredFieldsFilled}
-                >
-                    Create
-                </Button>
-            </Stack>
             <Footer />
         </>
     );
 };
-
-export default NewBid;

@@ -5,13 +5,13 @@ import { User } from './User.tsx';
 export type Bid = {
     name: string;
     id?: number;
-    bid_status: Status;
-    job_status: Status;
+    bid_status?: Status;
+    job_status?: Status;
     bid_managers: Manager[];
     project_managers: Manager[];
     lead: string;
     foreman: string;
-    customer: Customer;
+    customer?: Customer;
     start_date: string;
     finish_date: string;
     original_contract: number;
@@ -87,6 +87,34 @@ export const bidStatusOptions: Status[] = [
         value: 'Accepted',
     },
 ];
+
+export const jobStatusOptions: Status[] = [
+    {
+        id: 1,
+        value: 'Active',
+    },
+    {
+        id: 2,
+        value: 'Completed',
+    },
+];
+
+export type CreateRequestBody = {
+    name?: string;
+    bid_manager_ids?: number[];
+    project_manager_ids?: number[];
+    customer_id?: number;
+    original_contract?: number;
+    final_cost?: number;
+    bid_status_id?: number;
+    job_status_id?: number;
+    lead?: string;
+    start_date?: string;
+    finish_date?: string;
+    foreman?: string;
+    desired_margin?: number;
+    attributes?: AttributeUpdate[];
+};
 
 export type UpdateRequestBody = {
     name?: string;

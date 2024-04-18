@@ -25,16 +25,17 @@ type ChangePasswordProps = {
     id: number;
     name: string;
     desiredMargin: number;
-    handleSetBidStatus: (option: 'Accepted' | 'Rejected') => void;
-    handleAddComment: (comment: Comment) => void;
+    handleUpdateBidAfterRecommendation: (
+        option: 'Accepted' | 'Rejected',
+        comment?: Comment
+    ) => void;
 };
 
 const RecommendedActionModal = ({
     id,
     name,
     desiredMargin,
-    handleSetBidStatus,
-    handleAddComment,
+    handleUpdateBidAfterRecommendation,
 }: ChangePasswordProps) => {
     const [accessToken, setAccessToken] = useState<string>('');
     const navigate = useNavigate();
@@ -69,6 +70,7 @@ const RecommendedActionModal = ({
     const handleClose = () => {
         setOpen(false);
         setShowComments(false);
+        setCommentText('');
     };
 
     const handleOpen = () => {
@@ -111,9 +113,10 @@ const RecommendedActionModal = ({
         } else if (selectedOption === 'error') {
             action = 'Rejected';
         }
-        handleSetBidStatus(action);
         if (commentText) {
-            handleAddComment({ text: commentText });
+            handleUpdateBidAfterRecommendation(action, { text: commentText });
+        } else {
+            handleUpdateBidAfterRecommendation(action);
         }
         handleClose();
         enqueueSnackbar(

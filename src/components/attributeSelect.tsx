@@ -1,7 +1,7 @@
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { AttributeOption } from '../pages/bids/NewBid.tsx';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import { AttributeOption } from '../types/Bid.tsx';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 

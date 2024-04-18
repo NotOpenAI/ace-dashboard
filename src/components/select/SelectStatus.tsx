@@ -7,7 +7,7 @@ import { Status } from '../../types/Bid.tsx';
 type SelectProps = {
     label: string;
     options: Status[];
-    value?: number;
+    value?: number | '';
     onChange: Function;
     required?: boolean;
 };

@@ -19,6 +19,7 @@ import {
     Bid,
     bidStatusOptions,
     Comment,
+    jobStatusOptions,
     Status,
 } from '../../types/Bid.tsx';
 import {
@@ -206,28 +207,29 @@ export const BidInfo = () => {
         }
     };
 
-    const handleBidStatusChangeOnAIRecommendation = (
-        option: 'Accepted' | 'Rejected'
+    const handleUpdateBidAfterRecommendation = (
+        option: 'Accepted' | 'Rejected',
+        comment?: Comment
     ) => {
         const selectedStatus: Status | undefined = bidStatusOptions.find(
-            (status) => status.value === option
+            (status: Status) => status.value === option
         );
-        if (selectedStatus) {
+        if (selectedStatus && comment) {
             // @ts-ignore
-            setBid({ ...bid, bid_status: selectedStatus });
+            setBid({
+                ...bid,
+                bid_status: selectedStatus,
+                // @ts-ignore
+                comments: [...bid.comments, comment],
+            });
+        } else if (selectedStatus) {
+            // @ts-ignore
+            setBid({
+                ...bid,
+                bid_status: selectedStatus,
+            });
         }
     };
-
-    const jobStatusOptions: Status[] = [
-        {
-            id: 1,
-            value: 'Active',
-        },
-        {
-            id: 2,
-            value: 'Completed',
-        },
-    ];
 
     const handleJobStatusSelectChange = (event: {
         target: { value: SetStateAction<number | undefined> };
@@ -446,6 +448,7 @@ export const BidInfo = () => {
                 .then((response) => {
                     setOriginalBid(response.data.data);
                     enqueueSnackbar('Updated bid', { variant: 'success' });
+                    fetchAllData();
                 })
                 .catch((error) => {
                     if (typeof error.response.data.detail === 'object') {
@@ -522,10 +525,9 @@ export const BidInfo = () => {
                                             desiredMargin={
                                                 bid.desired_margin * 100
                                             }
-                                            handleSetBidStatus={
-                                                handleBidStatusChangeOnAIRecommendation
+                                            handleUpdateBidAfterRecommendation={
+                                                handleUpdateBidAfterRecommendation
                                             }
-                                            handleAddComment={handleAddComment}
                                         />
                                     )}
                                 </Stack>
@@ -548,31 +550,22 @@ export const BidInfo = () => {
                                     <SelectStatus
                                         label={'Bid Status'}
                                         options={bidStatusOptions}
-                                        value={bid?.bid_status.id}
+                                        value={
+                                            bid?.bid_status
+                                                ? bid?.bid_status.id
+                                                : ''
+                                        }
                                         onChange={handleBidStatusSelectChange}
                                     />
                                     <SelectStatus
                                         label={'Job Status'}
                                         options={jobStatusOptions}
-                                        // @ts-ignore
                                         value={
                                             bid?.job_status
                                                 ? bid?.job_status.id
                                                 : ''
                                         }
                                         onChange={handleJobStatusSelectChange}
-                                    />
-                                    <TextField
-                                        variant={'outlined'}
-                                        label={'Lead'}
-                                        value={bid?.lead || ''}
-                                        fullWidth
-                                        onChange={(e) =>
-                                            handleTextFieldChange(
-                                                'lead',
-                                                e.target.value
-                                            )
-                                        }
                                     />
                                     <TextField
                                         variant={'outlined'}
@@ -611,6 +604,18 @@ export const BidInfo = () => {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                    />
+                                    <TextField
+                                        variant={'outlined'}
+                                        label={'Lead'}
+                                        value={bid?.lead || ''}
+                                        fullWidth
+                                        onChange={(e) =>
+                                            handleTextFieldChange(
+                                                'lead',
+                                                e.target.value
+                                            )
+                                        }
                                     />
                                     <TextField
                                         variant={'outlined'}
@@ -695,7 +700,11 @@ export const BidInfo = () => {
                                 >
                                     <SelectCustomer
                                         options={customers}
-                                        value={bid?.customer.id}
+                                        value={
+                                            bid?.customer
+                                                ? bid?.customer.id
+                                                : ''
+                                        }
                                         onChange={handleCustomerChange}
                                         disabled
                                     />

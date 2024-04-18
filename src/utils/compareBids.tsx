@@ -31,11 +31,15 @@ export const compareBids = (
     if (originalBid.finish_date !== updatedBid.finish_date) {
         requestBody.finish_date = updatedBid.finish_date;
     }
-    if (originalBid.bid_status.id !== updatedBid.bid_status.id) {
-        requestBody.bid_status_id = updatedBid.bid_status.id;
+    if (originalBid.bid_status && updatedBid.bid_status) {
+        if (originalBid.bid_status.id !== updatedBid.bid_status.id) {
+            requestBody.bid_status_id = updatedBid.bid_status.id;
+        }
     }
-    if (originalBid.job_status !== updatedBid.job_status) {
-        requestBody.job_status_id = updatedBid.job_status.id;
+    if (originalBid.job_status && updatedBid.job_status) {
+        if (originalBid.job_status !== updatedBid.job_status) {
+            requestBody.job_status_id = updatedBid.job_status.id;
+        }
     }
     if (originalBid.original_contract !== updatedBid.original_contract) {
         requestBody.original_contract = updatedBid.original_contract;

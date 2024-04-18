@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 type SelectProps = {
     options: Customer[];
-    value?: number;
+    value?: number | '';
     onChange: Function;
     required?: boolean;
     disabled?: boolean;
