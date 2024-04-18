@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 18.x
 
+      - name: Enable Corepack
+        run: npx corepack enable
+
       - name: Run install
         uses: borales/actions-yarn@v5.0.0
         with:
