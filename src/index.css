@@ -1,36 +1,36 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light;
-  color: rgba(255, 255, 255, 0.87);
+    color-scheme: light;
+    color: rgba(255, 255, 255, 0.87);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-  position: relative;
-  width: 100%;
-  /*border: 1px solid red;*/
-  display: block;
+    position: relative;
+    width: 100%;
+    /*border: 1px solid red;*/
+    display: block;
 }
 
-body > *  {
-  margin: auto;
-  /*width: 180vh; TODO - optionally set this if we don't want full width pages by default */
-  /*border: 1px solid blue;*/
-  padding: 0 12px 0 12px;
-  display: block;
-  overflow: auto;
+body > * {
+    margin: auto;
+    /*width: 180vh; TODO - optionally set this if we don't want full width pages by default */
+    /*border: 1px solid blue;*/
+    padding: 0 12px 0 12px;
+    display: block;
+    overflow: auto;
 }
 
 body > script {
-  display: none
+    display: none;
 }
 
 /* Note - Commented borders are intended to visualize page styling (uncomment to view) */
