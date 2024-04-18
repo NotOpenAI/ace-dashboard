@@ -2,19 +2,21 @@ name: Prettier Check
 
 on:
   pull_request:
+  push:
     branches:
       - main
 
 jobs:
-  format-check:
+  prettier:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
 
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Run Prettier
-        run: yarn prettier --check
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write 'src/**/*.tsx'
