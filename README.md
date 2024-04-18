@@ -1,8 +1,5 @@
 # ACE Dashboard
 
-![npm](https://badgen.net/#npm/node/next)
-![Build](https://github.com/NotOpenAI/ace-dashboard/actions/workflows/test-build/badge.svg)
-
 ### About US Ceiling
 
 US Ceiling Corp is a contractor specializing in interior construction for commercial, multifamily, and residential
