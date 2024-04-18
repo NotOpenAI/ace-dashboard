@@ -61,7 +61,6 @@ export const Home = () => {
                 <LinearProgress />
             ) : (
                 <Masonry columns={PAGE_COLUMNS} spacing={SPACING}>
-                    {bids.length}
                     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
                         <Typography variant={'h6'}>Revenue</Typography>
                         {/*<LineChart*/}
@@ -107,6 +106,10 @@ export const Home = () => {
                         {/*        },*/}
                         {/*    ]}*/}
                         {/*/>*/}
+                    </Paper>
+                    <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
+                        <Typography variant={'h6'}>Number of Bids</Typography>
+                        {bids.length}
                     </Paper>
                 </Masonry>
             )}
