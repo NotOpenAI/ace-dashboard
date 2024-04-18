@@ -1,29 +1,20 @@
 name: Prettier Check
 
 on:
-    push:
-        branches:
-            - '*'
-        paths:
-            - '**/*.{tsx,json,css,scss,md}'
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    format-check:
-        runs-on: ubuntu-latest
+  format-check:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-            - name: Setup Node.js and Yarn
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '14'
-                  # Install yarn
-                  registry-url: 'https://registry.yarnpkg.com'
+      - name: Install dependencies
+        run: yarn install
 
-            - name: Install dependencies
-              run: yarn install
-
-            - name: Check code formatting with Prettier
-              run: yarn run format
+      - name: Run Prettier
+        run: yarn prettier --check
