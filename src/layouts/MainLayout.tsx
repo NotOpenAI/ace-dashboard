@@ -134,14 +134,35 @@ const MainLayout = () => {
                             onClick={handleDrawerOpen}
                             edge='start'
                             sx={{
-                                marginRight: 5,
+                                marginRight: 3,
                                 ...(open && { display: 'none' }),
                             }}
                         >
                             <MenuIcon />
                         </IconButton>
+                        <div
+                            style={{
+                                display: 'inline-block',
+                                borderRadius: '100%',
+                                backgroundColor: 'white',
+                                padding: 6, // adjust as needed
+                                marginRight: 12,
+                                height: 48,
+                                width: 48,
+                            }}
+                        >
+                            <img
+                                src={'public/usceiling-logo.png'}
+                                alt={'Logo'}
+                                style={{
+                                    height: 37,
+                                    width: 37,
+                                    objectFit: 'cover',
+                                }}
+                            />
+                        </div>
                         <Typography variant='h6' noWrap component='div'>
-                            Ace Dashboard
+                            ACE Dashboard
                         </Typography>
                     </Box>
                     <AccountMenu />
