@@ -20,5 +20,5 @@ jobs:
           node-version: '18.x'
 
       - run: npx corepack enable
-      - run: yarn
+      - run: yarn install
       - run: yarn run build
