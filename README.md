@@ -20,6 +20,6 @@ To get started, run yarn at the base of the repository:
 yarn
 ```
 
-To start the app locally, run `yarn run dev`. Open http://localhost:5174 to view it in a browser.
+To start the app locally, run `yarn dev`. Open http://localhost:5174 to view it in a browser.
 
-To format the repository according to [prettier](https://prettier.io/) standards, run `yarn run format`.
+To format the repository according to [prettier](https://prettier.io/) standards, run `yarn format`.
