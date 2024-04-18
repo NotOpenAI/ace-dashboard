@@ -11,13 +11,13 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "yarn run prettier",
+      "npm run prettier",
       "git add"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run format"
+      "pre-commit": "npm run format"
     }
   },
   "dependencies": {
@@ -53,6 +53,5 @@
     "prettier-plugin-sort-imports": "^1.8.5",
     "typescript": "^5.0.2",
     "vite": "^5.2.8"
-  },
-  "packageManager": "yarn@4.1.1"
+  }
 }
