@@ -1,5 +1,8 @@
 # ACE Dashboard
 
+![npm](https://badgen.net/#npm/node/next)
+![Build](https://github.com/NotOpenAI/ace-dashboard/actions/workflows/test-build/badge.svg)
+
 ### About US Ceiling
 
 US Ceiling Corp is a contractor specializing in interior construction for commercial, multifamily, and residential
@@ -19,3 +22,4 @@ To get started, run ```npm install``` at the base of the repository:
 To start the app locally, run ```npm run dev```. Open http://localhost:5174 to view it in a browser.
 
 To format the repository according to [prettier](https://prettier.io/) standards, run ```npm run format```.
+
