@@ -44,6 +44,14 @@ export const compareBids = (
         requestBody.final_cost = updatedBid.final_cost;
     }
 
+    // Compare comments
+    const addedComments = updatedBid.comments.filter(
+        (comment) => !originalBid.comments.includes(comment)
+    );
+    if (addedComments.length > 0) {
+        requestBody.new_comments = addedComments;
+    }
+
     // Compare arrays bid_manager_ids and project_manager_ids
     const originalBidManagerIds = originalBid.bid_managers.map(
         (manager: Manager) => manager.id

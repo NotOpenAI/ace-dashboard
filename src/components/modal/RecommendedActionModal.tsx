@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { BASE_URL } from '../../constants.tsx';
 import { useNavigate } from 'react-router-dom';
+import { Comment } from '../../types/Bid.tsx';
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -25,6 +26,7 @@ type ChangePasswordProps = {
     name: string;
     desiredMargin: number;
     handleSetBidStatus: (option: 'Accepted' | 'Rejected') => void;
+    handleAddComment: (comment: Comment) => void;
 };
 
 const RecommendedActionModal = ({
@@ -32,6 +34,7 @@ const RecommendedActionModal = ({
     name,
     desiredMargin,
     handleSetBidStatus,
+    handleAddComment,
 }: ChangePasswordProps) => {
     const [accessToken, setAccessToken] = useState<string>('');
     const navigate = useNavigate();
@@ -55,6 +58,7 @@ const RecommendedActionModal = ({
 
     const [open, setOpen] = useState<boolean>(false);
     const [showComments, setShowComments] = useState<boolean>(false);
+    const [commentText, setCommentText] = useState<string>();
     const [selectedOption, setSelectedOption] = useState<'success' | 'error'>();
     const [estimatedMargin, setEstimatedMargin] = useState<number>(0);
     const [error, setError] = useState<string>();
@@ -108,6 +112,9 @@ const RecommendedActionModal = ({
             action = 'Rejected';
         }
         handleSetBidStatus(action);
+        if (commentText) {
+            handleAddComment({ text: commentText });
+        }
         handleClose();
         enqueueSnackbar(
             `Bid ${action} - confirm changes by clicking the save button`,
@@ -165,10 +172,17 @@ const RecommendedActionModal = ({
                                     color={
                                         loading
                                             ? 'default'
-                                            : estimatedMargin < desiredMargin &&
-                                                !error
-                                              ? 'error'
-                                              : 'default'
+                                            : estimatedMargin === desiredMargin
+                                              ? 'info'
+                                              : estimatedMargin <
+                                                      desiredMargin && !error
+                                                ? 'error'
+                                                : 'default'
+                                    }
+                                    variant={
+                                        estimatedMargin === desiredMargin
+                                            ? 'outlined'
+                                            : 'filled'
                                     }
                                     icon={<ErrorIcon />}
                                     label={"Don't Bid"}
@@ -177,9 +191,16 @@ const RecommendedActionModal = ({
                                     color={
                                         loading
                                             ? 'default'
-                                            : estimatedMargin >= desiredMargin
-                                              ? 'success'
-                                              : 'default'
+                                            : estimatedMargin === desiredMargin
+                                              ? 'info'
+                                              : estimatedMargin > desiredMargin
+                                                ? 'success'
+                                                : 'default'
+                                    }
+                                    variant={
+                                        estimatedMargin === desiredMargin
+                                            ? 'outlined'
+                                            : 'filled'
                                     }
                                     icon={<CheckIcon />}
                                     label={'Bid'}
@@ -189,7 +210,11 @@ const RecommendedActionModal = ({
                         <Stack direction={'column'} spacing={1}>
                             <Typography variant={'body1'}>
                                 Desired Margin:{' '}
-                                <strong>{desiredMargin}%</strong>
+                                <strong>
+                                    {desiredMargin
+                                        ? `${desiredMargin}%`
+                                        : 'Not set'}
+                                </strong>
                             </Typography>
                             <Stack direction={'column'}>
                                 <Tooltip
@@ -204,7 +229,7 @@ const RecommendedActionModal = ({
                                             height: 10,
                                             borderRadius: '4px 4px 0 0',
                                         }}
-                                        value={desiredMargin}
+                                        value={desiredMargin || 0}
                                     />
                                 </Tooltip>
                                 <Tooltip
@@ -216,10 +241,12 @@ const RecommendedActionModal = ({
                                         color={
                                             loading
                                                 ? 'secondary'
-                                                : estimatedMargin >=
-                                                    desiredMargin
-                                                  ? 'success'
-                                                  : 'error'
+                                                : !desiredMargin
+                                                  ? 'info'
+                                                  : estimatedMargin >=
+                                                      desiredMargin
+                                                    ? 'success'
+                                                    : 'error'
                                         }
                                         variant={
                                             loading
@@ -262,7 +289,14 @@ const RecommendedActionModal = ({
                         {showComments && (
                             <Stack direction={'column'} spacing={1}>
                                 <Typography variant={'h6'}>Comments</Typography>
-                                <TextField multiline rows={3} />
+                                <TextField
+                                    multiline
+                                    value={commentText}
+                                    onChange={(event) => {
+                                        setCommentText(event.target.value);
+                                    }}
+                                    rows={3}
+                                />
                                 <Button
                                     color={selectedOption}
                                     variant={'contained'}

@@ -14,7 +14,6 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import renderCustomer from '../../renderer/renderCustomer.tsx';
 import renderCurrency from '../../renderer/renderCurrency.tsx';
 import renderManagers from '../../renderer/renderManagers.tsx';
-import renderComments from '../../renderer/renderComments.tsx';
 import renderStatus from '../../renderer/renderStatus.tsx';
 import renderBidID from '../../renderer/renderBidID.tsx';
 import { BASE_URL, SPACING } from '../../constants.tsx';
@@ -285,12 +284,6 @@ export const Bids = () => {
             field: 'actual_margin',
             headerName: 'Actual Margin',
             renderCell: renderPercentage,
-            width: 160,
-        },
-        {
-            field: 'comments',
-            headerName: 'Comments',
-            renderCell: renderComments,
             width: 160,
         },
         {

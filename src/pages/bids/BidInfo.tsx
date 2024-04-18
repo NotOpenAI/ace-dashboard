@@ -18,8 +18,14 @@ import {
     AttributeOption,
     Bid,
     bidStatusOptions,
+    Comment,
     Status,
 } from '../../types/Bid.tsx';
+import {
+    NavLink as RouterLink,
+    useNavigate,
+    useParams,
+} from 'react-router-dom';
 import RecommendedActionModal from '../../components/modal/RecommendedActionModal.tsx';
 import UpdateBidConfirmation from '../../components/updateBidConfirmation.tsx';
 import { SelectManagers } from '../../components/select/SelectManagers.tsx';
@@ -30,17 +36,20 @@ import { BASE_URL, FIELD_COLUMNS, SPACING } from '../../constants.tsx';
 import CreateAttribute from '../../components/createAttribute.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { SetStateAction, useEffect, useState } from 'react';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { compareBids } from '../../utils/compareBids.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import FormControl from '@mui/material/FormControl';
 import { Customer } from '../../types/Customer.tsx';
 import InputLabel from '@mui/material/InputLabel';
 import Footer from '../../components/Footer.tsx';
 import { Manager } from '../../types/Role.tsx';
+import Tooltip from '@mui/material/Tooltip';
 import Select from '@mui/material/Select';
 import { useSnackbar } from 'notistack';
 import { Masonry } from '@mui/lab';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 export const BidInfo = () => {
     const { id } = useParams();
@@ -175,6 +184,11 @@ export const BidInfo = () => {
                 };
             });
         }
+    };
+
+    const handleDateChange = (key: keyof Bid, date: dayjs.Dayjs) => {
+        // @ts-ignore
+        setBid({ ...bid, [key]: date });
     };
 
     const handleBidStatusSelectChange = (event: {
@@ -386,6 +400,37 @@ export const BidInfo = () => {
         );
     };
 
+    const handleAddComment = (comment: Comment) => {
+        // Make sure bid is not null or undefined
+        if (bid) {
+            // Create a copy of the bid object to avoid mutating the original
+            const updatedBid = { ...bid };
+
+            // Add the new comment to the comments array
+            updatedBid.comments = [...updatedBid.comments, comment];
+
+            // Update the bid state with the modified bid object
+            setBid(updatedBid);
+        }
+    };
+
+    const handleUpdateComment = (text: string, index: number) => {
+        // Make sure bid is not null or undefined
+        if (bid) {
+            // Create a copy of the bid object to avoid mutating the original
+            const updatedBid = { ...bid };
+
+            // Make sure the comments array exists
+            if (updatedBid.comments && updatedBid.comments.length > index) {
+                // Update the comment at the specified index
+                updatedBid.comments[index].text = text;
+
+                // Update the bid state with the modified bid object
+                setBid(updatedBid);
+            }
+        }
+    };
+
     const handleUpdate = () => {
         if (originalBid && bid) {
             const requestBody = compareBids(originalBid, bid);
@@ -474,12 +519,13 @@ export const BidInfo = () => {
                                         <RecommendedActionModal
                                             id={parseInt(id)}
                                             name={bid?.name}
-                                            desiredMargin={parseInt(
-                                                String(bid.desired_margin)
-                                            )}
+                                            desiredMargin={
+                                                bid.desired_margin * 100
+                                            }
                                             handleSetBidStatus={
                                                 handleBidStatusChangeOnAIRecommendation
                                             }
+                                            handleAddComment={handleAddComment}
                                         />
                                     )}
                                 </Stack>
@@ -596,6 +642,42 @@ export const BidInfo = () => {
                                         value={bid?.actual_margin || ''}
                                         disabled
                                         fullWidth
+                                    />
+                                    <DateTimePicker
+                                        label={'Start Date'}
+                                        value={
+                                            bid?.start_date
+                                                ? dayjs(bid?.start_date)
+                                                : null
+                                        }
+                                        onChange={(
+                                            date: dayjs.Dayjs | null
+                                        ) => {
+                                            if (date) {
+                                                handleDateChange(
+                                                    'start_date',
+                                                    date
+                                                );
+                                            }
+                                        }}
+                                    />
+                                    <DateTimePicker
+                                        label={'Finish Date'}
+                                        value={
+                                            bid?.finish_date
+                                                ? dayjs(bid?.finish_date)
+                                                : null
+                                        }
+                                        onChange={(
+                                            date: dayjs.Dayjs | null
+                                        ) => {
+                                            if (date) {
+                                                handleDateChange(
+                                                    'finish_date',
+                                                    date
+                                                );
+                                            }
+                                        }}
                                     />
                                 </Masonry>
                             </>
@@ -766,27 +848,118 @@ export const BidInfo = () => {
                                 >
                                     Comments
                                 </Typography>
-                                <Stack direction={'column'} spacing={1}>
+                                <Stack direction={'column'} spacing={2}>
                                     {bid?.comments &&
-                                    bid?.comments.length > 0 ? (
+                                        bid?.comments.length > 0 &&
                                         bid?.comments.map(
-                                            (commentText: string) => (
-                                                <TextField
-                                                    variant={'outlined'}
-                                                    label={'Desired Margin'}
-                                                    value={commentText || ''}
-                                                    fullWidth
-                                                />
+                                            (comment: Comment, index) => (
+                                                <Stack
+                                                    key={index}
+                                                    direction={'row'}
+                                                    spacing={1}
+                                                >
+                                                    {comment.author &&
+                                                        comment.created_at && (
+                                                            <Stack
+                                                                direction={
+                                                                    'column'
+                                                                }
+                                                                justifyContent={
+                                                                    'space-between'
+                                                                }
+                                                                spacing={1}
+                                                            >
+                                                                <Tooltip
+                                                                    title={
+                                                                        'Author'
+                                                                    }
+                                                                    arrow
+                                                                >
+                                                                    <Button
+                                                                        key={
+                                                                            comment
+                                                                                .author
+                                                                                ?.id
+                                                                        }
+                                                                        size={
+                                                                            'large'
+                                                                        }
+                                                                        startIcon={
+                                                                            <OpenInNewIcon />
+                                                                        }
+                                                                        color={
+                                                                            'inherit'
+                                                                        }
+                                                                        variant={
+                                                                            'outlined'
+                                                                        }
+                                                                        sx={{
+                                                                            textTransform:
+                                                                                'none',
+                                                                        }}
+                                                                        component={
+                                                                            RouterLink
+                                                                        }
+                                                                        to={`/users/${comment.author?.id}`}
+                                                                        target={
+                                                                            '_blank'
+                                                                        }
+                                                                    >
+                                                                        {`${comment.author?.first_name} ${comment.author?.last_name}`}
+                                                                    </Button>
+                                                                </Tooltip>
+                                                                <DateTimePicker
+                                                                    label={
+                                                                        'Created At'
+                                                                    }
+                                                                    value={
+                                                                        comment.created_at
+                                                                            ? dayjs(
+                                                                                  comment.created_at
+                                                                              )
+                                                                            : null
+                                                                    }
+                                                                    disabled
+                                                                />
+                                                            </Stack>
+                                                        )}
+                                                    <TextField
+                                                        variant={'outlined'}
+                                                        label={
+                                                            comment.editable
+                                                                ? 'New Comment'
+                                                                : 'Comment'
+                                                        }
+                                                        multiline
+                                                        rows={4}
+                                                        value={
+                                                            comment.text || ''
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleUpdateComment(
+                                                                e.target.value,
+                                                                index
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            !comment.editable
+                                                        }
+                                                        fullWidth
+                                                    />
+                                                </Stack>
                                             )
-                                        )
-                                    ) : (
-                                        <TextField
-                                            multiline
-                                            rows={3}
-                                            variant={'outlined'}
-                                            fullWidth
-                                        />
-                                    )}
+                                        )}
+                                    <Button
+                                        onClick={() =>
+                                            handleAddComment({
+                                                text: '',
+                                                editable: true,
+                                            })
+                                        }
+                                        sx={{ height: 56 }}
+                                    >
+                                        Add
+                                    </Button>
                                 </Stack>
                                 <Stack
                                     direction={'row'}

@@ -1,5 +1,6 @@
 import { Customer } from './Customer.tsx';
 import { Manager } from './Role.tsx';
+import { User } from './User.tsx';
 
 export type Bid = {
     name: string;
@@ -18,7 +19,7 @@ export type Bid = {
     desired_margin: number;
     actual_margin: number;
     attributes: BidAttribute[];
-    comments: string[];
+    comments: Comment[];
     created_at: string;
     updated_at: string;
 };
@@ -64,6 +65,14 @@ export type Status = {
     value: string;
 };
 
+export type Comment = {
+    id?: number;
+    text: string;
+    author?: User;
+    editable?: boolean;
+    created_at?: string;
+};
+
 export const bidStatusOptions: Status[] = [
     {
         id: 1,
@@ -91,7 +100,7 @@ export type UpdateRequestBody = {
     bid_status_id?: number;
     job_status_id?: number;
     original_contract?: number;
-    new_comments?: string[];
+    new_comments?: Comment[];
     final_cost?: number;
     attributes?: {
         updated_attributes?: Partial<AttributeUpdate>[];
