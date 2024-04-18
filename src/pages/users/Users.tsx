@@ -9,11 +9,11 @@ import {
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import renderUserID from '../../renderer/renderUserID.tsx';
-import renderRoles from '../../renderer/renderRoles.tsx';
+import renderUserID from '../../renderers/renderUserID.tsx';
+import renderRoles from '../../renderers/renderRoles.tsx';
+import renderDate from '../../renderers/renderDate.tsx';
 import { BASE_URL, SPACING } from '../../constants.tsx';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import renderDate from '../../renderer/renderDate.tsx';
 import Footer from '../../components/Footer.tsx';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../../types/User.tsx';

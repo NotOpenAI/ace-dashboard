@@ -8,11 +8,11 @@ import {
     Typography,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import renderCustomerID from '../../renderer/renderCustomerID.tsx';
+import renderCustomerID from '../../renderers/renderCustomerID.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import renderDate from '../../renderers/renderDate.tsx';
 import { BASE_URL, SPACING } from '../../constants.tsx';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import renderDate from '../../renderer/renderDate.tsx';
 import { Customer } from '../../types/Customer.tsx';
 import Footer from '../../components/Footer.tsx';
 import { useNavigate } from 'react-router-dom';

@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { BASE_URL } from '../../constants.tsx';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../constants.tsx';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 
@@ -19,7 +19,7 @@ type NewAttributeProps = {
     handleAddAttribute?: () => void;
 };
 
-const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
+const CreateAttributeModal = ({ handleAddAttribute }: NewAttributeProps) => {
     const [accessToken, setAccessToken] = useState<string>('');
     const navigate = useNavigate();
 
@@ -215,4 +215,4 @@ const CreateAttribute = ({ handleAddAttribute }: NewAttributeProps) => {
     );
 };
 
-export default CreateAttribute;
+export default CreateAttributeModal;

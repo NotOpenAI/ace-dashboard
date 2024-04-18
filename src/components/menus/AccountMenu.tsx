@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import * as React from 'react';
 
-export default function AccountMenu() {
+export const AccountMenu = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -91,4 +91,4 @@ export default function AccountMenu() {
             </Menu>
         </>
     );
-}
+};

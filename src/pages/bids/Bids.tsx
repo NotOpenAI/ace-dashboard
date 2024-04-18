@@ -9,16 +9,16 @@ import {
     Typography,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import renderPercentage from '../../renderer/renderPercentage.tsx';
+import renderPercentage from '../../renderers/renderPercentage.tsx';
+import renderCustomer from '../../renderers/renderCustomer.tsx';
+import renderCurrency from '../../renderers/renderCurrency.tsx';
+import renderManagers from '../../renderers/renderManagers.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import renderCustomer from '../../renderer/renderCustomer.tsx';
-import renderCurrency from '../../renderer/renderCurrency.tsx';
-import renderManagers from '../../renderer/renderManagers.tsx';
-import renderStatus from '../../renderer/renderStatus.tsx';
-import renderBidID from '../../renderer/renderBidID.tsx';
+import renderStatus from '../../renderers/renderStatus.tsx';
+import renderBidID from '../../renderers/renderBidID.tsx';
+import renderDate from '../../renderers/renderDate.tsx';
 import { BASE_URL, SPACING } from '../../constants.tsx';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import renderDate from '../../renderer/renderDate.tsx';
 import Footer from '../../components/Footer.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';

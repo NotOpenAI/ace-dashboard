@@ -7,10 +7,10 @@ import {
     Stack,
     Typography,
 } from '@mui/material';
-import renderAttributeOptions from '../../renderer/renderAttributeOptions.tsx';
-import renderAttributeName from '../../renderer/renderAttributeName.tsx';
+import renderAttributeOptions from '../../renderers/renderAttributeOptions.tsx';
+import renderAttributeName from '../../renderers/renderAttributeName.tsx';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import renderAttributeID from '../../renderer/renderAttributeID.tsx';
+import renderAttributeID from '../../renderers/renderAttributeID.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { BASE_URL, SPACING } from '../../constants.tsx';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';

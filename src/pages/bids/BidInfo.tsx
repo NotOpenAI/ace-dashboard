@@ -28,13 +28,12 @@ import {
     useParams,
 } from 'react-router-dom';
 import RecommendedActionModal from '../../components/modal/RecommendedActionModal.tsx';
-import UpdateBidConfirmation from '../../components/updateBidConfirmation.tsx';
+import CreateAttributeModal from '../../components/modal/CreateAttributeModal.tsx';
 import { SelectManagers } from '../../components/select/SelectManagers.tsx';
 import { SelectCustomer } from '../../components/select/SelectCustomer.tsx';
 import convertToSentenceCase from '../../utils/convertToSentenceCase.tsx';
 import { SelectStatus } from '../../components/select/SelectStatus.tsx';
 import { BASE_URL, FIELD_COLUMNS, SPACING } from '../../constants.tsx';
-import CreateAttribute from '../../components/createAttribute.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { SetStateAction, useEffect, useState } from 'react';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -844,7 +843,7 @@ export const BidInfo = () => {
                                             );
                                         }
                                     })}
-                                    <CreateAttribute
+                                    <CreateAttributeModal
                                         handleAddAttribute={handleAddAttribute}
                                     />
                                 </Masonry>
@@ -988,15 +987,6 @@ export const BidInfo = () => {
                                     >
                                         Save
                                     </Button>
-                                    <UpdateBidConfirmation
-                                        requestBody={
-                                            originalBid && bid
-                                                ? compareBids(originalBid, bid)
-                                                : {}
-                                        }
-                                        onSave={handleUpdate}
-                                        disabled={saveDisabled}
-                                    />
                                 </Stack>
                             </>
                         </Stack>
