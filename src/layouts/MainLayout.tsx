@@ -26,8 +26,7 @@ import { SPACING } from '../constants.tsx';
 import { Container } from '@mui/material';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { useEffect } from 'react';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 const drawerWidth = 240;
 
@@ -104,10 +103,10 @@ const navItems = ['', 'bids', 'customers', 'users', 'attributes'];
 
 const MainLayout = () => {
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const location = useLocation();
-    const [activePage, setActivePage] = React.useState('');
+    const [activePage, setActivePage] = useState('');
 
     useEffect(() => {
         const pathname = location.pathname.substring(1).replace('-', ' ');
@@ -140,7 +139,7 @@ const MainLayout = () => {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant={'h6'} noWrap component={'div'}>
+                        <Typography variant='h6' noWrap component='div'>
                             ACE Dashboard
                         </Typography>
                     </Box>

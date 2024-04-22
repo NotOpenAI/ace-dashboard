@@ -8,15 +8,15 @@ projects. US ceiling is looking to incorporate artificial intelligence into the 
 ## Installation
 
 This project was initialized using Vite's [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite)
-package (with template `react-ts`), alongside npm as a package manager.
+package (with template `react-ts`), alongside yarn (classic) as a package manager.
 
-To install npm, see their [Installation Guide](https://npmpkg.com/getting-started/install).
+To install yarn, see their [Installation Guide](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable).
 
 ### Development
 
-To get started, run ```npm install``` at the base of the repository:
+To get started, run ```yarn``` at the base of the repository:
 
-To start the app locally, run ```npm run dev```. Open http://localhost:5174 to view it in a browser.
+To start the app locally, run ```yarn dev```. Open http://localhost:5173 to view it in a browser.
 
-To format the repository according to [prettier](https://prettier.io/) standards, run ```npm run format```.
+To format the repository according to [prettier](https://prettier.io/) standards, run ```yarn format```.
 

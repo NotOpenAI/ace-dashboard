@@ -90,6 +90,7 @@ export const Bids = () => {
             fetchBids();
         }
     }, [accessToken]);
+
     useEffect(() => {
         if (bids.length > 0) {
             const customersMap = new Map<
