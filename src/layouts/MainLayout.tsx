@@ -152,7 +152,7 @@ const MainLayout = () => {
                             }}
                         >
                             <img
-                                src={'/usceiling-logo.png'}
+                                src={'public/usceiling-logo.png'}
                                 alt={'Logo'}
                                 style={{
                                     height: 37,
