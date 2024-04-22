@@ -27,7 +27,6 @@ import { Container } from '@mui/material';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { useEffect } from 'react';
-import * as React from 'react';
 
 const drawerWidth = 240;
 
