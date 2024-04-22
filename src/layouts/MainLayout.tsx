@@ -145,23 +145,25 @@ const MainLayout = () => {
                                 display: 'inline-block',
                                 borderRadius: '100%',
                                 backgroundColor: 'white',
-                                padding: 6, // adjust as needed
+                                padding: 6,
                                 marginRight: 12,
                                 height: 48,
                                 width: 48,
                             }}
                         >
-                            {/*<img*/}
-                            {/*    src={'/usceiling-logo.png'}*/}
-                            {/*    alt={'Logo'}*/}
-                            {/*    style={{*/}
-                            {/*        height: 37,*/}
-                            {/*        width: 37,*/}
-                            {/*        objectFit: 'cover',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
+                            <img
+                                src={
+                                    'https://main.d3d48l8fmspa2b.amplifyapp.com/usceiling-logo.png'
+                                }
+                                alt={'Logo'}
+                                style={{
+                                    height: 37,
+                                    width: 37,
+                                    objectFit: 'cover',
+                                }}
+                            />
                         </div>
-                        <Typography variant='h6' noWrap component='div'>
+                        <Typography variant={'h6'} noWrap component={'div'}>
                             ACE Dashboard
                         </Typography>
                     </Box>
