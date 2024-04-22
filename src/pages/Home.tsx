@@ -109,7 +109,7 @@ export const Home = () => {
                     </Paper>
                     <Paper elevation={1} sx={{ borderRadius: 2, p: 2 }}>
                         <Typography variant={'h6'}>Number of Bids</Typography>
-                        {bids.length}
+                        {bids ? bids.length : ''}
                     </Paper>
                 </Masonry>
             )}
