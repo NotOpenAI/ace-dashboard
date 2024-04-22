@@ -151,18 +151,15 @@ const MainLayout = () => {
                                 width: 48,
                             }}
                         >
-                            <img
-                                src={
-                                    import.meta.env.BASE_URL +
-                                    '/usceiling-logo.png'
-                                }
-                                alt={'Logo'}
-                                style={{
-                                    height: 37,
-                                    width: 37,
-                                    objectFit: 'cover',
-                                }}
-                            />
+                            {/*<img*/}
+                            {/*    src={'/usceiling-logo.png'}*/}
+                            {/*    alt={'Logo'}*/}
+                            {/*    style={{*/}
+                            {/*        height: 37,*/}
+                            {/*        width: 37,*/}
+                            {/*        objectFit: 'cover',*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                         </div>
                         <Typography variant='h6' noWrap component='div'>
                             ACE Dashboard
