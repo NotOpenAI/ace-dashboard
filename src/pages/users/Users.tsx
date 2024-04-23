@@ -2,11 +2,11 @@ import {
     Breadcrumbs,
     Button,
     LinearProgress,
-    Link,
     Paper,
     Stack,
     Typography,
 } from '@mui/material';
+import { NavLink as RouterLink } from 'react-router-dom';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import renderUserID from '../../renderers/renderUserID.tsx';
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { User } from '../../types/User.tsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', renderCell: renderUserID },
@@ -92,9 +93,7 @@ const Users = () => {
         <>
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
-                    <Link href={'/'} color={'inherit'} underline={'hover'}>
-                        Home
-                    </Link>
+                    <RouteLink to={'/'} label={'Home'} />
                     <Typography color={'text.primary'}>Users</Typography>
                 </Breadcrumbs>
                 <Button
@@ -103,8 +102,8 @@ const Users = () => {
                     color={'primary'}
                     sx={{ borderRadius: 4 }}
                     startIcon={<AddCircleRoundedIcon />}
-                    component={Link}
-                    href={'/users/new'}
+                    component={RouterLink}
+                    to={'/users/new'}
                 >
                     Create
                 </Button>

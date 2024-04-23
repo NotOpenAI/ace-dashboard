@@ -2,11 +2,11 @@ import {
     Breadcrumbs,
     Button,
     LinearProgress,
-    Link,
     Paper,
     Stack,
     Typography,
 } from '@mui/material';
+import { NavLink as RouterLink } from 'react-router-dom';
 import renderAttributeOptions from '../../renderers/renderAttributeOptions.tsx';
 import renderAttributeName from '../../renderers/renderAttributeName.tsx';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -19,6 +19,7 @@ import { Attribute } from '../../types/Bid.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', renderCell: renderAttributeID },
@@ -85,9 +86,7 @@ export const Attributes = () => {
         <>
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
-                    <Link href={'/'} color={'inherit'} underline={'hover'}>
-                        Home
-                    </Link>
+                    <RouteLink to={'/'} label={'Home'} />
                     <Typography color={'text.primary'}>Attributes</Typography>
                 </Breadcrumbs>
                 <Button
@@ -96,8 +95,8 @@ export const Attributes = () => {
                     color={'primary'}
                     sx={{ borderRadius: 4 }}
                     startIcon={<AddCircleRoundedIcon />}
-                    component={Link}
-                    href={'/attributes/new'}
+                    component={RouterLink}
+                    to={'/attributes/new'}
                 >
                     Create
                 </Button>

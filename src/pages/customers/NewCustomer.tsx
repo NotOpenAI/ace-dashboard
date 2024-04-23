@@ -4,7 +4,6 @@ import {
     CircularProgress,
     Container,
     Divider,
-    Link,
     Paper,
     Stack,
     TextField,
@@ -22,6 +21,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 export const NewCustomer = () => {
     const [accessToken, setAccessToken] = useState<string>('');
@@ -126,18 +126,18 @@ export const NewCustomer = () => {
             });
     };
 
+    const handleCancel = () => {
+        navigate('/customers');
+    };
+
     return (
         <>
             <Breadcrumbs
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
             >
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Link href={'/customers'} color={'inherit'} underline={'hover'}>
-                    Customers
-                </Link>
+                <RouteLink to={'/'} label={'Home'} />
+                <RouteLink to={'/customers'} label={'Customers'} />
                 <Typography color={'text.primary'}>New Customer</Typography>
             </Breadcrumbs>
             <Container maxWidth={'md'}>
@@ -296,7 +296,9 @@ export const NewCustomer = () => {
                         justifyContent={'flex-end'}
                         spacing={1}
                     >
-                        <Button color={'inherit'}>Cancel</Button>
+                        <Button color={'inherit'} onClick={handleCancel}>
+                            Cancel
+                        </Button>
                         <Button
                             variant={'contained'}
                             onClick={handleSave}

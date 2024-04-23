@@ -5,7 +5,6 @@ import {
     CircularProgress,
     Container,
     Divider,
-    Link,
     Paper,
     Stack,
     TextField,
@@ -24,6 +23,7 @@ import { User } from '../../types/User.tsx';
 import { useSnackbar } from 'notistack';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 const UserInfo = () => {
     const { id } = useParams();
@@ -187,12 +187,8 @@ const UserInfo = () => {
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
             >
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Link href={'/users'} color={'inherit'} underline={'hover'}>
-                    Users
-                </Link>
+                <RouteLink to={'/'} label={'Home'} />
+                <RouteLink to={'/users'} label={'Users'} />
                 <Typography color={'text.primary'}>{user?.id}</Typography>
             </Breadcrumbs>
             <Box sx={{ m: 2 }}>
