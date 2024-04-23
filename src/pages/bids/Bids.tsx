@@ -2,12 +2,12 @@ import {
     Breadcrumbs,
     Button,
     LinearProgress,
-    Link,
     Paper,
     Skeleton,
     Stack,
     Typography,
 } from '@mui/material';
+import { NavLink as RouterLink } from 'react-router-dom';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import renderPercentage from '../../renderers/renderPercentage.tsx';
 import renderCustomer from '../../renderers/renderCustomer.tsx';
@@ -23,6 +23,7 @@ import Footer from '../../components/Footer.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 interface Manager {
     username: string;
@@ -305,9 +306,7 @@ export const Bids = () => {
         <>
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
-                    <Link href={'/'} color={'inherit'} underline={'hover'}>
-                        Home
-                    </Link>
+                    <RouteLink to={'/'} label={'Home'} />
                     <Typography color={'text.primary'}>Bids</Typography>
                 </Breadcrumbs>
                 <Button
@@ -316,8 +315,8 @@ export const Bids = () => {
                     color={'primary'}
                     sx={{ borderRadius: 4 }}
                     startIcon={<AddCircleRoundedIcon />}
-                    component={Link}
-                    href={'/bids/new'}
+                    component={RouterLink}
+                    to={'/bids/new'}
                 >
                     Create
                 </Button>

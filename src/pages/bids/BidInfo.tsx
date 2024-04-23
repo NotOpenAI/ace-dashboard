@@ -6,7 +6,6 @@ import {
     Container,
     Divider,
     InputAdornment,
-    Link,
     MenuItem,
     Paper,
     Stack,
@@ -50,6 +49,7 @@ import { useSnackbar } from 'notistack';
 import { Masonry } from '@mui/lab';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 export const BidInfo = () => {
     const { id } = useParams();
@@ -485,12 +485,8 @@ export const BidInfo = () => {
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
             >
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Link href={'/bids'} color={'inherit'} underline={'hover'}>
-                    Bids
-                </Link>
+                <RouteLink to={'/'} label={'Home'} />
+                <RouteLink to={'/bids'} label={'Bids'} />
                 <Typography color={'text.primary'}>{bid?.id}</Typography>
             </Breadcrumbs>
             {loading ? (

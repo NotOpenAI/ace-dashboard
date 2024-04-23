@@ -2,11 +2,11 @@ import {
     Breadcrumbs,
     Button,
     LinearProgress,
-    Link,
     Paper,
     Stack,
     Typography,
 } from '@mui/material';
+import { NavLink as RouterLink } from 'react-router-dom';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import renderCustomerID from '../../renderers/renderCustomerID.tsx';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -18,6 +18,8 @@ import Footer from '../../components/Footer.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
+import renderLowMediumHigh from '../../renderers/renderLowMediumHigh.tsx';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', renderCell: renderCustomerID },
@@ -35,9 +37,24 @@ const columns: GridColDef[] = [
         width: 200,
     },
     { field: 'owner', headerName: 'Owner', width: 150 },
-    { field: 'market', headerName: 'Market', width: 150 },
-    { field: 'reputation', headerName: 'Reputation', width: 120 },
-    { field: 'fin_health', headerName: 'Financial Health', width: 150 },
+    {
+        field: 'market',
+        headerName: 'Market',
+        renderCell: renderLowMediumHigh,
+        width: 150,
+    },
+    {
+        field: 'reputation',
+        headerName: 'Reputation',
+        renderCell: renderLowMediumHigh,
+        width: 120,
+    },
+    {
+        field: 'fin_health',
+        headerName: 'Financial Health',
+        renderCell: renderLowMediumHigh,
+        width: 150,
+    },
 ];
 
 const Customers = () => {
@@ -90,9 +107,7 @@ const Customers = () => {
         <>
             <Stack direction={'row'} justifyContent={'space-between'}>
                 <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />}>
-                    <Link href={'/'} color={'inherit'} underline={'hover'}>
-                        Home
-                    </Link>
+                    <RouteLink to={'/'} label={'Home'} />
                     <Typography color={'text.primary'}>Customers</Typography>
                 </Breadcrumbs>
                 <Button
@@ -101,8 +116,8 @@ const Customers = () => {
                     color={'primary'}
                     sx={{ borderRadius: 4 }}
                     startIcon={<AddCircleRoundedIcon />}
-                    component={Link}
-                    href={'/customers/new'}
+                    component={RouterLink}
+                    to={'/customers/new'}
                 >
                     Create
                 </Button>
