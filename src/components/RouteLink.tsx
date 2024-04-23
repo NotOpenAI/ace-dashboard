@@ -5,6 +5,7 @@ type RouteLinkProps = {
     to: string;
     label: string;
 };
+
 export const RouteLink = ({ to, label }: RouteLinkProps) => {
     return (
         <Typography
