@@ -288,15 +288,18 @@ export const NewBid = () => {
                     .flatMap((attribute) => attribute.options)
                     .find((option) => option.id === optionId);
 
+                // Find the attribute type
+                const type = attributes.find((attr) => attr.name === typeName);
+
                 // Update the option ID of the found attribute
                 const updatedAttributes = [...prevBid.attributes];
 
-                if (option) {
+                if (option && type) {
                     updatedAttributes[attributeIndex] = {
                         ...updatedAttributes[attributeIndex],
                         type: {
-                            name: typeName,
-                            id: attributeIndex,
+                            name: type.name,
+                            id: type.id,
                         },
                         option: {
                             value: option.value,
@@ -349,12 +352,18 @@ export const NewBid = () => {
             if (attributeIndex === -1) {
                 attributeIndex = prevBid.attributes.length;
 
+                // Find the attribute type
+                const type = attributes.find((attr) => attr.name === typeName);
+
                 // Update the num_val of the found attribute
                 const updatedAttributes = [...prevBid.attributes];
-                updatedAttributes[attributeIndex] = {
-                    type: { name: typeName, id: attributeIndex },
-                    num_val: numVal,
-                };
+
+                if (type) {
+                    updatedAttributes[attributeIndex] = {
+                        type: { name: type.name, id: type.id },
+                        num_val: numVal,
+                    };
+                }
 
                 return {
                     ...prevBid,

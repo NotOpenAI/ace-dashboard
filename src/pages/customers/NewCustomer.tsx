@@ -18,10 +18,11 @@ import Footer from '../../components/Footer.tsx';
 import { BASE_URL } from '../../constants.tsx';
 import { useNavigate } from 'react-router-dom';
 import Tooltip from '@mui/material/Tooltip';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 import { RouteLink } from '../../components/RouteLink.tsx';
+import { SelectLowMediumHigh } from '../../components/select/SelectLowMediumHigh.tsx';
 
 export const NewCustomer = () => {
     const [accessToken, setAccessToken] = useState<string>('');
@@ -47,9 +48,9 @@ export const NewCustomer = () => {
     const [customer, setCustomer] = useState<Customer>({
         name: '',
         owner: '',
-        fin_health: '',
-        market: '',
-        reputation: '',
+        fin_health: undefined,
+        market: undefined,
+        reputation: undefined,
         contacts: [],
     });
     const [loading, setLoading] = useState(false);
@@ -61,6 +62,18 @@ export const NewCustomer = () => {
             ...prevCustomer,
             [key]: value,
         }));
+    };
+
+    const handleSelectChange = (
+        key: string,
+        value: SetStateAction<string | undefined>
+    ) => {
+        if (typeof value === 'string') {
+            setCustomer((prevCustomer: Customer) => ({
+                ...prevCustomer,
+                [key]: value,
+            }));
+        }
     };
 
     const handleAddContact = () => {
@@ -159,6 +172,7 @@ export const NewCustomer = () => {
                             onChange={(e) =>
                                 handleTextFieldChange('name', e.target.value)
                             }
+                            required
                         />
                         <Stack direction={'row'} spacing={1}>
                             <TextField
@@ -173,37 +187,46 @@ export const NewCustomer = () => {
                                     )
                                 }
                             />
-                            <TextField
-                                variant={'outlined'}
+                            <SelectLowMediumHigh
                                 label={'Financial Health'}
-                                value={customer?.fin_health || ''}
-                                fullWidth
-                                onChange={(e) =>
-                                    handleTextFieldChange(
+                                value={customer.fin_health || ''}
+                                onChange={(e: {
+                                    target: {
+                                        value: SetStateAction<
+                                            string | undefined
+                                        >;
+                                    };
+                                }) =>
+                                    handleSelectChange(
                                         'fin_health',
                                         e.target.value
                                     )
                                 }
                             />
-                            <TextField
-                                variant={'outlined'}
+                            <SelectLowMediumHigh
                                 label={'Market'}
-                                value={customer?.market || ''}
-                                fullWidth
-                                onChange={(e) =>
-                                    handleTextFieldChange(
-                                        'market',
-                                        e.target.value
-                                    )
+                                value={customer.market || ''}
+                                onChange={(e: {
+                                    target: {
+                                        value: SetStateAction<
+                                            string | undefined
+                                        >;
+                                    };
+                                }) =>
+                                    handleSelectChange('market', e.target.value)
                                 }
                             />
-                            <TextField
-                                variant={'outlined'}
+                            <SelectLowMediumHigh
                                 label={'Reputation'}
-                                value={customer?.reputation || ''}
-                                fullWidth
-                                onChange={(e) =>
-                                    handleTextFieldChange(
+                                value={customer.reputation || ''}
+                                onChange={(e: {
+                                    target: {
+                                        value: SetStateAction<
+                                            string | undefined
+                                        >;
+                                    };
+                                }) =>
+                                    handleSelectChange(
                                         'reputation',
                                         e.target.value
                                     )
@@ -302,9 +325,13 @@ export const NewCustomer = () => {
                         <Button
                             variant={'contained'}
                             onClick={handleSave}
-                            disabled={loading}
+                            disabled={!customer.name}
                         >
-                            {loading ? <CircularProgress size={24} /> : 'Save'}
+                            {loading ? (
+                                <CircularProgress size={24} />
+                            ) : (
+                                'Create'
+                            )}
                         </Button>
                     </Stack>
                 </Paper>

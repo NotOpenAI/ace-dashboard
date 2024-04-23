@@ -17,11 +17,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import Footer from '../../components/Footer.tsx';
 import { BASE_URL } from '../../constants.tsx';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { RouteLink } from '../../components/RouteLink.tsx';
+import { SelectLowMediumHigh } from '../../components/select/SelectLowMediumHigh.tsx';
 
 export const CustomerInfo = () => {
     const { id } = useParams();
@@ -81,6 +82,18 @@ export const CustomerInfo = () => {
                 [key]: value,
             };
         });
+    };
+
+    const handleSelectChange = (
+        key: string,
+        value: SetStateAction<string | undefined>
+    ) => {
+        if (typeof value === 'string') {
+            setCustomer((prevCustomer: Customer) => ({
+                ...prevCustomer,
+                [key]: value,
+            }));
+        }
     };
 
     const handleAddContact = () => {
@@ -230,37 +243,49 @@ export const CustomerInfo = () => {
                                         )
                                     }
                                 />
-                                <TextField
-                                    variant={'outlined'}
+                                <SelectLowMediumHigh
                                     label={'Financial Health'}
                                     value={customer?.fin_health || ''}
-                                    fullWidth
-                                    onChange={(e) =>
-                                        handleTextFieldChange(
+                                    onChange={(e: {
+                                        target: {
+                                            value: SetStateAction<
+                                                string | undefined
+                                            >;
+                                        };
+                                    }) =>
+                                        handleSelectChange(
                                             'fin_health',
                                             e.target.value
                                         )
                                     }
                                 />
-                                <TextField
-                                    variant={'outlined'}
+                                <SelectLowMediumHigh
                                     label={'Market'}
                                     value={customer?.market || ''}
-                                    fullWidth
-                                    onChange={(e) =>
-                                        handleTextFieldChange(
+                                    onChange={(e: {
+                                        target: {
+                                            value: SetStateAction<
+                                                string | undefined
+                                            >;
+                                        };
+                                    }) =>
+                                        handleSelectChange(
                                             'market',
                                             e.target.value
                                         )
                                     }
                                 />
-                                <TextField
-                                    variant={'outlined'}
+                                <SelectLowMediumHigh
                                     label={'Reputation'}
                                     value={customer?.reputation || ''}
-                                    fullWidth
-                                    onChange={(e) =>
-                                        handleTextFieldChange(
+                                    onChange={(e: {
+                                        target: {
+                                            value: SetStateAction<
+                                                string | undefined
+                                            >;
+                                        };
+                                    }) =>
+                                        handleSelectChange(
                                             'reputation',
                                             e.target.value
                                         )

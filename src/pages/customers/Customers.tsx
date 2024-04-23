@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { RouteLink } from '../../components/RouteLink.tsx';
+import renderLowMediumHigh from '../../renderers/renderLowMediumHigh.tsx';
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', renderCell: renderCustomerID },
@@ -36,9 +37,24 @@ const columns: GridColDef[] = [
         width: 200,
     },
     { field: 'owner', headerName: 'Owner', width: 150 },
-    { field: 'market', headerName: 'Market', width: 150 },
-    { field: 'reputation', headerName: 'Reputation', width: 120 },
-    { field: 'fin_health', headerName: 'Financial Health', width: 150 },
+    {
+        field: 'market',
+        headerName: 'Market',
+        renderCell: renderLowMediumHigh,
+        width: 150,
+    },
+    {
+        field: 'reputation',
+        headerName: 'Reputation',
+        renderCell: renderLowMediumHigh,
+        width: 120,
+    },
+    {
+        field: 'fin_health',
+        headerName: 'Financial Health',
+        renderCell: renderLowMediumHigh,
+        width: 150,
+    },
 ];
 
 const Customers = () => {
