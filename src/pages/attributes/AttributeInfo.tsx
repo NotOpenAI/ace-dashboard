@@ -7,7 +7,6 @@ import {
     Container,
     Divider,
     IconButton,
-    Link,
     Paper,
     Stack,
     TextField,
@@ -29,6 +28,7 @@ import { useEffect, useState } from 'react';
 import Select from '@mui/material/Select';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 export const AttributeInfo = () => {
     const { id } = useParams();
@@ -165,16 +165,8 @@ export const AttributeInfo = () => {
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
             >
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Link
-                    href={'/attributes'}
-                    color={'inherit'}
-                    underline={'hover'}
-                >
-                    Attributes
-                </Link>
+                <RouteLink to={'/'} label={'Home'} />
+                <RouteLink to={'/attributes'} label={'Attributes'} />
                 <Typography color={'text.primary'}>{id}</Typography>
             </Breadcrumbs>
             {loading ? (

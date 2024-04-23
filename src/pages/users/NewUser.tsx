@@ -6,7 +6,6 @@ import {
     Container,
     Divider,
     InputAdornment,
-    Link,
     Paper,
     Stack,
     TextField,
@@ -27,6 +26,7 @@ import { Role } from '../../types/Role.tsx';
 import { User } from '../../types/User.tsx';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
+import { RouteLink } from '../../components/RouteLink.tsx';
 
 const NewUser = () => {
     const [accessToken, setAccessToken] = useState<string>('');
@@ -149,12 +149,8 @@ const NewUser = () => {
                 separator={<NavigateNextIcon fontSize='small' />}
                 sx={{ paddingBottom: 2 }}
             >
-                <Link href={'/'} color={'inherit'} underline={'hover'}>
-                    Home
-                </Link>
-                <Link href={'/users'} color={'inherit'} underline={'hover'}>
-                    Users
-                </Link>
+                <RouteLink to={'/'} label={'Home'} />
+                <RouteLink to={'/users'} label={'Users'} />
                 <Typography color={'text.primary'}>New</Typography>
             </Breadcrumbs>
             <Box sx={{ m: 2 }}>
